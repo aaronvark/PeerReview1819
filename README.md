@@ -5,11 +5,18 @@ Repository for second year students of Game Development at the HKU University of
 ## How to use this repository
 
 ### Getting the repository on your local machine
-Before you can start adding things to the repository, you'll need to setup a git environment on your own machine:
+Before you can start adding things to the repository, you'll need to setup a git environment on your own machine.
+
+On Windows, I suggest you use Git for Windows: https://git-scm.com/download/
+On Mac, you can either use that as well, or work from the **Terminal** (check if you have it using **git --version**)
+
+Once you have Git on your machine, use the following command line commands:
 
 	git init
 	git remote add origin https://github.com/aaronvark/PeerReview1819.git
 	git pull origin master
+
+There are GUI tools for git, but I suggest learning to use the command line to become more familiar with the individual commands that git requires you to be familiar with. GUI tools take a lot of the thinking out of your hands, so if you learn to use the commands yourself, you will (eventually) understand it better.
 
 ### Creating Issues
 The most important thing to remember is to **always have an issue that you can reference**. To create your first issue, go to the **Issues** tab, and add a new issue. Follow the format of the example issue: **name - task**. Remember the number that's now behind your issue (you will need to know this to reference it)
