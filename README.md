@@ -11,8 +11,15 @@ Before you can start adding things to the repository, you'll need to setup a git
 	git remote add origin https://github.com/aaronvark/PeerReview1819.git
 	git pull origin master
 
-### Issues
+### Creating Issues
 The most important thing to remember is to **always have an issue that you can reference**. To create your first issue, go to the **Issues** tab, and add a new issue. Follow the format of the example issue: **name - task**. Remember the number that's now behind your issue (you will need to know this to reference it)
+
+Issue guidelines:
+1. Always have an issue up to work on
+2. Create an issue you can work on for multiple commits / pull requests, **that is relevant to the course you're in**
+3. Always reference your issue number in commits / pull requests
+4. Close your issue when you've finished
+5. Never close somebody else's issues
 
 ### Git Flow
 The next thing to know is how to use **git flow**, a way of working around a master repository without pushing to it directly. The steps taken to add code to the repository are as follows:
@@ -39,7 +46,7 @@ Once you've gotten this far, your code is committed to the online repository, bu
 - add a title and description
 - click **Create Pull Request**
 
-Somebody will have to **review** your pull request before it is **merged** into the master branch. If you want to make a new pull request, and you current one has not been merged, **ask somebody to review it** before you continue.
+Somebody will have to **review** your pull request before it is **merged** into the master branch. If you started a new issue, and want to make a new pull request, and your current one has not been merged, **ask somebody to review it** before you continue. If you commit after doing a pull request, the later commit (on the same branch) will be added to the pull request (so it only matters when you are working on a different issue).
 
 #### Pulling master into branch
 If the master branch has been updated while you were working on your branch, you will have to pull the master branch into your branch before continuing. While you are **on your own branch**, do the following:
