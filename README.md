@@ -7,8 +7,8 @@ Repository for second year students of Game Development at the HKU University of
 ### Getting the repository on your local machine
 Before you can start adding things to the repository, you'll need to setup a git environment on your own machine.
 
-On Windows, I suggest you use Git for Windows: https://git-scm.com/download/
-On Mac, you can either use that as well, or work from the **Terminal** (check if you have it using **git --version**)
+- **Windows**, I recommend Git for Windows: https://git-scm.com/download/ (and then right click in folders and choose **Bash from Here**)
+- **Mac**, You can use the **Terminal**. Check if you have it using **git --version**, follow instructions if you don't
 
 Once you have Git on your machine, use the following command line commands:
 
