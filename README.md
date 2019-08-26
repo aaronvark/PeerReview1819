@@ -18,17 +18,47 @@ The most important thing to remember is to **always have an issue that you can r
 The next thing to know is how to use **git flow**, a way of working around a master repository without pushing to it directly. The steps taken to add code to the repository are as follows:
 
 - pull the master branch to your local machine
-- create a branch (for example with your name) for the code you want to add
+- create a branch (for example with your name) for the code you want to add (you can use the same branch more than once)
 - commit to the branch while '''referencing''' (#) your issue number
 - push the branch to the repository
 
 These steps are done on the command line as follows:
 
     git pull origin master
-    git branch mynewbranchname      (instead of mynewbranchname, for example use your own name)
-    git commit -m "re #1, I did some amazing work!"      (instead of #1, use your own issue number)
-    git push origin mynewbranchname** (again, use the branch name you came up with)
+    git branch mynewbranchname                             (instead of mynewbranchname, for example use your own name)
+    git commit -m "re #1, I did [work] for [reason]!"      (instead of #1, use your own issue number)
+    git push origin mynewbranchname                        (again, use the branch name you came up with)
 
 Once you've gotten this far, your code is committed to the online repository, but it's not yet on the master branch. In order for it to get there, you have to **request that somebody pull it**, which is called a **Pull Request**. You can create a pull request from the browser:
 
-- 
+- go to the repository page: http://github.com/aaronvark/PeerReview1819/
+- go to your own branch
+- if it **does not say** that your branch is "x commits ahead of master", follow the **pulling master into branch** first
+- click the "Pull Request" button to the right
+- confirm that it looks like [master] < [yourbranch]
+- add a title and description
+- click **Create Pull Request**
+
+Somebody will have to **review** your pull request before it is **merged** into the master branch. If you want to make a new pull request, and you current one has not been merged, **ask somebody to review it** before you continue.
+
+#### Pulling master into branch
+If the master branch has been updated while you were working on your branch, you will have to pull the master branch into your branch before continuing. While you are **on your own branch**, do the following:
+
+If you want to check on which branch you are:
+
+	git status
+
+And if you want to move to your own branch:
+
+	git checkout mybranchname
+
+Finally, pulling the updated master into your own branch:
+
+	git pull origin master
+
+Then, you can push the newly merged branch to the repository:
+
+	git push origin mybranchname
+
+
+
