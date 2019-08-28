@@ -15,6 +15,10 @@ Once you have Git on your machine, use the following command line commands:
 	git init
 	git remote add origin https://github.com/aaronvark/PeerReview1819.git
 	git pull origin master
+	
+	//if you've already created a branch before
+	git fetch origin yourbranchname
+	git checkout yourbranchname
 
 There are GUI tools for git, but I suggest learning to use the command line to become more familiar with the individual commands that git requires you to be familiar with. GUI tools take a lot of the thinking out of your hands, so if you learn to use the commands yourself, you will (eventually) understand it better.
 
@@ -38,7 +42,8 @@ The next thing to know is how to use **git flow**, a way of working around a mas
 
 These steps are done on the command line as follows:
 
-    git pull origin master
+    git checkout master
+	git pull origin master
     git branch mynewbranchname                             (instead of mynewbranchname, for example use your own name)
     git commit -m "re #1, I did [work] for [reason]!"      (instead of #1, use your own issue number)
     git push origin mynewbranchname                        (again, use the branch name you came up with)
