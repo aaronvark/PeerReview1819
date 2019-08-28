@@ -7,7 +7,7 @@ Repository for second year students of Game Development at the HKU University of
 ### Getting the repository on your local machine
 Before you can start adding things to the repository, you'll need to setup a git environment on your own machine.
 
-- **Windows**, I recommend Git for Windows: https://git-scm.com/download/ (and then right click in folders and choose **Bash from Here**)
+- **Windows**, I recommend Git for Windows: https://git-scm.com/download/ (and then right click in folders and choose **Git Bash Here**)
 - **Mac**, You can use the **Terminal**. Check if you have it using **git --version**, follow instructions if you don't
 
 Once you have Git on your machine, use the following command line commands:
@@ -45,6 +45,8 @@ These steps are done on the command line as follows:
     git checkout master
 	git pull origin master
     git branch mynewbranchname                             (instead of mynewbranchname, for example use your own name)
+	[do some work]
+	git add myfoldername/.								   (. adds all the files in the folder called "myfoldername")
     git commit -m "re #1, I did [work] for [reason]!"      (instead of #1, use your own issue number)
     git push origin mynewbranchname                        (again, use the branch name you came up with)
 
