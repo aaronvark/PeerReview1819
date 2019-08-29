@@ -26,7 +26,7 @@ There are GUI tools for git, but I suggest learning to use the command line to b
 The most important thing to remember is to **always have an issue that you can reference**. To create your first issue, go to the **Issues** tab, and add a new issue. Follow the format of the example issue: **name - task**. Remember the number that's now behind your issue (you will need to know this to reference it)
 
 Issue guidelines:
-1. Always have an issue up to work on
+1. Always have an issue up to work on (for example: "Eindopdracht Blok 1")
 2. Create an issue you can work on for multiple commits / pull requests, **that is relevant to the course you're in**
 3. Always reference your issue number in commits / pull requests
 4. Close your issue when you've finished
@@ -45,7 +45,9 @@ These steps are done on the command line as follows:
     git checkout master
 	git pull origin master
     git branch mynewbranchname                             (instead of mynewbranchname, for example use your own name)
+	
 	[do some work]
+	
 	git add myfoldername/.								   (. adds all the files in the folder called "myfoldername")
     git commit -m "re #1, I did [work] for [reason]!"      (instead of #1, use your own issue number)
     git push origin mynewbranchname                        (again, use the branch name you came up with)
