@@ -3,7 +3,8 @@
 
 # But not these files
 !.gitignore
-!*.cs
+!/[Aa]ssets/*.cs
+!/[Aa]ssets/*.xml
 
 # even in subdirectories
 !*/
