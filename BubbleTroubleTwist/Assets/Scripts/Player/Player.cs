@@ -8,24 +8,33 @@ public class Player : AbstractAvatarClass
     public Transform firePoint;
     public Projectile currentProjectile;
     public float cooldown;
+    public float timeBetween;
+    public string currentProjectileName;
+
+    public WeaponData usingWeaponData;
+    public ObjectPooler objectPooler;
 
     Weapon currentWeapon;
 
-    public Player()
+    public bool ready = true;
+
+    void Awake()
     {
-        currentWeapon = new Weapon(firePoint, currentProjectile, damage);
+        //currentWeapon = new Weapon(currentProjectileName, firePoint, currentProjectile, damage);
+        currentWeapon = new Weapon();
+        currentWeapon.thisWeaponData = usingWeaponData;
+        currentWeapon.objectPooler = objectPooler;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && currentWeapon.WeaponReady(cooldown)) 
+        if (Input.GetKeyDown(KeyCode.Space) && currentWeapon.WeaponReady()) 
             Fire();
     }
 
-    
-
     private void Fire()
     {
-        currentWeapon.FireWeapon(damage);
+        StartCoroutine(currentWeapon.WaitForCooldown(cooldown));
     }
+    
 }

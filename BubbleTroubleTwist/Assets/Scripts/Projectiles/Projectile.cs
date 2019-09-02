@@ -10,4 +10,9 @@ public class Projectile : MonoBehaviour
     {
         speed = _speed;
     }
+
+    private void LateUpdate()
+    {
+
+    }
 }

@@ -2,29 +2,76 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class WeaponData
+{
+    public string projectileName;
+    public Transform firePoint;
+    public int damage;
+}
+
 public class Weapon : MonoBehaviour
 {
+    public WeaponData thisWeaponData;
+
+    public ObjectPooler objectPooler;
+
+    private string projectileName;
+    private Transform firePoint;
+    private int damage;
+    private bool ready = true;
+    float amount = 10;
+    
+    /*
+    string currentProjectileName;
     Transform firePoint;
     Projectile currentProjectile;
     int damage;
-    bool ready = false;
+    bool ready = true;
 
-    public Weapon(Transform _firePoint, Projectile _projectile, int _damage)
+    public Weapon(string _currentProjectileName,Transform _firePoint, Projectile _projectile, int _damage)
     {
+        currentProjectileName = _currentProjectileName;
         firePoint = _firePoint;
         currentProjectile = _projectile;
         damage = _damage;
-    }
+    }*/
+    private void Start()
+    {
+        projectileName = thisWeaponData.projectileName;
+        firePoint = thisWeaponData.firePoint;
+        damage = thisWeaponData.damage;
 
+    }
     public void FireWeapon(int _damage)
     {
-
+         objectPooler.SpawnFromPool(projectileName, firePoint.position, Quaternion.identity);            
     }
-    
+
+    public IEnumerator WaitForCooldown(float _time)
+    {
+        ready = false;
+        while (amount > 1)
+        {
+            FireWeapon(damage);
+            yield return new WaitForSeconds(0.2f);
+            amount--;
+        }
+        yield return new WaitForSeconds(_time);
+        ready = true;
+        amount = 10;
+    }
+
+    public bool WeaponReady()
+    {
+        return ready;
+    }
+
+    /*
     public bool WeaponReady(float _cooldown)
     {
         if (ready)
-            StartCoroutine(WaitForCooldown(_cooldown));
+            WaitForCooldown(_cooldown);
 
         return ready;
     }
@@ -34,7 +81,7 @@ public class Weapon : MonoBehaviour
         while (!ready)
         {
             _time -= Time.time;
-            if (_time < 0.1f) { ready = false; yield return new WaitForSeconds(0.1f); }
+            if (_time < 0.1f) { ready = true; yield return new WaitForSeconds(0.1f); }
         }
-    }
+    }*/
 }
