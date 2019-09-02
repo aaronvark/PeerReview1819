@@ -61,7 +61,7 @@ crashlytics-build.properties
 
 
 # Ignore all files except code files
+!/[Aa]ssets/**/*.cs
 /[Aa]ssets/
 /[Pp]ackages/
 /[Pp]rojectSettings/
-!/[Aa]ssets/**/*.cs
