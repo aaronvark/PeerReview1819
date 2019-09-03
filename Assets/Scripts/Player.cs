@@ -24,6 +24,10 @@ public class Player : MonoBehaviour
     [SerializeField] Vector2 maxHorizontalRotation = new Vector2(-120, 120);
     [SerializeField] Vector2 maxVerticalRotation = new Vector2(-80, 45);
 
+    [Header("Move Settings")]
+    [SerializeField] Vector2 movementRestrictions = new Vector2(-120, 120);
+    [SerializeField] float moveSpeed;
+
     private float yaw = 0f;
     private float pitch = 0f;
 
@@ -51,6 +55,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        DoLookAround();
         DoMovement();
 
         if (Input.GetButtonDown("Fire1"))
@@ -61,7 +66,19 @@ public class Player : MonoBehaviour
 
     void DoMovement()
     {
-        
+        float _horizontalAxis = Input.GetAxis("Horizontal");
+
+        Vector3 newPlayerPostion = transform.position;
+        newPlayerPostion = new Vector3(transform.position.x + _horizontalAxis * moveSpeed, transform.position.y, transform.position.z);
+        newPlayerPostion.x = Mathf.Clamp(newPlayerPostion.x, movementRestrictions.x, movementRestrictions.y);
+
+        transform.position = newPlayerPostion;
+
+        //transform.position = Vector3.Lerp(transform.position, newPlayerPostion, Time.deltaTime * 1f);
+    }
+
+    void DoLookAround()
+    {
         float _mouseX = Input.GetAxis("Mouse X");
         float _mouseY = Input.GetAxis("Mouse Y");
 

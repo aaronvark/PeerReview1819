@@ -7,8 +7,7 @@ public class Spawner : MonoBehaviour
 {
     ObjectPoolManager objectPool;
 
-    [Tooltip("Enemy prefabs that can be spawned.")]
-    [SerializeField] GameObject[] spawnables;
+    [SerializeField] Vector2 spawnAmountRange;
 
     BoxCollider spawnCollider;
     public static Vector3 randomPointInBounds(Bounds bounds)
@@ -25,10 +24,20 @@ public class Spawner : MonoBehaviour
         objectPool = ObjectPoolManager.Instance;
 
         spawnCollider = GetComponent<BoxCollider>();
+
+        for (int i = 0; i < Random.Range(spawnAmountRange.x, spawnAmountRange.y); i++)
+        {
+            SpawnEnemy();
+            Debug.Log("Spawn Enemy");
+        }
     }
 
     void SpawnEnemy()
     {
-        
+        //TODO make only enemy types spawn from the pool. 
+        //ObjectPoolManager.Pool _randomSpawnable = objectPool.pools[Random.Range(0, objectPool.pools.Count)];
+        ObjectPoolManager.Pool _randomSpawnable = objectPool.pools[1];
+
+        objectPool.SpawnFromPool(_randomSpawnable.tag, randomPointInBounds(spawnCollider.bounds), _randomSpawnable.prefab.transform.rotation);
     }
 }

@@ -24,6 +24,13 @@ public class Bullet : MonoBehaviour, IPoolObject
         StartCoroutine(DisableAfterTime());
     }
 
+    public void OnObjectDespawn()
+    {
+        this.gameObject.SetActive(false);
+        rb.velocity = Vector3.zero;
+        GetComponent<TrailRenderer>().Clear();
+    }
+
     /*
     public void AddForce(Vector3 direction)
     {
@@ -44,12 +51,8 @@ public class Bullet : MonoBehaviour, IPoolObject
     {
         yield return new WaitForSeconds(2);
 
-        
-        this.gameObject.SetActive(false);
-
-        rb.velocity = Vector3.zero;
-        GetComponent<TrailRenderer>().Clear();
+        OnObjectDespawn();
     }
 
-   
+    
 }

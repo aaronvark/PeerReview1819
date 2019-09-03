@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IDamagable
+public class Enemy : MonoBehaviour, IDamagable, IPoolObject
 {
 
     [Header("Move Settings")]
@@ -19,9 +19,20 @@ public class Enemy : MonoBehaviour, IDamagable
     void Start()
     {
         target = Player.Instance.gameObject;
+
+        moveSpeed = moveSpeed * Random.Range(0.5f, 1.2f);
     }
 
-    // Update is called once per frame
+    public void OnObjectSpawn()
+    {
+        return;
+    }
+
+    public void OnObjectDespawn()
+    {
+        this.gameObject.SetActive(false);
+    }
+
     void Update()
     {
         MoveToTarget();
@@ -50,4 +61,6 @@ public class Enemy : MonoBehaviour, IDamagable
     {
         Destroy(this.gameObject);
     }
+
+    
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ObjectPoolManager : MonoBehaviour
 {
+
+    //TODO Vervangen met scriptable object?
+
     [System.Serializable]
     public class Pool {
         public string tag;
@@ -49,7 +52,7 @@ public class ObjectPoolManager : MonoBehaviour
     public GameObject SpawnFromPool(string tag, Vector3 position , Quaternion rotation)
     {
         if (!poolDictionary.ContainsKey(tag)){
-            Debug.LogWarning("Pool with tag" + tag + " does not exist.");
+            Debug.LogWarning("Pool with tag " + tag + " does not exist.");
             return null;
         }
 
