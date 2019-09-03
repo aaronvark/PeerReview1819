@@ -17,4 +17,8 @@ public class MainBlock : Block
         base.AssignColor(_color);
         currentColorOfSelfAndAttachedBlocks = _color;
     }
+
+    public void MoveTo(Direction direction) {
+        
+    }
 }
