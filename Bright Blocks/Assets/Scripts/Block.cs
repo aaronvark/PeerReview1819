@@ -4,17 +4,12 @@ using UnityEngine;
 
 public class Block : MonoBehaviour{
 
-    public Block(Coordinate _coordinate) {
-
-        coordinate = _coordinate;
-    }
-
     public bool isSet;
     public Coordinate coordinate;
 
     private Material material;
 
-    private void Awake() {
+    public void Initialize(int x, int y) {
         material = GetComponent<Renderer>().material;
     }
 
