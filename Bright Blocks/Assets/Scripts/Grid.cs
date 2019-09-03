@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// To create a grid and safe the position of the blocks within the created grid
+/// </summary>
+
 public class Grid : MonoBehaviour
 {
+    public static Dictionary<Coordinate, Block> allBlocks = new Dictionary<Coordinate, Block>();
+
     [SerializeField] private int gridSizeX, gridSizeY;
     [SerializeField] private GameObject blockPrefab;
 
-    private Dictionary<Block, Coordinate> allBlocks;
-
-    private void Start() {
+    private void Awake() {
         CreateGrid();
     }
 
@@ -17,8 +21,22 @@ public class Grid : MonoBehaviour
 
         for (int x = 0; x < gridSizeX; x++) {
             for (int y = 0; y < gridSizeY; y++) {
-                Instantiate(blockPrefab, new Vector3(x, y), Quaternion.identity, transform).AddComponent<Block>();
+                //DISCUSS
+
+                //Saves the current coordinates for later use
+                Coordinate _currentCoordinate = new Coordinate(x, y);
+
+                //Creates a block, then adds the Block script to the object
+                Block _newBlock = Instantiate(blockPrefab, new Vector3(x, y), Quaternion.identity, transform).AddComponent<Block>();
+
+                //Initializes the newBlock with the coordinates
+                _newBlock.Initialize(_currentCoordinate);
+                
+
+                allBlocks.Add(_currentCoordinate, _newBlock);
             }
         }
     }
+
+
 }

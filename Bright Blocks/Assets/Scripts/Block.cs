@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour{
+public class Block : MonoBehaviour
+{
 
     public bool isSet;
     public Coordinate coordinate;
 
     private Material material;
 
-    public void Initialize(int x, int y) {
+    public void Initialize(Coordinate _coordinate) {
         material = GetComponent<Renderer>().material;
+        coordinate = _coordinate;
     }
 
-    public void AssignColor(Color _color) {
+    public virtual void AssignColor(Color _color) {
 
         material.color = _color;
     }
