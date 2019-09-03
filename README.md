@@ -42,9 +42,15 @@ The next thing to know is how to use **git flow**, a way of working around a mas
 
 These steps are done on the command line as follows:
 
-    git checkout master
+    	//if you DON'T already have a branch
+	git checkout master
 	git pull origin master
-    git branch mynewbranchname                             (instead of mynewbranchname, for example use your own name)
+    	git branch mynewbranchname              (instead of mynewbranchname, for example use your own name)
+	git checkout mynewbranchname
+	
+	//if you DO already have a branch
+	git checkout mybranchname
+	git pull origin master			(this will make your branch "up to date" with the remote master)
 	
 	[do some work]
 	
