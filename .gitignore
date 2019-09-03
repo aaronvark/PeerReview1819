@@ -3,11 +3,11 @@
 
 # But not these files
 !.gitignore
-!/[Aa]ssets/**/*.cs
-!/[Aa]ssets/**/*.xml
+!*/[Aa]ssets/**/*.cs
+!*/[Aa]ssets/**/*.xml
 
 # even in subdirectories
 !*/
 
-# Not in Files folder
-!/Files/**
+# but not these subdirectories
+!/Files/*
