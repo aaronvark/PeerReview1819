@@ -19,7 +19,7 @@ public class Box : MonoBehaviour
     {
         if(CanBeHalted)
         {           
-            if(collision.gameObject.tag == "Box")
+            if(collision.gameObject.tag == "Box" || collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Player")
             {
                 IsPlaced = true;
                 rigidBody.isKinematic = true;
