@@ -11,7 +11,7 @@ public class MainBlockShapeList : MonoBehaviour {
 
     private void Start() {
 
-        shapeList.Add(new Shape(300, Color.blue));
+        shapeList.Add(new Shape(321, Color.blue));
 
     }
 }

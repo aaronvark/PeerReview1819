@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class ShapeCodeProcessor : MonoBehaviour {
     
-    public static Coordinate[] IntToCoords(int _shapeCode, Coordinate _fromCoordinate) {
+    public static List<Coordinate> IntToCoords(int _shapeCode, Coordinate _fromCoordinate) {
+
+        List<Coordinate> _coordinates = new List<Coordinate>();
 
         //Calculates the number of blocks based on the position within the number
         //EXAMPLE the number 234 would be
@@ -13,10 +15,27 @@ public class ShapeCodeProcessor : MonoBehaviour {
         //left = 3
         //right = 4
 
-        int _up = _shapeCode/100;
-        int _left = ((_shapeCode/100) % 1) * 10;
-        int _right = ((_shapeCode / 10) % 1) * 10;
+        int _up = (int)((float)_shapeCode/100);
+        int _left = Mathf.RoundToInt((((float)_shapeCode /100) % 1) * 10);
+        int _right = Mathf.RoundToInt((((float)_shapeCode / 10) % 1) * 10);
 
+        Debug.Log(_up);
+        Debug.Log(_left);
+        Debug.Log(_right);
+
+        for (int i = 0; i < _up; i++) {
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate + _up));
+        }
+
+        for (int i = 0; i < _left; i++) {
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate - _left, _fromCoordinate.yCoordinate));
+        }
+
+        for (int i = 0; i < _left; i++) {
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate + _right, _fromCoordinate.yCoordinate));
+        }
+
+        return _coordinates;
 
     }
 

@@ -8,7 +8,7 @@ public class MainBlock : Block
 
     private Color currentColorOfSelfAndAttachedBlocks;
     private Color baseColor;
-    private Block[] attachedBlocks;
+    private List<Block> attachedBlocks = new List<Block>();
 
     private void Awake() {
 
@@ -20,6 +20,7 @@ public class MainBlock : Block
     }
 
     public override void AssignColor(Color _color) {
+
         base.AssignColor(_color);
         currentColorOfSelfAndAttachedBlocks = _color;
     }
@@ -60,9 +61,32 @@ public class MainBlock : Block
         transform.position = _blockToMoveTo.transform.position;
         _blockToMoveTo.transform.position = _currentPosition;
 
+        //This moves the rest of the shape with the mainblock
+        ColorAttachedBlocks();
     }
 
-    private void ActivatePositionOfAttachedBlocks() {
+    //Should probably not be in this class
+    private void UpdateAttachedBlocks() {
 
+        List<Coordinate> _coordinates = ShapeCodeProcessor.IntToCoords(positionOfAttachedBlocks, coordinate);
+
+        //Finds the blocks linked with the coordinates
+        for (int i = 0; i < _coordinates.Count; i++) {
+
+            if (Grid.allBlocks.ContainsKey(_coordinates[i])) {
+
+                attachedBlocks.Add(Grid.allBlocks[_coordinates[i]]);
+            }
+        }
+    }
+
+    private void ColorAttachedBlocks() {
+
+        UpdateAttachedBlocks();
+
+        for (int i = 0; i < attachedBlocks.Count; i++) {
+
+            attachedBlocks[i].AssignColor(currentColorOfSelfAndAttachedBlocks);
+        }
     }
 }
