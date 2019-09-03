@@ -8,13 +8,23 @@ public class Box : MonoBehaviour
     public bool IsPlaced;
     public bool CanBeHalted;
 
-    private void Start()
+    private void Awake()
     {
-        float randomSize = Random.Range(1,3.1f);
-        transform.localScale = new Vector3(randomSize, randomSize, randomSize);
         rigidBody = GetComponent<Rigidbody>();
+    }
+
+    private void OnEnable()
+    {
+        Initialise();
+    }
+
+    void Initialise()
+    {
+        float randomSize = Random.Range(1, 3.1f);
+        transform.localScale = new Vector3(randomSize, randomSize, randomSize);
         CanBeHalted = true;
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if(CanBeHalted)
