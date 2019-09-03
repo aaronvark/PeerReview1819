@@ -1,0 +1,10 @@
+# Ignore Everything
+*
+
+# But not these files
+!.gitignore
+!/[Aa]ssets/Scripts/**/*.cs
+!/[Aa]ssets/Scripts/**/*.xml
+
+# even in subdirectories
+!*/
