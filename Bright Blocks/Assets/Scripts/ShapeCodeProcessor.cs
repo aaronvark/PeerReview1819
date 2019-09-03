@@ -24,15 +24,15 @@ public class ShapeCodeProcessor : MonoBehaviour {
         Debug.Log(_right);
 
         for (int i = 0; i < _up; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate + _up));
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate + i));
         }
 
         for (int i = 0; i < _left; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate - _left, _fromCoordinate.yCoordinate));
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate - i, _fromCoordinate.yCoordinate));
         }
 
         for (int i = 0; i < _left; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate + _right, _fromCoordinate.yCoordinate));
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate + i, _fromCoordinate.yCoordinate));
         }
 
         return _coordinates;
