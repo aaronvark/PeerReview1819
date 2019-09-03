@@ -7,13 +7,7 @@ public class Pellet : MonoBehaviour
     [SerializeField]
     private int points = 10;
 
-    private void Consume() {
+    public void Consume() {
         Destroy(gameObject);
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.CompareTag("Player")) {
-            Consume();
-        }
     }
 }
