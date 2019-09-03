@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     GameObject cameraObject;
+   
 
     [Header("Mouse Settings")]
     [SerializeField] float xSensitivity = 0.5f;
@@ -27,8 +28,13 @@ public class Player : MonoBehaviour
     [Tooltip("Spawn positions of bullets (e.g. the position where the bullets come out of the rifle.")]
     [SerializeField] GameObject[] spawnPositions;
 
+    //ObjectPool
+    ObjectPoolManager objectPool;
+
     private void Start()
     {
+        objectPool = ObjectPoolManager.Instance;
+
         cameraObject = GetComponentInChildren<Camera>().gameObject;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -63,9 +69,14 @@ public class Player : MonoBehaviour
     {
         for (int i = 0; i < spawnPositions.Length; i++)
         {
-            GameObject _bulletClone = Instantiate(bulletPrefab, spawnPositions[i].transform.position, bulletPrefab.transform.rotation);
-            _bulletClone.GetComponent<Rigidbody>().AddForce(spawnPositions[i].transform.forward * bulletForce);
+            Debug.DrawRay(spawnPositions[i].transform.position, spawnPositions[i].transform.forward, Color.red);
+            
+            GameObject _bulletClone = objectPool.SpawnFromPool("PlayerBullets", spawnPositions[i].transform.position, spawnPositions[i].transform.rotation);
             _bulletClone.GetComponent<Bullet>().bulletDamage = bulletDamage;
+
+            //_bulletClone.GetComponent<Bullet>().bulletForce = bulletForce;
+            _bulletClone.GetComponent<Rigidbody>().AddForce(cameraObject.transform.forward * bulletForce);
+
         }
     }
 }

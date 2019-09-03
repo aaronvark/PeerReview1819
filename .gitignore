@@ -1,9 +1,17 @@
-*meta
+# Ignore Everything
+*
 
 # But not these files
 !.gitignore
-!*.cs
-!*.xml
+!/[Aa]ssets/**/*.cs
+!/[Aa]ssets/**/*.txt
+!/[Aa]ssets/**/*.xml
+!/[Aa]ssets/**/*.fnt
+!/[Aa]ssets/**/*.cd
+!/[Aa]ssets/**/*.asmref
 
 # even in subdirectories
 !*/
+
+# but not these subdirectories
+/[Aa]ssets/Standard Assets/
