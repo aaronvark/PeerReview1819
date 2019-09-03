@@ -3,8 +3,11 @@
 
 # But not these files
 !.gitignore
-!/[Aa]ssets/*.cs
-!/[Aa]ssets/*.xml
+!/[Aa]ssets/**/*.cs
+!/[Aa]ssets/**/*.xml
 
 # even in subdirectories
 !*/
+
+# but not these subdirectories
+/[Aa]ssets/Shapes2D/
