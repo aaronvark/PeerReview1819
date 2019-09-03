@@ -1,10 +1,9 @@
-# Ignore Everything
-*
+*meta
 
 # But not these files
 !.gitignore
-!/[Aa]ssets/*.cs
-!/[Aa]ssets/*.xml
+!*.cs
+!*.xml
 
 # even in subdirectories
 !*/
