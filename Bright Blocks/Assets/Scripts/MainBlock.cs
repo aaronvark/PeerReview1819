@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Is the block in the middle of a tetris shape
+/// </summary>
 public class MainBlock : Block
 {
     public int positionOfAttachedBlocks;
@@ -22,7 +25,7 @@ public class MainBlock : Block
     public override void AssignColor(Color _color) {
 
         base.AssignColor(_color);
-        currentColorOfSelfAndAttachedBlocks = _color;
+        currentColorOfSelfAndAttachedBlocks = (_color != baseColor)? _color : currentColorOfSelfAndAttachedBlocks;
     }
 
     public void MoveTo(Direction _direction) {
@@ -38,6 +41,8 @@ public class MainBlock : Block
             default:
                 break;
         }
+
+        ColorUpdate();
     }
 
     private void SwitchWithBlock(Coordinate _coordinate) {
@@ -60,14 +65,20 @@ public class MainBlock : Block
         //Switches the blocks, making this block move down 1
         transform.position = _blockToMoveTo.transform.position;
         _blockToMoveTo.transform.position = _currentPosition;
+    }
 
-        //This moves the rest of the shape with the mainblock
-        ColorAttachedBlocks();
+    private void ColorUpdate() {
+
+        //Setsback the old color of the attached blocks and then applies the color to the new blocks (basically making is look like the blocks have moved)
+        ColorAttachedBlocks(baseColor);
+        UpdateAttachedBlocks();
+        ColorAttachedBlocks(currentColorOfSelfAndAttachedBlocks);
     }
 
     //Should probably not be in this class
     private void UpdateAttachedBlocks() {
 
+        attachedBlocks.Clear();
         List<Coordinate> _coordinates = ShapeCodeProcessor.IntToCoords(positionOfAttachedBlocks, coordinate);
 
         //Finds the blocks linked with the coordinates
@@ -80,13 +91,11 @@ public class MainBlock : Block
         }
     }
 
-    private void ColorAttachedBlocks() {
-
-        UpdateAttachedBlocks();
+    private void ColorAttachedBlocks(Color _color) {
 
         for (int i = 0; i < attachedBlocks.Count; i++) {
 
-            attachedBlocks[i].AssignColor(currentColorOfSelfAndAttachedBlocks);
+            attachedBlocks[i].AssignColor(_color);
         }
     }
 }

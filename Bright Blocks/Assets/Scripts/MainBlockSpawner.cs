@@ -24,7 +24,6 @@ public class MainBlockSpawner : MonoBehaviour
 
         _currentMainBlock.AssignColor(_currentShape.color);
         _currentMainBlock.positionOfAttachedBlocks = _currentShape.shape;
-
     }
 
     private Shape ChooseRandomShape() {
