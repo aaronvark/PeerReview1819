@@ -8,7 +8,7 @@ public class Block : MonoBehaviour
     public bool isSet;
     public Coordinate coordinate;
 
-    private Renderer rend;
+    protected Renderer rend;
 
     public void Initialize(Coordinate _coordinate) {
         rend = GetComponent<Renderer>();

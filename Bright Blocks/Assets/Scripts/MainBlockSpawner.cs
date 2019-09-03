@@ -18,6 +18,10 @@ public class MainBlockSpawner : MonoBehaviour
 
         Shape _currentShape = ChooseRandomShape();
         MainBlock _currentMainBlock = startingBlock.gameObject.AddComponent<MainBlock>();
+
+        //Temporary
+        FindObjectOfType<PlayerInput>().currentMainBlock = _currentMainBlock;
+
         _currentMainBlock.AssignColor(_currentShape.color);
         _currentMainBlock.positionOfAttachedBlocks = _currentShape.shape;
 
