@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MainBlock : Block
 {
-    public float positionOfAttachedBlocks;
+    public int positionOfAttachedBlocks;
 
     private Color currentColorOfSelfAndAttachedBlocks;
     private Color baseColor;

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public struct Shape {
 
-    public Shape(float _shapeOfShape, Color _colorOfShape) {
+    public Shape(int _shapeOfShape, Color _colorOfShape) {
 
         color = _colorOfShape;
         shape = _shapeOfShape;
     }
 
     public Color color;
-    public float shape;
+    public int shape;
 }
