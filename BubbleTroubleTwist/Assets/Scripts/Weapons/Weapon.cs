@@ -2,14 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Data class that stores each weapon data
+/// </summary>
 [System.Serializable]
 public class WeaponData
 {
     public string projectileName;
     public Transform firePoint;
     public int damage;
+    public float amount;
 }
 
+/// <summary>
+/// Weapon class with all weapon functionality
+/// </summary>
 public class Weapon : MonoBehaviour
 {
     public WeaponData thisWeaponData;
@@ -34,53 +41,35 @@ public class Weapon : MonoBehaviour
         currentProjectile = _projectile;
         damage = _damage;
     }*/
-    private void Start()
-    {
-
-
-    }
     public void FireWeapon(int _damage)
     {
-         objectPooler.SpawnFromPool(projectileName, firePoint.position, Quaternion.identity);            
+        GameObject projectile = objectPooler.SpawnFromPool(projectileName, firePoint.position, Quaternion.identity);
+        if(projectile != null)
+        {
+            projectile.GetComponent<Projectile>().damage = damage;
+        }
     }
 
-    public IEnumerator WaitForCooldown(float _time)
+    public IEnumerator WaitForCooldown(float _time, float _timeBetween)
     {
         projectileName = thisWeaponData.projectileName;
         firePoint = thisWeaponData.firePoint;
         damage = thisWeaponData.damage;
+        amount = thisWeaponData.amount;
         ready = false;
         while (amount > 1)
         {
             FireWeapon(damage);
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(_timeBetween);
             amount--;
         }
         yield return new WaitForSeconds(_time);
         ready = true;
-        amount = 10;
+        amount = thisWeaponData.amount;
     }
 
     public bool WeaponReady()
     {
         return ready;
     }
-
-    /*
-    public bool WeaponReady(float _cooldown)
-    {
-        if (ready)
-            WaitForCooldown(_cooldown);
-
-        return ready;
-    }
-
-    private IEnumerator WaitForCooldown(float _time)
-    {
-        while (!ready)
-        {
-            _time -= Time.time;
-            if (_time < 0.1f) { ready = true; yield return new WaitForSeconds(0.1f); }
-        }
-    }*/
 }

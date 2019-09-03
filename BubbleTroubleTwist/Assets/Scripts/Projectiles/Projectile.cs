@@ -5,14 +5,22 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public float speed;
+    public int damage;
 
-    public Projectile(float _speed)
-    {
-        speed = _speed;
-    }
-
-    private void LateUpdate()
+    private void OnCollisionEnter(Collision collision)
     {
 
+
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Enemy _enemy = collision.gameObject.GetComponent<Enemy>();
+            _enemy.SplitEnemy();
+            _enemy.TakeDamage(damage);
+        }
+        if (collision.gameObject.tag != "Projectile")
+        {
+            gameObject.SetActive(false);
+
+        }
     }
 }
