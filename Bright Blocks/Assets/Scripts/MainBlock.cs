@@ -35,8 +35,10 @@ public class MainBlock : Block
                 SwitchWithBlock(new Coordinate(coordinate.xCoordinate, coordinate.yCoordinate-1));
                 break;
             case Direction.Left:
+                SwitchWithBlock(new Coordinate(coordinate.xCoordinate-1, coordinate.yCoordinate));
                 break;
             case Direction.Right:
+                SwitchWithBlock(new Coordinate(coordinate.xCoordinate+1, coordinate.yCoordinate));
                 break;
             default:
                 break;

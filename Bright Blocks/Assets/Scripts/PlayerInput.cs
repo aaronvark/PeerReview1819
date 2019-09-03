@@ -17,6 +17,12 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
 
             currentMainBlock.MoveTo(Direction.Down);
+        } else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+
+            currentMainBlock.MoveTo(Direction.Left);
+        } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+
+            currentMainBlock.MoveTo(Direction.Right);
         }
     }
 }
