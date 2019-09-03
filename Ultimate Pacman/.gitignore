@@ -4,10 +4,15 @@
 # But not these files
 !.gitignore
 !/[Aa]ssets/**/*.cs
+!/[Aa]ssets/**/*.txt
 !/[Aa]ssets/**/*.xml
+!/[Aa]ssets/**/*.fnt
+!/[Aa]ssets/**/*.cd
+!/[Aa]ssets/**/*.asmref
 
 # even in subdirectories
 !*/
 
 # but not these subdirectories
+/[Aa]ssets/Standard Assets/
 /[Aa]ssets/Shapes2D/
