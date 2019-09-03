@@ -6,8 +6,10 @@ public class Bullet : MonoBehaviour, IPoolObject
 {
     ObjectPoolManager poolManager;
 
-    public int bulletDamage;
-    public float bulletForce;
+    [SerializeField] float destroyTime;
+
+    [HideInInspector] public int bulletDamage; //Will be assigned by gun firing the bullet.
+    //public float bulletForce;
 
     public Vector3 bulletDirection;
 
@@ -49,7 +51,7 @@ public class Bullet : MonoBehaviour, IPoolObject
 
     IEnumerator DisableAfterTime()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(destroyTime);
 
         OnObjectDespawn();
     }
