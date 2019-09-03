@@ -25,6 +25,6 @@ public class MainBlockSpawner : MonoBehaviour
 
     private Shape ChooseRandomShape() {
 
-        return MainBlockShapeList.shapeList[Random.Range(0, MainBlockShapeList.shapeList.Count)];
+        return MainBlockShapeList.shapeList[Random.Range(0, MainBlockShapeList.shapeList.Count-1)];
     }
 }

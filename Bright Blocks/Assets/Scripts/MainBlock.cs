@@ -9,6 +9,10 @@ public class MainBlock : Block
     private Color currentColorOfSelfAndAttachedBlocks;
     private Block[] attachedBlocks;
 
+    private void Awake() {
+        Initialize(GetComponent<Block>().coordinate);
+    }
+
     public override void AssignColor(Color _color) {
         base.AssignColor(_color);
         currentColorOfSelfAndAttachedBlocks = _color;

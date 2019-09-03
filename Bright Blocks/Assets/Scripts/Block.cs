@@ -8,15 +8,15 @@ public class Block : MonoBehaviour
     public bool isSet;
     public Coordinate coordinate;
 
-    private Material material;
+    private Renderer rend;
 
     public void Initialize(Coordinate _coordinate) {
-        material = GetComponent<Renderer>().material;
+        rend = GetComponent<Renderer>();
         coordinate = _coordinate;
     }
 
     public virtual void AssignColor(Color _color) {
 
-        material.color = _color;
+        rend.material.SetColor("_BaseColor", _color);
     }
 }
