@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    GameManager gameManager;
+    GameObject Player;
+    public float Speed;
+
+    private void Start()
+    {
+        gameManager = GameManager.Instance;
+        Player = gameManager.Player;
+    }
 
     // Update is called once per frame
     void Update()
@@ -13,9 +22,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        if(Input.GetAxis("Horizontal") != 0)
-        {
-            
-        }
+        float horizontalAxis = Input.GetAxis("Horizontal");
+        float verticalAxis = Input.GetAxis("Vertical");
+
+        Player.transform.position = new Vector3(transform.position.x + (horizontalAxis * Speed / 10),transform.position.y, transform.position.z + (verticalAxis * Speed / 10));
     }
 }
