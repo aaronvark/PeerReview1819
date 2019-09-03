@@ -16,6 +16,15 @@ public class MainBlockSpawner : MonoBehaviour
 
     public void SpawnMainBlock() {
 
-        //startingBlock.gameObject.AddComponent<MainBlock>().AssignColor();
+        Shape _currentShape = ChooseRandomShape();
+        MainBlock _currentMainBlock = startingBlock.gameObject.AddComponent<MainBlock>();
+        _currentMainBlock.AssignColor(_currentShape.color);
+        _currentMainBlock.positionOfAttachedBlocks = _currentShape.shape;
+
+    }
+
+    private Shape ChooseRandomShape() {
+
+        return MainBlockShapeList.shapeList[Random.Range(0, MainBlockShapeList.shapeList.Count)];
     }
 }

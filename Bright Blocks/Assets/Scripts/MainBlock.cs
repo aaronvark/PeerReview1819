@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class MainBlock : Block
 {
-    public Color currentColorOfSelfAndAttachedBlocks;
+    public float positionOfAttachedBlocks;
 
-    private int positionOfAttachedBlocks;
+    private Color currentColorOfSelfAndAttachedBlocks;
     private Block[] attachedBlocks;
 
     public override void AssignColor(Color _color) {
