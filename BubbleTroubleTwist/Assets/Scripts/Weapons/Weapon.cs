@@ -13,9 +13,7 @@ public class WeaponData
 public class Weapon : MonoBehaviour
 {
     public WeaponData thisWeaponData;
-
     public ObjectPooler objectPooler;
-
     private string projectileName;
     private Transform firePoint;
     private int damage;
@@ -38,9 +36,7 @@ public class Weapon : MonoBehaviour
     }*/
     private void Start()
     {
-        projectileName = thisWeaponData.projectileName;
-        firePoint = thisWeaponData.firePoint;
-        damage = thisWeaponData.damage;
+
 
     }
     public void FireWeapon(int _damage)
@@ -50,6 +46,9 @@ public class Weapon : MonoBehaviour
 
     public IEnumerator WaitForCooldown(float _time)
     {
+        projectileName = thisWeaponData.projectileName;
+        firePoint = thisWeaponData.firePoint;
+        damage = thisWeaponData.damage;
         ready = false;
         while (amount > 1)
         {

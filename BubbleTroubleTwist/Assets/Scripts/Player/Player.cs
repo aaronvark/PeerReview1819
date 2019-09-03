@@ -23,7 +23,11 @@ public class Player : AbstractAvatarClass
         //currentWeapon = new Weapon(currentProjectileName, firePoint, currentProjectile, damage);
         currentWeapon = new Weapon();
         currentWeapon.thisWeaponData = usingWeaponData;
-        currentWeapon.objectPooler = objectPooler;
+    }
+
+    private void Start()
+    {
+        objectPooler = ObjectPooler.Instance;
     }
 
     private void Update()
@@ -34,6 +38,7 @@ public class Player : AbstractAvatarClass
 
     private void Fire()
     {
+        currentWeapon.objectPooler = objectPooler;
         StartCoroutine(currentWeapon.WaitForCooldown(cooldown));
     }
     
