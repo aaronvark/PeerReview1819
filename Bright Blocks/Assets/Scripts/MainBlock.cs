@@ -29,22 +29,28 @@ public class MainBlock : Block
     }
 
     public void MoveTo(Direction _direction) {
-        
-        switch (_direction) {
-            case Direction.Down:
-                SwitchWithBlock(new Coordinate(coordinate.xCoordinate, coordinate.yCoordinate-1));
-                break;
-            case Direction.Left:
-                SwitchWithBlock(new Coordinate(coordinate.xCoordinate-1, coordinate.yCoordinate));
-                break;
-            case Direction.Right:
-                SwitchWithBlock(new Coordinate(coordinate.xCoordinate+1, coordinate.yCoordinate));
-                break;
-            default:
-                break;
-        }
 
-        ColorUpdate();
+        if (Grid.CanShapeMove(_direction, ShapeCodeProcessor.ShapeCodeToInt(positionOfAttachedBlocks), coordinate)) {
+
+            switch (_direction) {
+                case Direction.Down:
+                    SwitchWithBlock(new Coordinate(coordinate.xCoordinate, coordinate.yCoordinate - 1));
+                    break;
+                case Direction.Left:
+                    SwitchWithBlock(new Coordinate(coordinate.xCoordinate - 1, coordinate.yCoordinate));
+                    break;
+                case Direction.Right:
+                    SwitchWithBlock(new Coordinate(coordinate.xCoordinate + 1, coordinate.yCoordinate));
+                    break;
+                default:
+                    break;
+            }
+
+            ColorUpdate();
+        } else {
+
+            Debug.Log("Can't move there");
+        }
     }
 
     private void SwitchWithBlock(Coordinate _coordinate) {
@@ -81,7 +87,7 @@ public class MainBlock : Block
     private void UpdateAttachedBlocks() {
 
         attachedBlocks.Clear();
-        List<Coordinate> _coordinates = ShapeCodeProcessor.IntToCoords(positionOfAttachedBlocks, coordinate);
+        List<Coordinate> _coordinates = Grid.IntToCoords(ShapeCodeProcessor.ShapeCodeToInt(positionOfAttachedBlocks), coordinate);
 
         //Finds the blocks linked with the coordinates
         for (int i = 0; i < _coordinates.Count; i++) {

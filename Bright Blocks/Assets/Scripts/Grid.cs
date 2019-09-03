@@ -17,6 +17,53 @@ public class Grid : MonoBehaviour
         CreateGrid();
     }
 
+    public static bool CanShapeMove(Direction _direction, int[] _shapeCodeArray, Coordinate _fromCoordinate) {
+
+        List<Coordinate> _potentialCoordinates = new List<Coordinate>();
+
+        switch (_direction) {
+            case Direction.Down:
+                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate - 1));
+                break;
+            case Direction.Left:
+                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate - 1, _fromCoordinate.yCoordinate));
+                break;
+            case Direction.Right:
+                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate + 1, _fromCoordinate.yCoordinate));
+                break;
+            default:
+                break;
+        }
+
+        for (int i = 0; i < _potentialCoordinates.Count; i++) {
+            if (!allBlocks.ContainsKey(_potentialCoordinates[i])) {
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static List<Coordinate> IntToCoords(int[] _shapeCodeArray, Coordinate _fromCoordinate) {
+
+        List<Coordinate> _coordinates = new List<Coordinate>();
+
+        for (int i = 0; i < _shapeCodeArray[0]+1; i++) {
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate + i));
+        }
+
+        for (int i = 0; i < _shapeCodeArray[1]+1; i++) {
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate - i, _fromCoordinate.yCoordinate));
+        }
+
+        for (int i = 0; i < _shapeCodeArray[2]+1; i++) {
+            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate + i, _fromCoordinate.yCoordinate));
+        }
+
+        return _coordinates;
+    }
+
     private void CreateGrid() {
 
         for (int x = 0; x < gridSizeX; x++) {
@@ -37,6 +84,5 @@ public class Grid : MonoBehaviour
             }
         }
     }
-
 
 }

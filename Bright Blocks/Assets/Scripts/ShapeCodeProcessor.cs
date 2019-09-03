@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class ShapeCodeProcessor : MonoBehaviour {
     
-    public static List<Coordinate> IntToCoords(int _shapeCode, Coordinate _fromCoordinate) {
-
-        List<Coordinate> _coordinates = new List<Coordinate>();
+    public static int[] ShapeCodeToInt(int _shapeCode) {
 
         //Calculates the number of blocks based on the position within the number
         //EXAMPLE the number 234 would be
@@ -19,23 +17,9 @@ public class ShapeCodeProcessor : MonoBehaviour {
         int _left = Mathf.RoundToInt((((float)_shapeCode /100) % 1) * 10);
         int _right = Mathf.RoundToInt((((float)_shapeCode / 10) % 1) * 10);
 
-        Debug.Log(_up);
-        Debug.Log(_left);
-        Debug.Log(_right);
+        int[] _shapeCodeArray = { _up, _left, _right };
 
-        for (int i = 0; i < _up; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate + i));
-        }
-
-        for (int i = 0; i < _left; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate - i, _fromCoordinate.yCoordinate));
-        }
-
-        for (int i = 0; i < _left; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate + i, _fromCoordinate.yCoordinate));
-        }
-
-        return _coordinates;
+        return _shapeCodeArray;
 
     }
 
