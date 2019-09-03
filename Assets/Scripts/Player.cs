@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+    #region Singleton
+    public static Player Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+    #endregion
+
     GameObject cameraObject;
-   
 
     [Header("Mouse Settings")]
     [SerializeField] float xSensitivity = 0.5f;
