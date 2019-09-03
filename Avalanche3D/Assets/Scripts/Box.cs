@@ -4,27 +4,29 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
-    Rigidbody rigidBody;
+    Rigidbody rigidbody;
     public bool IsPlaced;
     public bool CanBeHalted;
 
     private void Awake()
     {
-        rigidBody = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()
     {
-        Initialise();
+        Initialize();
     }
 
-    void Initialise()
+    //Randomize size
+    void Initialize()
     {
         float randomSize = Random.Range(1, 3.1f);
         transform.localScale = new Vector3(randomSize, randomSize, randomSize);
         CanBeHalted = true;
     }
 
+    //Set rigidbody to kinematic when hitting something
     private void OnCollisionEnter(Collision collision)
     {
         if(CanBeHalted)
@@ -32,7 +34,7 @@ public class Box : MonoBehaviour
             if(collision.gameObject.tag == "Box" || collision.gameObject.tag == "Ground" || collision.gameObject.tag == "Player")
             {
                 IsPlaced = true;
-                rigidBody.isKinematic = true;
+                rigidbody.isKinematic = true;
             }
         }
     }

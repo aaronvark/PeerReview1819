@@ -26,7 +26,7 @@ public class ObjectPooler : MonoBehaviour {
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
 
-	// Use this for initialization
+	// Create pools and put them in empty gameObjects to make sure the hierarchy window is clean.
 	void Start ()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
@@ -47,6 +47,7 @@ public class ObjectPooler : MonoBehaviour {
         }
     }
 
+    //Spawn an object from the corresponding pool with the given variables
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
     {
         if(!poolDictionary.ContainsKey(tag))
