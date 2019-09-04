@@ -53,11 +53,8 @@ public class Player : AbstractAvatarClass
     public override void Start()
     {
         base.Start();
-        if (currentPlayer == Players.Player1)
-        {
-            //Search players for the current selected player ( Lamba )
-            currentPlayerData = players.Find(p => p.id.Equals((int)currentPlayer));
-        }
+        //Search players for the current selected player ( Lamba )
+        currentPlayerData = players.Find(p => p.id.Equals((int)currentPlayer));     
     }
 
     private void Update()
