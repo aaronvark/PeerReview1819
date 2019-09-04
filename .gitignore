@@ -3,17 +3,12 @@
 
 # But not these files
 !.gitignore
-!/TimPeeters_Eind/[Aa]ssets/**/*.cs
-!/TimPeeters_Eind/[Aa]ssets/**/*.xml
-!/TimPeeters_Eind/[Aa]ssets/**/*.fnt
-!/TimPeeters_Eind/[Aa]ssets/**/*.cd
-!/TimPeeters_Eind/[Aa]ssets/**/*.asmref
-!/TimPeeters_Eind/UML_TimPeeters.png
-
+!/[Aa]ssets/**/*.cs
+!/[Aa]ssets/**/*.xml
 
 # even in subdirectories
 !*/
-
-# but not these subdirectories
-/[Aa]ssets/Standard Assets/
-
+Assets/Scripts/Player.cs
+Assets/Scripts/InputManager.cs
+Assets/Scripts/Enemy.cs
+Assets/Scripts/Actor.cs
