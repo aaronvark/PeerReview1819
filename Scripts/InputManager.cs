@@ -39,7 +39,10 @@ public class InputManager : Singleton<InputManager> {
     /// Updating the current block.
     /// </summary>
     public void UpdateCurrentBlock() {
-        _currentBlock = _blockGenerator.GenerateNewBlock();
+        GameObject go = _blockGenerator.GenerateNewBlock();
+        go = Instantiate<GameObject>(go);
+        CurrentBlock = go.GetComponent<Block>();
+
     }
 
 

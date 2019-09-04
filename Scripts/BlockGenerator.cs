@@ -5,13 +5,12 @@ using UnityEngine;
 public class BlockGenerator : MonoBehaviour {
 
     [SerializeField]
-    private Block[] _blockCollection;
-    [SerializeField]
-    private Transform beginPosition;
-
-    public Block GenerateNewBlock() {
+    private GameObject[] _blockCollection;
+   
+    public GameObject GenerateNewBlock() {
         int randomNumber = Random.Range(0, _blockCollection.Length);
-        Block block = _blockCollection[randomNumber];
+        GameObject block = _blockCollection[randomNumber];
+        Debug.Log(block);
         return block;
     }
 }

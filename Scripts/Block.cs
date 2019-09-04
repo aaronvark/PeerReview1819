@@ -10,16 +10,17 @@ public class Block : MonoBehaviour {
     [Range(1,1000)]
     [SerializeField]
     private float _rotateMultiplier;
-    [Range(1,1000)]
+    [Range(0,1)]
     [SerializeField]
     private float _movementMultiplier;
     [Range(0,10)]
     [SerializeField]
     private float _gravityModifier;
+    private bool _isCurrentBlock;
 
-    //private void Start() {
-    //    myRb.centerOfMass = Vector3.zero;
-    //}
+    public void Start() {
+        _isCurrentBlock = true;
+    }
 
     public void Update() {
         Fall();
@@ -47,8 +48,13 @@ public class Block : MonoBehaviour {
     }
 
     public void OnCollisionEnter(Collision coll) {
-        if(coll.gameObject.layer == LayerMask.NameToLayer("Ground")) {
-            InputManager.Instance.UpdateCurrentBlock();
+        if(coll.gameObject.layer == LayerMask.NameToLayer("Ground") || 
+            coll.gameObject.tag == "Block") {
+            if (_isCurrentBlock) {
+                InputManager.Instance.UpdateCurrentBlock();
+                _isCurrentBlock = false;
+            }
+
         }
     }
 }
