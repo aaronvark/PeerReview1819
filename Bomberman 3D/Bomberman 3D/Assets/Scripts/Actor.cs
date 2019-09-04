@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DropBomb : MonoBehaviour
-{
+public class Actor : MonoBehaviour {
+
     public GameObject bomb;
-    public bool bombDeployPossible = true;
+    public bool bombDeployCheck = true;
 
     // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKey(KeyCode.E) && bombDeployPossible)
-        {
-            bombDeployPossible = false;
+    private void Update() {
+        if (Input.GetKey(KeyCode.E) && bombDeployCheck) {
+            bombDeployCheck = false;
             DeployBomb();
         }
     }
 
-    void DeployBomb()
-    {
+    private void DeployBomb() {
         Instantiate(bomb, transform.position, Quaternion.identity);
     }
 }
