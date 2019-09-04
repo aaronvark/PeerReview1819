@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Registrates and acts upon player input
+/// </summary>
 public class PlayerInput : MonoBehaviour
 {
-    public MainBlockSpawner tempVar;
+    public MainBlockManager tempVar;
     public MainBlock currentMainBlock;
 
     private void Update() {

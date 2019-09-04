@@ -35,9 +35,17 @@ public class Grid : MonoBehaviour
                 break;
         }
 
+        //Checks if coordinates exist within the grid
         for (int i = 0; i < _potentialCoordinates.Count; i++) {
+
             if (!allBlocks.ContainsKey(_potentialCoordinates[i])) {
 
+                //Checks if the block has reached the bottom
+                if(_potentialCoordinates[i].yCoordinate < 0) {
+
+                    FindObjectOfType<MainBlockManager>().ResetMainBlock();
+                    return false;
+                }
                 return false;
             }
         }
@@ -66,8 +74,8 @@ public class Grid : MonoBehaviour
 
     private void CreateGrid() {
 
-        for (int x = 0; x < gridSizeX; x++) {
-            for (int y = 0; y < gridSizeY; y++) {
+        for (int y = 0; y < gridSizeY; y++) {
+            for (int x = 0; x < gridSizeX; x++) {
                 //DISCUSS
 
                 //Saves the current coordinates for later use

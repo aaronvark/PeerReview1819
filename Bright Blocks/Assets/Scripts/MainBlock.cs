@@ -7,13 +7,36 @@ using UnityEngine;
 /// </summary>
 public class MainBlock : Block
 {
-    public int positionOfAttachedBlocks;
+    //ShapeCode which decides where the blocks around the mainblock are
+    public int shapeCode;
+
+    //Singleton
+    public static MainBlock Instance {
+        get { return instance; }
+        private set { instance = value; }
+    }
+    private static MainBlock instance;
+    
 
     private Color currentColorOfSelfAndAttachedBlocks;
     private Color baseColor;
     private List<Block> attachedBlocks = new List<Block>();
 
+    
+
+
     private void Awake() {
+
+        //Singleton script
+        if (Instance == null) {
+
+            Instance = this;
+        }else if (Instance != this) {
+
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
 
         //Disables block script since it's no longer necessary
         GetComponent<Block>().enabled = false;
@@ -30,7 +53,7 @@ public class MainBlock : Block
 
     public void MoveTo(Direction _direction) {
 
-        if (Grid.CanShapeMove(_direction, ShapeCodeProcessor.ShapeCodeToInt(positionOfAttachedBlocks), coordinate)) {
+        if (Grid.CanShapeMove(_direction, ShapeCodeProcessor.ShapeCodeToInt(shapeCode), coordinate)) {
 
             switch (_direction) {
                 case Direction.Down:
@@ -53,7 +76,17 @@ public class MainBlock : Block
         }
     }
 
-    private void SwitchWithBlock(Coordinate _coordinate) {
+    public void SetAttachedBlocks() {
+
+        for (int i = 0; i < attachedBlocks.Count; i++) {
+
+            attachedBlocks[i].SetBlock();
+        }
+
+        SetBlock();
+    }
+
+    public void SwitchWithBlock(Coordinate _coordinate) {
 
         Vector3 _currentPosition = transform.position;
 
@@ -75,19 +108,11 @@ public class MainBlock : Block
         _blockToMoveTo.transform.position = _currentPosition;
     }
 
-    private void ColorUpdate() {
-
-        //Setsback the old color of the attached blocks and then applies the color to the new blocks (basically making is look like the blocks have moved)
-        ColorAttachedBlocks(baseColor);
-        UpdateAttachedBlocks();
-        ColorAttachedBlocks(currentColorOfSelfAndAttachedBlocks);
-    }
-
     //Should probably not be in this class
-    private void UpdateAttachedBlocks() {
+    public void UpdateAttachedBlocks() {
 
         attachedBlocks.Clear();
-        List<Coordinate> _coordinates = Grid.IntToCoords(ShapeCodeProcessor.ShapeCodeToInt(positionOfAttachedBlocks), coordinate);
+        List<Coordinate> _coordinates = Grid.IntToCoords(ShapeCodeProcessor.ShapeCodeToInt(shapeCode), coordinate);
 
         //Finds the blocks linked with the coordinates
         for (int i = 0; i < _coordinates.Count; i++) {
@@ -97,6 +122,14 @@ public class MainBlock : Block
                 attachedBlocks.Add(Grid.allBlocks[_coordinates[i]]);
             }
         }
+    }
+
+    private void ColorUpdate() {
+
+        //Setsback the old color of the attached blocks and then applies the color to the new blocks (basically making is look like the blocks have moved)
+        ColorAttachedBlocks(baseColor);
+        UpdateAttachedBlocks();
+        ColorAttachedBlocks(currentColorOfSelfAndAttachedBlocks);
     }
 
     private void ColorAttachedBlocks(Color _color) {

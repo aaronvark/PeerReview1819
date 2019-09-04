@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ShapeCodeProcessor : MonoBehaviour {
     
+    //TODO int to string then to array
     public static int[] ShapeCodeToInt(int _shapeCode) {
 
         //Calculates the number of blocks based on the position within the number
