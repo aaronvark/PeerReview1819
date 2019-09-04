@@ -3,15 +3,17 @@
 
 # But not these files
 !.gitignore
-!/[Aa]ssets/**/*.cs
-!/[Aa]ssets/**/*.txt
-!/[Aa]ssets/**/*.xml
-!/[Aa]ssets/**/*.fnt
-!/[Aa]ssets/**/*.cd
-!/[Aa]ssets/**/*.asmref
+!/TimPeeters_Eind/[Aa]ssets/**/*.cs
+!/TimPeeters_Eind/[Aa]ssets/**/*.xml
+!/TimPeeters_Eind/[Aa]ssets/**/*.fnt
+!/TimPeeters_Eind/[Aa]ssets/**/*.cd
+!/TimPeeters_Eind/[Aa]ssets/**/*.asmref
+!/TimPeeters_Eind/UML_TimPeeters.png
+
 
 # even in subdirectories
 !*/
 
 # but not these subdirectories
 /[Aa]ssets/Standard Assets/
+

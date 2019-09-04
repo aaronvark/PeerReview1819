@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamagable
 {
 
     #region Singleton
@@ -14,35 +14,39 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    GameObject cameraObject;
+    private GameObject cameraObject;
 
     [Header("Mouse Settings")]
-    [SerializeField] float xSensitivity = 0.5f;
-    [SerializeField] float ySensitivity = 0.5f;
+    [SerializeField] private float xSensitivity = 0.5f;
+    [SerializeField] private float ySensitivity = 0.5f;
 
     [Header("Rotation Settings")]
-    [SerializeField] Vector2 maxHorizontalRotation = new Vector2(-120, 120);
-    [SerializeField] Vector2 maxVerticalRotation = new Vector2(-80, 45);
+    [SerializeField] private Vector2 maxHorizontalRotation = new Vector2(-120, 120);
+    [SerializeField] private Vector2 maxVerticalRotation = new Vector2(-80, 45);
 
     [Header("Move Settings")]
-    [SerializeField] Vector2 movementRestrictions = new Vector2(-120, 120);
-    [SerializeField] float moveSpeed;
+    [SerializeField] private Vector2 movementRestrictions = new Vector2(-120, 120);
+    [SerializeField] private float moveSpeed;
 
     private float yaw = 0f;
     private float pitch = 0f;
 
     [Space]
     [Header("Gun Settings")]
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] float bulletForce;
-    [SerializeField] int bulletDamage;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private float bulletForce;
+    [SerializeField] private int bulletDamage;
 
     [Space]
     [Tooltip("Spawn positions of bullets (e.g. the position where the bullets come out of the rifle.")]
-    [SerializeField] GameObject[] spawnPositions;
+    [SerializeField] private GameObject[] spawnPositions;
+
+    [Space]
+    [Header("Health Settings")]
+    [SerializeField] private int health;
 
     //ObjectPool
-    ObjectPoolManager objectPool;
+    private ObjectPoolManager objectPool;
 
     private void Start()
     {
@@ -64,7 +68,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void DoMovement()
+    private void DoMovement()
     {
         float _horizontalAxis = Input.GetAxis("Horizontal");
 
@@ -74,10 +78,10 @@ public class Player : MonoBehaviour
 
         transform.position = newPlayerPostion;
 
-        //transform.position = Vector3.Lerp(transform.position, newPlayerPostion, Time.deltaTime * 1f);
+        //transform.position = Vector3.Lerp(transform.position, newPlayerPostion, Time.deltaTime * 0.5f);
     }
 
-    void DoLookAround()
+    private void DoLookAround()
     {
         float _mouseX = Input.GetAxis("Mouse X");
         float _mouseY = Input.GetAxis("Mouse Y");
@@ -91,7 +95,7 @@ public class Player : MonoBehaviour
         cameraObject.transform.eulerAngles = new Vector3(pitch, yaw, 0f);
     }
 
-    void DoShot()
+    private void DoShot()
     {
         for (int i = 0; i < spawnPositions.Length; i++)
         {
@@ -104,5 +108,15 @@ public class Player : MonoBehaviour
             _bulletClone.GetComponent<Rigidbody>().AddForce(cameraObject.transform.forward * bulletForce);
 
         }
+    }
+
+    public void Damage(int damage)
+    {
+
+    }
+
+    public void Die()
+    {
+
     }
 }

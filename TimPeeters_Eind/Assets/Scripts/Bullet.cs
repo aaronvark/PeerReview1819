@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour, IPoolObject
 {
-    ObjectPoolManager poolManager;
-
-    [SerializeField] float destroyTime;
+    [SerializeField] private float destroyTime;
 
     [HideInInspector] public int bulletDamage; //Will be assigned by gun firing the bullet.
+
     //public float bulletForce;
-
-    public Vector3 bulletDirection;
-
-    Rigidbody rb;
+    //public Vector3 bulletDirection;
+    private ObjectPoolManager poolManager;
+    private Rigidbody rb;
 
     private void Start()
     {
@@ -49,7 +47,7 @@ public class Bullet : MonoBehaviour, IPoolObject
         catch { }
     }
 
-    IEnumerator DisableAfterTime()
+    private IEnumerator DisableAfterTime()
     {
         yield return new WaitForSeconds(destroyTime);
 

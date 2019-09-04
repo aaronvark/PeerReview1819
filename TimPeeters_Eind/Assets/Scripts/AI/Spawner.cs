@@ -5,11 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class Spawner : MonoBehaviour
 {
-    ObjectPoolManager objectPool;
+    private ObjectPoolManager objectPool;
 
-    [SerializeField] Vector2 spawnAmountRange;
+    [SerializeField] private Vector2 spawnAmountRange;
 
-    BoxCollider spawnCollider;
+    private BoxCollider spawnCollider;
+
     public static Vector3 randomPointInBounds(Bounds bounds)
     {
         return new Vector3(
@@ -32,7 +33,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    void SpawnEnemy()
+    private void SpawnEnemy()
     {
         //TODO make only enemy types spawn from the pool. 
         //ObjectPoolManager.Pool _randomSpawnable = objectPool.pools[Random.Range(0, objectPool.pools.Count)];
