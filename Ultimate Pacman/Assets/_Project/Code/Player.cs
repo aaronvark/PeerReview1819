@@ -25,10 +25,10 @@ public class Player : MonoBehaviour
         rigidbody = GetComponent<Rigidbody2D>();
         shape = GetComponent<Shape>();
 
-        mouthAngle = new LerpValue(Thing);
+        mouthAngle = new LerpValue(ChangeMouthAnimationDirection);
     }
 
-    private float Thing(LerpValue _lerpValue) {
+    private float ChangeMouthAnimationDirection(LerpValue _lerpValue) {
         if (Mathf.Approximately(_lerpValue.Current, maxMouthAngle)) {
             return MOUTH_CLOSED_ANGLE;
         }
@@ -65,5 +65,9 @@ public class Player : MonoBehaviour
 
         shape.settings.startAngle = mouthAngle.Current;
         shape.settings.endAngle = 360f - mouthAngle.Current;
+    }
+
+    public void Die() {
+        Destroy(gameObject);
     }
 }
