@@ -35,10 +35,10 @@ public class LerpValue
         this.interpolationMethod = interpolationMethod;
     }
 
-    public LerpValue(Func<LerpValue, float> setTarget, float startFromValue, InterpolationMethod interpolationMethod)
+    public LerpValue(Func<LerpValue, float> setTarget, float startValue, InterpolationMethod interpolationMethod)
         : this(setTarget, interpolationMethod)
     {
-        StartFrom(startFromValue);
+        last = startValue;
     }
 
     private void Init()
@@ -46,11 +46,6 @@ public class LerpValue
         last = Current;
         target = setTarget(this);
         interpolationValue = 0f;
-    }
-
-    public void StartFrom(float value)
-    {
-        last = value;
     }
 
     public void Update()
