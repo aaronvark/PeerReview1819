@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
 
     //Public variables
     public float Speed;
-    public float RotationSpeed;
     public float JumpForce;
     public float GravityModifier;
 
@@ -40,16 +39,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        //Get Axises
+        float yStore = moveDirection.y;
+
         float horizontalAxis = Input.GetAxis("Horizontal");
         float verticalAxis = Input.GetAxis("Vertical");
 
-        moveDirection = new Vector3(horizontalAxis * Speed, moveDirection.y ,verticalAxis * Speed);
+        moveDirection = ((transform.forward * verticalAxis) + (transform.right * horizontalAxis)).normalized * Speed;
+
+        moveDirection.y = yStore;
     }
 
     void Jump()
     {
-        if (groundedChecker.Grounded)
+        if (characterController.isGrounded)
         {
             moveDirection.y = 0f;
 

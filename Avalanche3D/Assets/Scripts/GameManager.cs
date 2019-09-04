@@ -8,8 +8,15 @@ public class GameManager : MonoBehaviour
 
     public GameObject Player;
 
+    public float Score;
+
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void AddScore(float score)
+    {
+        score += Score;
     }
 }
