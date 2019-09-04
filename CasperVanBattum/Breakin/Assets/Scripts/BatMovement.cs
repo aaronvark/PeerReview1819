@@ -1,11 +1,10 @@
 using UnityEngine;
 
 public class BatMovement : MonoBehaviour {
-
 	[SerializeField] private float radius;
 
 	private Camera cam;
-	
+
 	public float Angle { get; private set; }
 	public float Radius => radius; //TODO move this out of this class, it doesn't belong here
 
@@ -21,6 +20,12 @@ public class BatMovement : MonoBehaviour {
 		SetPosition();
 	}
 
+	private void OnDrawGizmos() {
+		// Handy gizmo that visualizes the sphere where the bat can go
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(Vector3.zero, radius);
+	}
+
 	/// <summary>
 	/// Calculate the angle from the center of the ring towards the mouse cursor
 	/// </summary>
@@ -29,7 +34,7 @@ public class BatMovement : MonoBehaviour {
 		Vector3 _mousePos = Input.mousePosition;
 		// Turn the pixels into a point in the game world; use Vector2 to discard z-coordinate (not used in 2d)
 		Vector2 _mousePosWorld = cam.ScreenToWorldPoint(_mousePos);
-		
+
 		// The angle of the bat should be relative to the positive x-axis (same as on a unit circle)
 		Angle = Vector2.SignedAngle(Vector2.right, _mousePosWorld.normalized);
 	}
@@ -53,11 +58,5 @@ public class BatMovement : MonoBehaviour {
 
 		// Set the position
 		transform.position = _newPos;
-	}
-
-	private void OnDrawGizmos() {
-		// Handy gizmo that visualizes the sphere where the bat can go
-		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere(Vector3.zero, radius);
 	}
 }

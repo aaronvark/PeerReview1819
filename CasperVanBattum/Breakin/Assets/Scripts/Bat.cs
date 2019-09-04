@@ -2,7 +2,6 @@
 
 [RequireComponent(typeof(BatMovement))]
 public class Bat : MonoBehaviour {
-
 	private BatMovement movement;
 
 	/// <summary>

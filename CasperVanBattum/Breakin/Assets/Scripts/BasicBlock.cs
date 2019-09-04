@@ -1,7 +1,6 @@
 ﻿public class BasicBlock : Block {
-
 	private int strength = 1;
-	
+
 	protected override void OnHit() {
 		strength--;
 

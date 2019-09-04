@@ -2,7 +2,6 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour {
-
 	[SerializeField] private float speed = 0.5f;
 	[SerializeField] private Bat bat;
 	[SerializeField] private int lives;
@@ -20,7 +19,7 @@ public class Ball : MonoBehaviour {
 		get => lives;
 		set {
 			lives = value;
-			
+
 			// Run game over sequence once the lives have reached a value lower than 0
 			if (lives < 0) GameOver();
 		}
@@ -70,10 +69,10 @@ public class Ball : MonoBehaviour {
 	/// </summary>
 	private void Unlock() {
 		locked = false;
-		
+
 		// Add velocity in the inverse direction of the bat (inwards) with a magnitude of the speed parameter
 		rb.velocity = -bat.Dir * speed;
-		
+
 		// Remove bat as parent
 		transform.SetParent(null);
 	}
@@ -91,7 +90,7 @@ public class Ball : MonoBehaviour {
 		transform.SetParent(bat.transform);
 		// Re-initialize all the transform values to their defaults
 		transform.localPosition = startPos;
-		transform.localRotation = Quaternion.Euler(0,0,0);
+		transform.localRotation = Quaternion.Euler(0, 0, 0);
 		transform.localScale = startScale;
 	}
 

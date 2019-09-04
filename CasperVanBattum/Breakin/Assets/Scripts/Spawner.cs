@@ -2,6 +2,7 @@
 using UnityEngine;
 
 public class Spawner : MonoBehaviour {
+	public float Radius => spawnRadius;
 
 	[SerializeField] private Block standardBlock;
 	[SerializeField] private float spawnRadius;
@@ -9,8 +10,6 @@ public class Spawner : MonoBehaviour {
 
 	private List<Ring> rings;
 
-	public float Radius => spawnRadius;
-	
 	private void Start() {
 		rings = new List<Ring>();
 
@@ -24,5 +23,4 @@ public class Spawner : MonoBehaviour {
 		// Create a new ring and add it to the list for future reference
 		rings.Add(new Ring(rings.Count, this, blockCountRing, standardBlock));
 	}
-	
 }
