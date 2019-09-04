@@ -82,8 +82,6 @@ public class MainBlock : Block
 
             attachedBlocks[i].SetBlock();
         }
-
-        SetBlock();
     }
 
     public void SwitchWithBlock(Coordinate _coordinate) {
@@ -117,7 +115,7 @@ public class MainBlock : Block
         //Finds the blocks linked with the coordinates
         for (int i = 0; i < _coordinates.Count; i++) {
 
-            if (Grid.allBlocks.ContainsKey(_coordinates[i])) {
+            if (Grid.allBlocks[_coordinates[i]] != this) {
 
                 attachedBlocks.Add(Grid.allBlocks[_coordinates[i]]);
             }

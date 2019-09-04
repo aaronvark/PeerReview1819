@@ -35,13 +35,13 @@ public class Grid : MonoBehaviour
                 break;
         }
 
-        //Checks if coordinates exist within the grid
+        //Checks if coordinates exist within the grid and are not already occupied by colored blocks
         for (int i = 0; i < _potentialCoordinates.Count; i++) {
 
-            if (!allBlocks.ContainsKey(_potentialCoordinates[i])) {
+            if (!allBlocks.ContainsKey(_potentialCoordinates[i]) || allBlocks[_potentialCoordinates[i]].isSet) {
 
-                //Checks if the block has reached the bottom
-                if(_potentialCoordinates[i].yCoordinate < 0) {
+                //Checks if the block has reached the bottom or a colored block
+                if(_potentialCoordinates[i].yCoordinate < 0 || (_direction == Direction.Down && allBlocks[_potentialCoordinates[i]].isSet)) {
 
                     FindObjectOfType<MainBlockManager>().ResetMainBlock();
                     return false;
