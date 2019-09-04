@@ -20,6 +20,7 @@ public class Singleton<T> : MonoBehaviour, ISerializationCallbackReceiver where 
     /// Returns the instance of this singleton.
     /// </summary>
     public static T instance;
+
     [HideInInspector] [SerializeField] private T cashedInstance = null;
 
     [Header("Singleton")]
@@ -28,15 +29,19 @@ public class Singleton<T> : MonoBehaviour, ISerializationCallbackReceiver where 
 
     private void Awake()
     {
-        if (instance == null)
+        T thisIstance = transform.GetComponent<T>();
+        if (instance == null) 
         {
-            instance = transform.GetComponent<T>();
-            if (dontDestroyOnLoad)
-                DontDestroyOnLoad(gameObject);
+            instance = thisIstance;
         }
-        else
+
+        if (!instance.Equals(thisIstance)) 
         {
             Destroy(gameObject);
+        }
+        else if (dontDestroyOnLoad)
+        {
+            DontDestroyOnLoad(gameObject);
         }
     }
 
