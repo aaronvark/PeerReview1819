@@ -23,7 +23,7 @@ public class Weapon : MonoBehaviour
     public ObjectPooler objectPooler;
     private bool ready = true;
     float amount = 10;
-    
+
     /*
     string currentProjectileName;
     Transform firePoint;
@@ -41,7 +41,7 @@ public class Weapon : MonoBehaviour
     public void FireWeapon(int _damage)
     {
         GameObject projectile = objectPooler.SpawnFromPool(thisWeaponData.projectileName, thisWeaponData.firePoint.position, Quaternion.identity);
-        if(projectile != null)
+        if (projectile != null)
         {
             projectile.GetComponent<Projectile>().damage = thisWeaponData.damage;
         }

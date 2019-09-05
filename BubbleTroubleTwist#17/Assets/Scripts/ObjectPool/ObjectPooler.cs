@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Bas.Interfaces;
 
-public class ObjectPooler : MonoBehaviour
+public class ObjectPooler : MonoBehaviour, IPooler
 {
 
     [System.Serializable]
@@ -14,21 +15,23 @@ public class ObjectPooler : MonoBehaviour
     }
 
     #region Singleton
-
-    public static ObjectPooler Instance;
-
-    private void Awake()
+    private static ObjectPooler instance;
+    public static IPooler Instance
     {
-        Instance = this;
+        get
+        {
+            if (instance == null)
+                instance = new ObjectPooler();
+            return instance;
+        }
     }
-
     #endregion
 
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
 
     // Use this for initialization
-    void Start()
+    public void Start()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
@@ -40,7 +43,7 @@ public class ObjectPooler : MonoBehaviour
 
             for (int i = 0; i < pool.size; i++)
             {
-                GameObject obj = Instantiate(pool.prefab, containerObject.transform);
+                GameObject obj = GameObject.Instantiate(pool.prefab, containerObject.transform);
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }

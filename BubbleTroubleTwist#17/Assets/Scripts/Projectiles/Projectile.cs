@@ -9,8 +9,6 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-
-
         if (collision.gameObject.tag == "Enemy")
         {
             Enemy _enemy = collision.gameObject.GetComponent<Enemy>();

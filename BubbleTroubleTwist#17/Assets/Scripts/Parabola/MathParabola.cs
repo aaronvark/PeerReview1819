@@ -3,7 +3,6 @@ using System;
 
 public class MathParabola
 {
-
     public static Vector3 Parabola(Vector3 start, Vector3 end, float height, float t)
     {
         Func<float, float> f = x => -4 * height * x * x + 4 * height * x;
