@@ -6,7 +6,7 @@ public class SpawnerHeightChanger : MonoBehaviour
 {
     private void OnTriggerStay(Collider other)
     {
-        if(other.tag == "Box")
+        if (other.tag == "Box")
         {
             if (other.GetComponent<Box>().IsPlaced)
             {

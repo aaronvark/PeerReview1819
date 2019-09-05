@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //Singleton
     public static GameManager Instance;
 
+    //References
     public GameObject Player;
 
+    //Public Variables
     public float Score;
 
     private void Awake()

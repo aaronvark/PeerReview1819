@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    //Scripts
     GameManager gameManager;
 
+    //References
     Transform target;
+    public Transform Pivot;
 
+    //Public Variables
     public Vector3 Offset;
-
     public float RotationSpeed;
 
-    public Transform Pivot;
 
     // Start is called before the first frame update
     void Start()
@@ -56,9 +58,9 @@ public class CameraController : MonoBehaviour
 
     void CheckMaxPosition()
     {
-        if(transform.position.y < target.position.y)
+        if (transform.position.y < target.position.y)
         {
-            transform.position = new Vector3(transform.position.x, target.position.y -0.5f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, target.position.y - 0.5f, transform.position.z);
         }
     }
 }

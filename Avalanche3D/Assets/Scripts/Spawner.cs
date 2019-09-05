@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    //Scripts
     ObjectPooler objectPooler;
+
+    //Public Variables
     public float SpawnTime;
 
     // Start is called before the first frame update
@@ -16,7 +19,7 @@ public class Spawner : MonoBehaviour
 
     void SpawnCube()
     {
-        Vector3 position = new Vector3(Random.Range(-4f,4f), transform.position.y, Random.Range(-4f, 4f));
+        Vector3 position = new Vector3(Random.Range(-4f, 4f), transform.position.y, Random.Range(-4f, 4f));
         objectPooler.SpawnFromPool("Cube", position, Quaternion.identity);
     }
 }

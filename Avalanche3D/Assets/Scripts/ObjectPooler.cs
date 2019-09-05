@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPooler : MonoBehaviour {
+public class ObjectPooler : MonoBehaviour
+{
 
     [System.Serializable]
     public class Pool
@@ -26,18 +27,18 @@ public class ObjectPooler : MonoBehaviour {
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
 
-	// Create pools and put them in empty gameObjects to make sure the hierarchy window is clean.
-	void Start ()
+    // Create pools and put them in empty gameObjects to make sure the hierarchy window is clean.
+    void Start()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        foreach(Pool pool in pools)
+        foreach (Pool pool in pools)
         {
             pool.tag = pool.prefab.name;
             GameObject containerObject = new GameObject(pool.tag);
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
-            for(int i = 0; i <pool.size; i++)
+            for (int i = 0; i < pool.size; i++)
             {
                 GameObject obj = Instantiate(pool.prefab, containerObject.transform);
                 obj.SetActive(false);
@@ -50,21 +51,21 @@ public class ObjectPooler : MonoBehaviour {
     //Spawn an object from the corresponding pool with the given variables
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
     {
-        if(!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(tag))
         {
             Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
             return null;
         }
 
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
-        
+
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = rotation;
 
         poolDictionary[tag].Enqueue(objectToSpawn);
 
-        return objectToSpawn;  
+        return objectToSpawn;
     }
-	
+
 }

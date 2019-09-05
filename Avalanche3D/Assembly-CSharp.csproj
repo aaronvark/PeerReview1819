@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\GroundedChecker.cs" />
     <Compile Include="Assets\Scripts\ObjectPooler.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\PlayerMovementV2.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\SpawnerHeightChanger.cs" />
     <Reference Include="Cinemachine">

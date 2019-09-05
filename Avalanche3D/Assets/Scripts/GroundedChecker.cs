@@ -4,21 +4,34 @@ using UnityEngine;
 
 public class GroundedChecker : MonoBehaviour
 {
+    // Public Variables
     public bool Grounded;
+    public bool Walled;
+    public Vector3 Opposite;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Ground" || other.tag == "Box")
+        if (other.tag == "Ground")
         {
             Grounded = true;
+        }
+        if (other.tag == "Box")
+        {
+            Walled = true;
+            Opposite = -(other.transform.position - transform.position);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Ground" || other.tag == "Box")
+        if (other.tag == "Ground")
         {
             Grounded = false;
+        }
+        if (other.tag == "Box")
+        {
+            Walled = false;
+            Opposite = -(other.transform.position - transform.position);
         }
     }
 }
