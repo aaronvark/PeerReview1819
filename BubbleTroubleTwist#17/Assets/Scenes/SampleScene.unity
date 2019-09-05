@@ -219,8 +219,8 @@ MonoBehaviour:
     prefab: {fileID: 2381273675624277185, guid: fb9b86a68ff052b45bec7a831b4b38fc,
       type: 3}
     size: 100
-  - tag: 0
-    prefab: {fileID: 8402491054278034305, guid: d4ebe3a599f646b46ac5b86ef965de5d,
+  - tag: Player
+    prefab: {fileID: 7790578033780216300, guid: 5eff4129470b44245bec1b8ab5a935f1,
       type: 3}
     size: 3
   - tag: 1
@@ -367,12 +367,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playersStats:
-  - id: 0
+  - id: Player
     horizontalAxis: Horizontal
     verticalAxis: Vertical
     level: 1
     spawnVector: {x: 0, y: 1.135, z: 0}
-  - id: 1
+  - id: Player
     horizontalAxis: Horizontal1
     verticalAxis: Vertical1
     level: 2

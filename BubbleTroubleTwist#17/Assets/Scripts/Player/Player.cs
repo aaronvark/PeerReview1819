@@ -21,7 +21,6 @@ public class Player : AbstractAvatarClass
         //Create a weapon and give its weapon data
         currentWeapon = new Weapon();
         currentWeapon.thisWeaponData = usingWeaponData;
-        rBody = GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -33,5 +32,10 @@ public class Player : AbstractAvatarClass
     private void Fire()
     {
         StartCoroutine(currentWeapon.WaitForCooldown(cooldown, timeBetween));
+    }
+
+    private void OnDestroy()
+    {
+        OnDeathHandler -= OnDeath;
     }
 }

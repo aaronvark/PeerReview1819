@@ -4,7 +4,7 @@ using UnityEngine;
 using Bas.Interfaces;
 
 [System.Serializable]
-public class PlayerData 
+public class PlayerData : StatsBase
 {
     public string id;
     public string horizontalAxis;
@@ -17,6 +17,7 @@ public class PlayerManager : MonoBehaviour, IPlayer
 {
     public List<PlayerData> playersStats;
     public GameObject player;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -32,30 +33,9 @@ public class PlayerManager : MonoBehaviour, IPlayer
     {
         foreach(PlayerData playerStats in playersStats)
         {
-            //GameObject playerGameObject = ObjectPooler.Instance.SpawnFromPool(playerStats.id, playerStats.spawnVector, Quaternion.identity);
+            GameObject playerGameObject = ObjectPooler.Instance.SpawnFromPool(playerStats.id, playerStats.spawnVector, Quaternion.identity);
             //playerGameObject.GetComponent<Player>().entityDataHandler += SetPlayerData;
-            GameObject playerGameObject = Instantiate(player, playerStats.spawnVector, Quaternion.identity);
-            playerGameObject.GetComponent<PlayerMovement>().entityStats = playerStats;
+            playerGameObject.GetComponent<IStats<PlayerData>>().SetStats(playerStats);
         }
     }
-
-    private void SetPlayerData(PlayerData data)
-    {
-
-    }
-
-    /*
-    #region Singleton
-    private static PlayerManager instance;
-    public static PlayerManager Instance
-    {
-        get
-        {
-            if (instance == null)
-                instance = new PlayerManager();
-            return instance;
-        }
-    }
-    #endregion
-    */
 }

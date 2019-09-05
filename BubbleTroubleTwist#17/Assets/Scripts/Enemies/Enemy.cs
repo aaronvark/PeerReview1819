@@ -2,42 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class Game
-{
-    public void Start()
-    {
-        
-    }
-}
-
-
-public class EnemyBase
-{
-    public int HP { get; protected set; }
-    public EnemyBase(int hp)
-    {
-        HP = hp;
-    }
-
-    public virtual void ReceiveHit(int damage)
-    {
-        HP -= damage;
-        if(HP <= 0)
-        {
-            Die();
-        }
-    }
-
-    private void Die()
-    {
-        //DO SOMETHING
-    }
-}
-
 public class Enemy : AbstractAvatarClass
 {
-
     public string splitChildName;
     public Transform[] spawnPoints;
 

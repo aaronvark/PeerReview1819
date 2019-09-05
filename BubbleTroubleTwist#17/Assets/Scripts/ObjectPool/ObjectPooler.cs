@@ -25,7 +25,15 @@ public class ObjectPooler : MonoBehaviour, IPooler
             return instance;
         }
     }
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     #endregion
+
+
 
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;

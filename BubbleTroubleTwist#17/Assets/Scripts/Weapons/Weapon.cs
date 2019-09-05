@@ -20,27 +20,12 @@ public class WeaponData
 public class Weapon : MonoBehaviour
 {
     public WeaponData thisWeaponData;
-    public ObjectPooler objectPooler;
     private bool ready = true;
     float amount = 10;
 
-    /*
-    string currentProjectileName;
-    Transform firePoint;
-    Projectile currentProjectile;
-    int damage;
-    bool ready = true;
-
-    public Weapon(string _currentProjectileName,Transform _firePoint, Projectile _projectile, int _damage)
-    {
-        currentProjectileName = _currentProjectileName;
-        firePoint = _firePoint;
-        currentProjectile = _projectile;
-        damage = _damage;
-    }*/
     public void FireWeapon(int _damage)
     {
-        GameObject projectile = objectPooler.SpawnFromPool(thisWeaponData.projectileName, thisWeaponData.firePoint.position, Quaternion.identity);
+        GameObject projectile = ObjectPooler.Instance.SpawnFromPool(thisWeaponData.projectileName, thisWeaponData.firePoint.position, Quaternion.identity);
         if (projectile != null)
         {
             projectile.GetComponent<Projectile>().damage = thisWeaponData.damage;
