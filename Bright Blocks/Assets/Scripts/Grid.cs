@@ -8,40 +8,40 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    public static Dictionary<Coordinate, Block> allBlocks = new Dictionary<Coordinate, Block>();
+    public static Dictionary<Vector2, Block> allBlocks = new Dictionary<Vector2, Block>();
 
-    [SerializeField] private int gridSizeX, gridSizeY;
+    [SerializeField] private Vector2 gridSize;
     [SerializeField] private GameObject blockPrefab;
 
     private void Awake() {
         CreateGrid();
     }
 
-    public static bool CanShapeMove(Direction _direction, int[] _shapeCodeArray, Coordinate _fromCoordinate) {
+    public static bool CanShapeMove(Direction _direction, int[] _shapeCodeArray, Vector2 _fromCoordinate) {
 
-        List<Coordinate> _potentialCoordinates = new List<Coordinate>();
+        List<Vector2> _potentialCoordinate = new List<Vector2>();
 
         switch (_direction) {
             case Direction.Down:
-                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate - 1));
+                _potentialCoordinate = IntToCoords(_shapeCodeArray, new Vector2(_fromCoordinate.x, _fromCoordinate.y - 1));
                 break;
             case Direction.Left:
-                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate - 1, _fromCoordinate.yCoordinate));
+                _potentialCoordinate = IntToCoords(_shapeCodeArray, new Vector2(_fromCoordinate.x - 1, _fromCoordinate.y));
                 break;
             case Direction.Right:
-                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate + 1, _fromCoordinate.yCoordinate));
+                _potentialCoordinate = IntToCoords(_shapeCodeArray, new Vector2(_fromCoordinate.x + 1, _fromCoordinate.y));
                 break;
             default:
                 break;
         }
 
-        //Checks if coordinates exist within the grid and are not already occupied by colored blocks
-        for (int i = 0; i < _potentialCoordinates.Count; i++) {
+        //Checks if Vector2s exist within the grid and are not already occupied by colored blocks
+        for (int i = 0; i < _potentialCoordinate.Count; i++) {
 
-            if (!allBlocks.ContainsKey(_potentialCoordinates[i]) || allBlocks[_potentialCoordinates[i]].isSet) {
+            if (!allBlocks.ContainsKey(_potentialCoordinate[i]) || allBlocks[_potentialCoordinate[i]].isSet) {
 
                 //Checks if the block has reached the bottom or a colored block
-                if(_potentialCoordinates[i].yCoordinate < 0 || (_direction == Direction.Down && allBlocks[_potentialCoordinates[i]].isSet)) {
+                if(_potentialCoordinate[i].y < 0 || (_direction == Direction.Down && allBlocks[_potentialCoordinate[i]].isSet)) {
 
                     FindObjectOfType<MainBlockManager>().ResetMainBlock();
                     return false;
@@ -53,20 +53,20 @@ public class Grid : MonoBehaviour
         return true;
     }
 
-    public static List<Coordinate> IntToCoords(int[] _shapeCodeArray, Coordinate _fromCoordinate) {
+    public static List<Vector2> IntToCoords(int[] _shapeCodeArray, Vector2 _fromCoordinate) {
 
-        List<Coordinate> _coordinates = new List<Coordinate>();
+        List<Vector2> _coordinates = new List<Vector2>();
 
         for (int i = 0; i < _shapeCodeArray[0]+1; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate + i));
+            _coordinates.Add(new Vector2(_fromCoordinate.x, _fromCoordinate.y + i));
         }
 
         for (int i = 0; i < _shapeCodeArray[1]+1; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate - i, _fromCoordinate.yCoordinate));
+            _coordinates.Add(new Vector2(_fromCoordinate.x - i, _fromCoordinate.y));
         }
 
         for (int i = 0; i < _shapeCodeArray[2]+1; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate + i, _fromCoordinate.yCoordinate));
+            _coordinates.Add(new Vector2(_fromCoordinate.x + i, _fromCoordinate.y));
         }
 
         return _coordinates;
@@ -74,17 +74,17 @@ public class Grid : MonoBehaviour
 
     private void CreateGrid() {
 
-        for (int y = 0; y < gridSizeY; y++) {
-            for (int x = 0; x < gridSizeX; x++) {
+        for (int y = 0; y < gridSize.y; y++) {
+            for (int x = 0; x < gridSize.x; x++) {
                 //DISCUSS
 
-                //Saves the current coordinates for later use
-                Coordinate _currentCoordinate = new Coordinate(x, y);
+                //Saves the current Vector2s for later use
+                Vector2 _currentCoordinate = new Vector2(x, y);
 
                 //Creates a block, then adds the Block script to the object
                 Block _newBlock = Instantiate(blockPrefab, new Vector3(x, y), Quaternion.identity, transform).AddComponent<Block>();
 
-                //Initializes the newBlock with the coordinates
+                //Initializes the newBlock with the Vector2s
                 _newBlock.Initialize(_currentCoordinate);
                 
 

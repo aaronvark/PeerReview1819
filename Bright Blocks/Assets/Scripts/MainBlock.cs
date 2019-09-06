@@ -57,13 +57,13 @@ public class MainBlock : Block
 
             switch (_direction) {
                 case Direction.Down:
-                    SwitchWithBlock(new Coordinate(coordinate.xCoordinate, coordinate.yCoordinate - 1));
+                    SwitchWithBlock(new Vector2(coordinate.x, coordinate.y - 1));
                     break;
                 case Direction.Left:
-                    SwitchWithBlock(new Coordinate(coordinate.xCoordinate - 1, coordinate.yCoordinate));
+                    SwitchWithBlock(new Vector2(coordinate.x - 1, coordinate.y));
                     break;
                 case Direction.Right:
-                    SwitchWithBlock(new Coordinate(coordinate.xCoordinate + 1, coordinate.yCoordinate));
+                    SwitchWithBlock(new Vector2(coordinate.x + 1, coordinate.y));
                     break;
                 default:
                     break;
@@ -84,7 +84,7 @@ public class MainBlock : Block
         }
     }
 
-    public void SwitchWithBlock(Coordinate _coordinate) {
+    public void SwitchWithBlock(Vector2 _coordinate) {
 
         Vector3 _currentPosition = transform.position;
 
@@ -97,7 +97,7 @@ public class MainBlock : Block
         Grid.allBlocks.Add(_coordinate, this);
         Grid.allBlocks.Add(this.coordinate, _blockToMoveTo);
 
-        //Changes the coordinates on the block
+        //Changes the Vector2s on the block
         _blockToMoveTo.coordinate = this.coordinate;
         coordinate = _coordinate;
 
@@ -110,14 +110,14 @@ public class MainBlock : Block
     public void UpdateAttachedBlocks() {
 
         attachedBlocks.Clear();
-        List<Coordinate> _coordinates = Grid.IntToCoords(ShapeCodeProcessor.ShapeCodeToInt(shapeCode), coordinate);
+        List<Vector2> _Vector2s = Grid.IntToCoords(ShapeCodeProcessor.ShapeCodeToInt(shapeCode), coordinate);
 
-        //Finds the blocks linked with the coordinates
-        for (int i = 0; i < _coordinates.Count; i++) {
+        //Finds the blocks linked with the Vector2s
+        for (int i = 0; i < _Vector2s.Count; i++) {
 
-            if (Grid.allBlocks[_coordinates[i]] != this) {
+            if (Grid.allBlocks[_Vector2s[i]] != this) {
 
-                attachedBlocks.Add(Grid.allBlocks[_coordinates[i]]);
+                attachedBlocks.Add(Grid.allBlocks[_Vector2s[i]]);
             }
         }
     }

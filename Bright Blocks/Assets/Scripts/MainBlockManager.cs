@@ -7,14 +7,8 @@ using UnityEngine;
 /// </summary>
 public class MainBlockManager : MonoBehaviour {
 
-    [SerializeField] private int spawnPositionX, spawnPositionY;
-    private Coordinate spawnCoordinate;
+    [SerializeField] private Vector2 spawnCoordinate;
     private MainBlock mainBlock;
-
-    private void Start() {
-
-        spawnCoordinate = new Coordinate(spawnPositionX, spawnPositionY);
-    }
 
     public void SpawnMainBlock() {
 
@@ -34,11 +28,11 @@ public class MainBlockManager : MonoBehaviour {
 
         Shape _currentShape = ChooseRandomShape();
 
-        //Assigns color to the spawncoordinate block
+        //Assigns color to the spawnVector2 block
         Grid.allBlocks[spawnCoordinate].AssignColor(_currentShape.color);
         Grid.allBlocks[spawnCoordinate].SetBlock();
 
-        //Switches the mainblock with the spawncoordinate block
+        //Switches the mainblock with the spawnCoordinate block
         mainBlock.SwitchWithBlock(spawnCoordinate);
 
         //Gives the mainblock his new shape information

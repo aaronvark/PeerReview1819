@@ -9,11 +9,11 @@ public class Block : MonoBehaviour
 {
 
     public bool isSet;
-    public Coordinate coordinate;
+    public Vector2 coordinate;
 
     protected Renderer rend;
 
-    public void Initialize(Coordinate _coordinate) {
+    public void Initialize(Vector2 _coordinate) {
         rend = GetComponent<Renderer>();
         coordinate = _coordinate;
     }
