@@ -6,24 +6,29 @@ public class ActorManager : MonoBehaviour
 {
     public int amountPlayersAlive;
 
-    [SerializeField] private List <Actor> _actors;
+    [SerializeField] private List<Actor> _actors;
 
     private static ActorManager _instance;
 
-    public static ActorManager Instance {
-        get {
+    public static ActorManager Instance
+    {
+        get
+        {
             return _instance;
         }
-        set {
+        set
+        {
             _instance = value;
         }
     }
 
-    public void Start() {
+    public void Start()
+    {
         _instance = this;
     }
 
-    public void RemoveFromList(Actor actor) {
+    public void RemoveFromList(Actor actor)
+    {
         _actors.Remove(actor);
     }
 }
