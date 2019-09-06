@@ -59,8 +59,25 @@ public class Player : Singleton<Player>
         shape.settings.endAngle = 360f - mouthAngle.Current;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Ghost ghost = collision.transform.GetComponent<Ghost>();
+        if (!ghost)
+            return;
+
+        if (ghost.Vulnerable)
+        {
+            ghost.Consume();
+        }
+        else
+        {
+            Die();
+        }
+    }
+
     public void Die()
     {
         Destroy(gameObject);
+        SceneHandler.Instance.LoadScene("Game Over");
     }
 }
