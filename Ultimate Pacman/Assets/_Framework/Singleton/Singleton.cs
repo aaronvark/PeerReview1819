@@ -91,10 +91,15 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         GameObject gameObject = this.gameObject;
 
-        if (gameObject.scene.GetRootGameObjects()
+        // Check if this scene already contains an instance of the Singleton
+        bool sceneHasInstance = gameObject.scene.GetRootGameObjects()
             .Any(go => go.GetComponentInChildren<T>(true) 
-                && !go.GetComponentInChildren<T>(true).gameObject.Equals(gameObject))
-            )
+                && (!go.GetComponentInChildren<T>(true).gameObject.Equals(gameObject)
+                    || gameObject.GetComponents<T>().Length > 1)
+            );
+
+        // If the scene already contains an instance, remove THIS instance and all its added RequiredComponents
+        if (sceneHasInstance)
         {
             DestroyImmediate(this);
 
