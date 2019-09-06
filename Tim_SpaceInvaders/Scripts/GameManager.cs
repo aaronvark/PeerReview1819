@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent (typeof(ObjectPoolManager))]
 public class GameManager : MonoBehaviour
 {
     #region Singleton

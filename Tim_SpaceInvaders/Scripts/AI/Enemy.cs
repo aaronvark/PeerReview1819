@@ -7,18 +7,18 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
 
     [Header("Move Settings")]
     [Tooltip("The distance from the player for which it stops.")]
-    [SerializeField] private float stopDistance = 200f;
-    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] float stopDistance = 200f;
+    [SerializeField] float moveSpeed = 10f;
 
     [Header("Health Settings")]
-    [SerializeField] private int health = 40;
+    [SerializeField] int health = 40;
 
     [Header("Gun Settings")]
-    [SerializeField] private float maxWaitTimeForShot;
+    [SerializeField] float maxWaitTimeForShot;
 
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float bulletForce;
-    [SerializeField] private int bulletDamage;
+    [SerializeField] Pool bulletPool;
+    [SerializeField] float bulletForce;
+    [SerializeField] int bulletDamage;
 
     [Space]
     [Tooltip("Spawn positions of bullets (e.g. the position where the bullets come out of the rifle.")]
@@ -31,11 +31,19 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
     [Header("Death Settings")]
 
     //TODO pool death particles?
-    [SerializeField] private GameObject deathParticles;
+    [SerializeField] Pool particlePool;
 
     private void Start()
     {
         objectPool = ObjectPoolManager.Instance;
+
+        if (!objectPool.pools.Contains(bulletPool) && !objectPool.pools.Contains(particlePool))
+        {
+            objectPool.AddPool(bulletPool);
+            objectPool.AddPool(particlePool);
+        }
+        
+
         target = Player.Instance.gameObject;
 
         moveSpeed = moveSpeed * Random.Range(0.2f, 1.2f);
@@ -49,8 +57,6 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
     public void OnObjectDespawn()
     {
         this.gameObject.SetActive(false);
-
-        Instantiate(deathParticles, transform.position, transform.rotation);
 
         StopCoroutine(DoShot());
     }
@@ -83,6 +89,8 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
 
     public void Die()
     {
+        objectPool.SpawnFromPool(particlePool, transform.position, particlePool.prefab.transform.rotation);
+
         OnObjectDespawn();
     }
 
@@ -96,7 +104,7 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
             Vector3 _targetDirection = target.transform.position - spawnPositions[i].transform.position;
             //Debug.Log(_targetDirection);
 
-            GameObject _bulletClone = objectPool.SpawnFromPool("Enemy1Bullets", spawnPositions[i].transform.position, spawnPositions[i].transform.rotation);
+            GameObject _bulletClone = objectPool.SpawnFromPool(bulletPool, spawnPositions[i].transform.position, spawnPositions[i].transform.rotation);
             _bulletClone.GetComponent<Bullet>().bulletDamage = bulletDamage;
 
             //_bulletClone.GetComponent<Bullet>().bulletForce = bulletForce;

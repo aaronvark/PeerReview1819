@@ -6,7 +6,9 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     private ObjectPoolManager objectPool;
+    [SerializeField] List<Pool> spawnables;
 
+    [Space]
     [SerializeField] private Vector2 spawnAmountRange;
 
     private BoxCollider spawnCollider;
@@ -23,22 +25,25 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         objectPool = ObjectPoolManager.Instance;
+        for (int i = 0; i < spawnables.Count; i++)
+        {
+            objectPool.AddPool(spawnables[i]);
+        }
 
         spawnCollider = GetComponent<BoxCollider>();
 
         for (int i = 0; i < Random.Range(spawnAmountRange.x, spawnAmountRange.y); i++)
         {
             SpawnEnemy();
-            Debug.Log("Spawn Enemy");
+            //Debug.Log("Spawn Enemy");
         }
     }
 
     private void SpawnEnemy()
     {
-        //TODO make only enemy types spawn from the pool. 
-        //ObjectPoolManager.Pool _randomSpawnable = objectPool.pools[Random.Range(0, objectPool.pools.Count)];
-        ObjectPoolManager.Pool _randomSpawnable = objectPool.pools[1];
+        Pool _poolToSpawn = spawnables[Random.Range(0, spawnables.Count)];
 
-        objectPool.SpawnFromPool(_randomSpawnable.tag, randomPointInBounds(spawnCollider.bounds), _randomSpawnable.prefab.transform.rotation);
+
+        objectPool.SpawnFromPool(_poolToSpawn, randomPointInBounds(spawnCollider.bounds), _poolToSpawn.prefab.transform.rotation);
     }
 }

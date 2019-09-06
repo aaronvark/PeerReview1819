@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IDamagable
 {
-
+    //TODO UI en Events toevoegen.
     #region Singleton
     public static Player Instance;
 
@@ -17,33 +17,33 @@ public class Player : MonoBehaviour, IDamagable
     private GameObject cameraObject;
 
     [Header("Mouse Settings")]
-    [SerializeField] private float xSensitivity = 0.5f;
-    [SerializeField] private float ySensitivity = 0.5f;
+    [SerializeField] float xSensitivity = 0.5f;
+    [SerializeField] float ySensitivity = 0.5f;
 
     [Header("Rotation Settings")]
-    [SerializeField] private Vector2 maxHorizontalRotation = new Vector2(-120, 120);
-    [SerializeField] private Vector2 maxVerticalRotation = new Vector2(-80, 45);
+    [SerializeField] Vector2 maxHorizontalRotation = new Vector2(-120, 120);
+    [SerializeField] Vector2 maxVerticalRotation = new Vector2(-80, 45);
 
     [Header("Move Settings")]
-    [SerializeField] private Vector2 movementRestrictions = new Vector2(-120, 120);
-    [SerializeField] private float moveSpeed;
+    [SerializeField] Vector2 movementRestrictions = new Vector2(-120, 120);
+    [SerializeField] float moveSpeed;
 
     private float yaw = 0f;
     private float pitch = 0f;
 
     [Space]
     [Header("Gun Settings")]
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float bulletForce;
-    [SerializeField] private int bulletDamage;
+    [SerializeField] Pool bulletPool;
+    [SerializeField] float bulletForce;
+    [SerializeField] int bulletDamage;
 
     [Space]
     [Tooltip("Spawn positions of bullets (e.g. the position where the bullets come out of the rifle.")]
-    [SerializeField] private GameObject[] spawnPositions;
+    [SerializeField] GameObject[] spawnPositions;
 
     [Space]
     [Header("Health Settings")]
-    [SerializeField] private int health;
+    [SerializeField] int health;
 
     //ObjectPool
     private ObjectPoolManager objectPool;
@@ -51,6 +51,11 @@ public class Player : MonoBehaviour, IDamagable
     private void Start()
     {
         objectPool = ObjectPoolManager.Instance;
+
+        if (!objectPool.pools.Contains(bulletPool))
+        {
+            objectPool.AddPool(bulletPool);
+        }
 
         cameraObject = GetComponentInChildren<Camera>().gameObject;
         Cursor.lockState = CursorLockMode.Locked;
@@ -101,10 +106,9 @@ public class Player : MonoBehaviour, IDamagable
         {
             Debug.DrawRay(spawnPositions[i].transform.position, spawnPositions[i].transform.forward, Color.red);
             
-            GameObject _bulletClone = objectPool.SpawnFromPool("PlayerBullets", spawnPositions[i].transform.position, spawnPositions[i].transform.rotation);
+            GameObject _bulletClone = objectPool.SpawnFromPool(bulletPool, spawnPositions[i].transform.position, spawnPositions[i].transform.rotation);
             _bulletClone.GetComponent<Bullet>().bulletDamage = bulletDamage;
 
-            //_bulletClone.GetComponent<Bullet>().bulletForce = bulletForce;
             _bulletClone.GetComponent<Rigidbody>().AddForce(cameraObject.transform.forward * bulletForce);
 
         }
