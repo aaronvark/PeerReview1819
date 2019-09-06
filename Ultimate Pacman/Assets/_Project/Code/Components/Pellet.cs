@@ -21,10 +21,10 @@ public class Pellet : MonoBehaviour, IScore
         PelletCount--;
     }
 
-    public void Consume()
+    public virtual void Consume()
     {
         Destroy(gameObject);
         ScoreManager.Instance.AddScore(ScoreValue);
-        PelletManager.Instance.CheckPellets();
+        GameManager.Instance.CheckPellets();
     }
 }
