@@ -20,17 +20,6 @@ public class MainBlockManager : MonoBehaviour {
         AddShapes();
     }
 
-    private void AddShapes() {
-
-        availableShapes.Add(new Shape(new int[] { 4, 0, 0, 0, 0, 0, 0, 0 }, Color.cyan));
-        availableShapes.Add(new Shape(new int[] { 0, 2, 2, 0, 0, 0, 2, 0 }, Color.yellow));
-        availableShapes.Add(new Shape(new int[] { 2, 2, 0, 2, 0, 0, 0, 0 }, Color.magenta));
-        availableShapes.Add(new Shape(new int[] { 3, 2, 0, 0, 0, 0, 0, 0 }, Color.yellow));
-        availableShapes.Add(new Shape(new int[] { 3, 0, 0, 2, 0, 0, 0, 0 }, Color.blue));
-        availableShapes.Add(new Shape(new int[] { 0, 2, 2, 0, 0, 2, 0, 0 }, Color.red));
-        availableShapes.Add(new Shape(new int[] { 2, 2, 0, 0, 0, 0, 2, 0 }, Color.green));
-    }
-
     public void SpawnShape() {
 
         currentMainBlockCoordinate = spawnCoordinate;
@@ -44,7 +33,7 @@ public class MainBlockManager : MonoBehaviour {
     public void MoveShapeTowards(Direction _direction) {
 
         //Checks if shape can move towards specified direction
-        if (Grid.CanShapeMove(_direction, ShapeCodeProcessor.ShapeCodeToCoords(currentShape.shape, currentMainBlockCoordinate))) {
+        if (Grid.CanShapeMove(ShapeCodeProcessor.ShapeCodeToCoordinates(currentShape.shape, currentMainBlockCoordinate), _direction)) {
 
             //Resets current shape to base color
             ColorShapeAroundMainBlock(baseColor);
@@ -59,6 +48,26 @@ public class MainBlockManager : MonoBehaviour {
             ColorShapeAroundMainBlock(currentShape.color);
         }
 
+    }
+
+    public void RotateShape() {
+
+        //Checks if shape can rotate
+        if (Grid.AreTheseCoordinatesAvailable(ShapeCodeProcessor.RotateAndGiveCoordinates(currentShape.shape, currentMainBlockCoordinate))) {
+
+            //Resets current shape to base color
+            ColorShapeAroundMainBlock(baseColor);
+
+            //RotatesShape
+            currentShape.shape = ShapeCodeProcessor.RotateShapeCode(currentShape.shape);
+
+            //Updates the list of blocks the shape is made of
+            UpdateCurrentUsedBlocks();
+
+            //Colors the shape around the main block
+            ColorShapeAroundMainBlock(currentShape.color);
+        }
+        
     }
 
     public void SetShape() {
@@ -78,7 +87,7 @@ public class MainBlockManager : MonoBehaviour {
         //Clears the list
         currentUsedBlocks.Clear();
 
-        List<Vector2Int> _currentUsedBlocksCoordinates = ShapeCodeProcessor.ShapeCodeToCoords(currentShape.shape, currentMainBlockCoordinate);
+        List<Vector2Int> _currentUsedBlocksCoordinates = ShapeCodeProcessor.ShapeCodeToCoordinates(currentShape.shape, currentMainBlockCoordinate);
 
         //Finds the blocks linked with the coordinates and adds them to the list
         for (int i = 0; i < _currentUsedBlocksCoordinates.Count; i++) {
@@ -106,6 +115,18 @@ public class MainBlockManager : MonoBehaviour {
         //Colors the new block
         Grid.allBlocks[currentMainBlockCoordinate].AssignColor(currentShape.color);
 
+    }
+
+
+    private void AddShapes() {
+
+        availableShapes.Add(new Shape(new int[] { 4, 0, 0, 0, 0, 0, 0, 0 }, Color.cyan));
+        availableShapes.Add(new Shape(new int[] { 0, 2, 2, 0, 0, 0, 2, 0 }, Color.yellow));
+        availableShapes.Add(new Shape(new int[] { 2, 2, 0, 2, 0, 0, 0, 0 }, Color.magenta));
+        availableShapes.Add(new Shape(new int[] { 3, 2, 0, 0, 0, 0, 0, 0 }, Color.yellow));
+        availableShapes.Add(new Shape(new int[] { 3, 0, 0, 2, 0, 0, 0, 0 }, Color.blue));
+        availableShapes.Add(new Shape(new int[] { 0, 2, 2, 0, 0, 2, 0, 0 }, Color.red));
+        availableShapes.Add(new Shape(new int[] { 2, 2, 0, 0, 0, 0, 2, 0 }, Color.green));
     }
 
     private Shape ChooseRandomShape() {

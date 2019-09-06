@@ -16,6 +16,8 @@ public class PlayerInput : MonoBehaviour
             tempVar.SpawnShape();
         }
 
+        
+
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
 
             tempVar.MoveShapeTowards(Direction.Down);
@@ -25,6 +27,9 @@ public class PlayerInput : MonoBehaviour
         } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
 
             tempVar.MoveShapeTowards(Direction.Right);
+        } else if (Input.GetKeyDown(KeyCode.UpArrow)) {
+
+            tempVar.RotateShape();
         }
     }
 }

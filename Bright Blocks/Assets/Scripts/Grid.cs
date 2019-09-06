@@ -17,23 +17,31 @@ public class Grid : MonoBehaviour
         CreateGrid();
     }
 
-    public static bool CanShapeMove(Direction _direction, List<Vector2Int> _fromCoordinates) {
+    public static bool CanShapeMove(List<Vector2Int> _fromCoordinates, Direction _direction) {
 
-        List<Vector2Int> _potentialCoordinate = new List<Vector2Int>();
+        List<Vector2Int> _potentialCoordinates = new List<Vector2Int>();
 
         //Adds all potential coordinates to a list
         for (int i = 0; i < _fromCoordinates.Count; i++) {
 
-            _potentialCoordinate.Add(DirectionToCoords(_direction, _fromCoordinates[i]));
+            _potentialCoordinates.Add(DirectionToCoords(_direction, _fromCoordinates[i]));
         }
 
-        //Checks if the potential coordinates exist within the grid and are not already occupied by colored blocks
-        for (int i = 0; i < _potentialCoordinate.Count; i++) {
+        
 
-            if (!allBlocks.ContainsKey(_potentialCoordinate[i]) || allBlocks[_potentialCoordinate[i]].isSet) {
+        return AreTheseCoordinatesAvailable(_potentialCoordinates, _direction);
+    }
+
+
+    public static bool AreTheseCoordinatesAvailable(List<Vector2Int> _coordinates, Direction _direction = Direction.Left) {
+
+        //Checks if the potential coordinates exist within the grid and are not already occupied by colored blocks
+        for (int i = 0; i < _coordinates.Count; i++) {
+
+            if (!allBlocks.ContainsKey(_coordinates[i]) || allBlocks[_coordinates[i]].isSet) {
 
                 //Checks if the block has reached the bottom or a colored block
-                if(_potentialCoordinate[i].y < 0 || (_direction == Direction.Down && allBlocks[_potentialCoordinate[i]].isSet)) {
+                if (_coordinates[i].y < 0 || (_direction == Direction.Down && allBlocks[_coordinates[i]].isSet)) {
 
                     FindObjectOfType<MainBlockManager>().SetShape();
                     return false;
