@@ -39,10 +39,10 @@ public class ScaleScript : MonoBehaviour
     private void StartScale(Vector2 _scale, AnimationCurve _curve, float _duration, Coroutine _routine, int _index) {
 
         if (_routine != null) StopCoroutine(_routine);
-        _routine = StartCoroutine(IScale(_scale, _curve, _duration, _routine, _index));
+        _routine = StartCoroutine(IEScale(_scale, _curve, _duration, _routine, _index));
     }
 
-    private IEnumerator IScale(Vector2 _scale, AnimationCurve _curve, float _duration, Coroutine _routine, int _index) {
+    private IEnumerator IEScale(Vector2 _scale, AnimationCurve _curve, float _duration, Coroutine _routine, int _index) {
 
         float _timeValue = 0;
 
