@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour {
+public class Spawner : MonoBehaviour
+{
 	public float Radius => spawnRadius;
 
 	[SerializeField] private Block standardBlock;
@@ -10,7 +11,8 @@ public class Spawner : MonoBehaviour {
 
 	private List<Ring> rings;
 
-	private void Start() {
+	private void Start()
+	{
 		rings = new List<Ring>();
 
 		SpawnRing();
@@ -19,7 +21,8 @@ public class Spawner : MonoBehaviour {
 	/// <summary>
 	/// Spawns a new ring of blocks
 	/// </summary>
-	private void SpawnRing() {
+	private void SpawnRing()
+	{
 		// Create a new ring and add it to the list for future reference
 		rings.Add(new Ring(rings.Count, this, blockCountRing, standardBlock));
 	}

@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(BatMovement))]
-public class Bat : MonoBehaviour {
+public class Bat : MonoBehaviour
+{
 	private BatMovement movement;
 
 	/// <summary>
 	/// Direction of the flat side of the bat pointing outward
 	/// </summary>
-	public Vector3 Dir {
-		get {
+	public Vector3 Dir
+	{
+		get
+		{
 			float _angleRad = movement.Angle * Mathf.Deg2Rad;
 			return new Vector2(Mathf.Cos(_angleRad), Mathf.Sin(_angleRad)).normalized;
 		}
@@ -19,7 +22,8 @@ public class Bat : MonoBehaviour {
 	/// </summary>
 	public float Radius => movement.Radius;
 
-	private void Start() {
+	private void Start()
+	{
 		// Load the reference to the movement class
 		movement = GetComponent<BatMovement>();
 	}
