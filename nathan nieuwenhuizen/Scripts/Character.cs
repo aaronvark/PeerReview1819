@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviour, IDestroyable
 {
     //movement
     [Range(1, 20f)]
@@ -22,34 +22,35 @@ public class Character : MonoBehaviour
     private bool dead = false;
     private bool inAir = true;
 
-    void Start() {
+    [SerializeField]
+    private int health = 1;
+
+    void Start()
+    {
         rb = GetComponent<Rigidbody2D>();
-        gun = GetComponent<Gun>();
     }
 
-    void OnCollisionStay2D(Collision2D _collision) {
+    void OnCollisionStay2D(Collision2D _collision)
+    {
         inAir = false;
     }
 
-    private void OnCollisionEnter2D(Collision2D _collision) {
-        if (_collision.gameObject.GetComponent<Asteroid>()) {
-            Death();
-        }
-    }
-
-    void OnCollisionExit2D(Collision2D _collision) {
+    void OnCollisionExit2D(Collision2D _collision)
+    {
         rb.gravityScale = gravityScale;
         inAir = true;
     }
 
 
-    public void Walking(float _h_input) {
+    public void Walking(float _h_input)
+    {
         Vector3 tempRb = rb.velocity;
         tempRb.x = _h_input * walkSpeed;
         rb.velocity = tempRb;
     }
 
-    public void Jump() {
+    public void Jump()
+    {
         if (inAir) { return; }
 
         Vector3 tempRb = rb.velocity;
@@ -58,7 +59,8 @@ public class Character : MonoBehaviour
     }
 
     //to give the player move control in their jump height
-    public void CancelJump(bool _onlyWhenUp = true) {
+    public void CancelJump(bool _onlyWhenUp = true)
+    {
         if (rb.velocity.y > 0 || !_onlyWhenUp){
             Vector3 tempRb = rb.velocity;
             tempRb.y = 0;
@@ -66,11 +68,34 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void Shoot() {
+    public void Shoot()
+    {
         gun.Shoot();
     }
 
-    public void Death() {
+    public int Health
+    {
+        get
+        {
+            return health;
+        }
+        set
+        {
+            health = value;
+        }
+    }
+
+    public void TakeDamage(int val)
+    {
+        Health -= val;
+        if (Health == 0)
+        {
+            Death();
+        }
+    }
+
+    public void Death()
+    {
         rb.gravityScale = gravityScale;
         dead = true;
         gameObject.SetActive(false);

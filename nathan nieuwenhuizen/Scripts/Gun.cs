@@ -4,11 +4,18 @@ public class Gun : MonoBehaviour
 {
     [SerializeField]
     private GameObject bulletPrefab;
+    private Character myOwner;
+
+    private void Start()
+    {
+        myOwner = GetComponent<Character>();
+        PoolManager.instance.CreatePool(bulletPrefab, 1);
+    }
 
     public void Shoot() {
-        Bullet bullet = GameObject.Instantiate(bulletPrefab).GetComponent<Bullet>();
-        bullet.gameObject.transform.position = transform.position;
-        bullet.gameObject.transform.rotation = ForwardRotationToMouse();
+        Bullet bullet = PoolManager.instance.ReuseObject(bulletPrefab, transform.position, ForwardRotationToMouse()).GetComponent<Bullet>();
+        bullet.myOwner = myOwner;
+        bullet.OnObjectReuse();
     }
 
     //to get the angle of the bullet right.

@@ -4,11 +4,13 @@ public class InputHandeler : MonoBehaviour
 {
     private Character character;
 
-    private void Start() {
+    private void Start()
+    {
         character = GetComponent<Character>();
     }
 
-    void Update() {
+    void FixedUpdate()
+    {
         character.Walking(Input.GetAxis("Horizontal"));
 
         if (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space)){
@@ -20,6 +22,5 @@ public class InputHandeler : MonoBehaviour
         if (Input.GetButtonDown("Fire1")){
             character.Shoot();
         }
-
     }
 }
