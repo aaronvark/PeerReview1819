@@ -5,10 +5,10 @@ using UnityEngine;
 public class Brick : MonoBehaviour
 {
 	[SerializeField] private DifferentBricks diffBrick;
-	private Renderer ren;
 
 	private Dictionary<DifferentBricks, Color> differentColoredBricks;
 	private Dictionary<DifferentBricks, DifferentBricks> changeBricks;
+	private Renderer ren;
 
 	private void Awake()
 	{

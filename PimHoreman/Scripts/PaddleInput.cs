@@ -2,7 +2,6 @@
 
 public class PaddleInput : MonoBehaviour
 {
-
 	[SerializeField] private float speed = 8;
 	private Rigidbody rb;
 

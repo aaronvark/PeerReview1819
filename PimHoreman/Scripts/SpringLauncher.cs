@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class SpringLauncher : MonoBehaviour
 {
-	const float MAX_DISTANCE = 1f;
-
 	private float pullSpeed = 0.5f;
 	private float resetSpeed = 10f;
-
 	private bool isResetting;
 	private bool isActive;
 	private Vector3 startPos;
-	private Vector3 ballStartPos;
 
 	private void Start()
 	{
@@ -20,7 +16,12 @@ public class SpringLauncher : MonoBehaviour
 		startPos = gameObject.transform.position;
 	}
 
-	private void FixedUpdate()
+	private void Update()
+	{
+		PlungerActivity();
+	}
+
+	private void PlungerActivity()
 	{
 		if (!isResetting && isActive && Input.GetKey(KeyCode.Space) && Mathf.Abs(gameObject.transform.position.y - startPos.y) < 1f)
 		{
