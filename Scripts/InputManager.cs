@@ -1,49 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class InputManager : Singleton<InputManager> {
+public class InputManager : Singleton<InputManager>
+{
+    /// <summary>
+    /// Horizontal movement of the blocks
+    /// </summary>
+    /// <param name="movement"></param>
+    public delegate void HorizontalMovement(float movement);
+    public event HorizontalMovement _horizontalMovement;
 
     /// <summary>
-    /// current block you're controlling
+    /// Rotating movement of the block
     /// </summary>
-    [SerializeField]
-    private Block _currentBlock;
-    public Block CurrentBlock {
-        get {
-            return _currentBlock;
-        }
-        set {
-            _currentBlock = value;
-        }
-    }
-    [SerializeField]
-    private BlockGenerator _blockGenerator;
-
-
-    private void FixedUpdate() {
-        if (_currentBlock) {
-            if (Input.GetAxis("Horizontal") != 0) {
-                CurrentBlock.Move(Input.GetAxis("Horizontal"));
-            }
-            if (Input.GetKey(KeyCode.X)) {
-                CurrentBlock.Rotate(1);
-            }
-            if (Input.GetKey(KeyCode.Z)) {
-                CurrentBlock.Rotate(-1);
-            }
-        }
-    }
+    /// <param name="rotate"></param>
+    public delegate void RotateMovement(float rotate);
+    public event RotateMovement _rotateMovement;
 
     /// <summary>
-    /// Updating the current block.
+    /// Fixed update is used for the 
     /// </summary>
-    public void UpdateCurrentBlock() {
-        GameObject go = _blockGenerator.GenerateNewBlock();
-        go = Instantiate<GameObject>(go);
-        CurrentBlock = go.GetComponent<Block>();
+    private void FixedUpdate()
+    {
+        if (Input.GetAxis("Horizontal") != 0)
+            _horizontalMovement?.Invoke(Input.GetAxis("Horizontal"));
 
+        if (Input.GetKey(KeyCode.X))
+            _rotateMovement?.Invoke(1);
+        if (Input.GetKey(KeyCode.Z))
+            _rotateMovement?.Invoke(-1);
     }
-
-
 }

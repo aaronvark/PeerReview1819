@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-public class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
-    public static T Instance {
+public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+{
+    public static T Instance
+    {
         get;
         private set;
     }
@@ -10,8 +12,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
     /// <summary>
     /// Checks if the instance exists and creates a new one when there is none.
     /// </summary>
-    protected virtual void Awake() {
-        if (Instance) {
+    protected virtual void Awake()
+    {
+        if (Instance)
+        {
             Destroy(this);
             return;
         }

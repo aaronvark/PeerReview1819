@@ -2,59 +2,89 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour {
+public class Block : MonoBehaviour, IDamagable
+{
 
     [SerializeField]
-    private Rigidbody myRb;
+    private Rigidbody _myRb;
 
-    [Range(1,1000)]
+    [Range(0, 1)]
     [SerializeField]
     private float _rotateMultiplier;
-    [Range(0,1)]
+    [Range(0, 1)]
     [SerializeField]
     private float _movementMultiplier;
-    [Range(0,10)]
+    [Range(0, 10)]
     [SerializeField]
     private float _gravityModifier;
-    private bool _isCurrentBlock;
 
-    public void Start() {
-        _isCurrentBlock = true;
+    public delegate void BlockCallBack(Block b);
+    public BlockCallBack _onHitGround;
+
+    public float Hitpoints
+    {
+        get;
+        set;
     }
 
-    public void Update() {
+    [SerializeField]
+    private Renderer _renderer;
+
+    [SerializeField]
+    private Material[] _materials;
+
+    public void Start()
+    {
+        InputManager.Instance._horizontalMovement += Move;
+        InputManager.Instance._rotateMovement += Rotate;
+    }
+
+    public void Update()
+    {
         Fall();
     }
+    public void GetDamage(float damage)
+    {
+        Hitpoints -= damage;
+    }
 
-    public void Fall() {
-        myRb.AddForce(Vector3.down * _gravityModifier);
+
+    public void Fall()
+    {
+        _myRb.AddForce(Vector3.down * _gravityModifier);
     }
 
     /// <summary>
     /// Rotating the Tetris block
     /// </summary>
     /// <param name="rotateMultiplier"></param>
-    public void Rotate(float rotate) {
-        myRb.AddTorque(new Vector3(myRb.rotation.x, myRb.rotation.y, myRb.rotation.z + (rotate * _rotateMultiplier)));
+    public void Rotate(float rotate)
+    {
+        _myRb.AddTorque(new Vector3(_myRb.rotation.x, _myRb.rotation.y, _myRb.rotation.z + (rotate * _rotateMultiplier)));
     }
 
     /// <summary>
     /// Moving the Tetris block
     /// </summary>
     /// <param name="moveMultiplier"></param>
-    public void Move(float movement) {
+    public void Move(float movement)
+    {
         Vector3 vector = new Vector3(movement * _movementMultiplier, 0, 0);
-        myRb.MovePosition(transform.position + vector);
+        _myRb.MovePosition(transform.position + vector);
     }
 
-    public void OnCollisionEnter(Collision coll) {
-        if(coll.gameObject.layer == LayerMask.NameToLayer("Ground") || 
-            coll.gameObject.tag == "Block") {
-            if (_isCurrentBlock) {
-                InputManager.Instance.UpdateCurrentBlock();
-                _isCurrentBlock = false;
-            }
-
+    /// <summary>
+    /// When the block hit the ground or a block it will update Delegates 
+    /// </summary>
+    /// <param name="coll"></param>
+    public void OnCollisionEnter(Collision coll)
+    {
+        Block block = coll.gameObject.GetComponent<Block>();
+        if (coll.gameObject.layer == LayerMask.NameToLayer("Ground") || block != null)
+        {
+            _onHitGround?.Invoke(this);
+            InputManager.Instance._horizontalMovement -= Move;
+            InputManager.Instance._rotateMovement -= Rotate;
         }
     }
 }
