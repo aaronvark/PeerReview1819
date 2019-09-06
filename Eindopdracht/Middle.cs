@@ -4,18 +4,13 @@ using UnityEngine;
 
 public class Middle : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
-    void FixedUpdate()
+    public void UpdateMiddle()
     {
         transform.Rotate(new Vector3(0,0, GameManager.Instance.middleRotateSpeed * 1));
 
-        foreach( Block block in GameManager.Instance.blocks)
+        foreach( Block block in GameManager.Instance.GetBlocks())
         {
-            block.rigidB.AddForce(-block.transform.position * GameManager.Instance.middleForce);
+            block.GetRigidB().AddForce(-block.transform.position.normalized * GameManager.Instance.middleForce);
         }
     }
 }

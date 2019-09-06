@@ -2,42 +2,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour { 
+public class GameManager : MonoBehaviour {
 
-    private static GameManager _instance;
-    public static GameManager Instance { get { return _instance; } }
+    private static GameManager instance;
+    public static GameManager Instance { get { return instance; } }
 
     public float blockSpeed = 1;
     public float middleForce = 1;
     public float middleRotateSpeed = 1;
 
-    public List<Block> blocks;
-    public GameObject[] blockPrefabs;
+    private List<Block> blocks;
+    public List<Block> GetBlocks() { return blocks; }
+    public void AddBlock(Block _block) { blocks.Add(_block); }
+    public void RemoveBlock(Block _block) { blocks.Remove(_block); }
+
+    private GameObject[] blockPrefabs;
+    public GameObject[] GetBlocksPrefabs() { return blockPrefabs; }
+
+    //TODO: other way without player references?
     public Player[] players = new Player[2];
-    
+
+    public event System.Action GetInput;
+    public event System.Action UpdateMiddle;
+
+    private PlayerInput playerInput;
+    private Middle middle;
 
     private void Awake()
     {
-        if ( _instance != null && _instance != this){ Destroy(this.gameObject); }
-        else{ _instance = this; }
-    }    
+        if ( instance != null && instance != this){ Destroy(this.gameObject); }
+        else{ instance = this; }
+    }
 
-    void Start()
+    private void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
+        middle = FindObjectOfType<Middle>();
+
+        GetInput += playerInput.GetInput;
+        UpdateMiddle += middle.UpdateMiddle;
+
         players[0].NewBlock();
         players[1].NewBlock();
     }
 
-    
-    void Update()
+    private void Update()
     {
-        //Player1
-        GameManager.Instance.players[0].Move(Input.GetKey(KeyCode.UpArrow)); 
-        if (Input.GetKey(KeyCode.LeftArrow)) { GameManager.Instance.players[0].Rotate(-1); }
-        else if (Input.GetKey(KeyCode.RightArrow)) { GameManager.Instance.players[0].Rotate(1); }
-        //Player2
-        GameManager.Instance.players[1].Move(Input.GetKey(KeyCode.W));
-        if (Input.GetKey(KeyCode.A)) { GameManager.Instance.players[1].Rotate(-1); }
-        else if (Input.GetKey(KeyCode.D)) { GameManager.Instance.players[1].Rotate(1); }
+        GetInput.Invoke();
+        UpdateMiddle.Invoke();
     }
+
+    
 }
