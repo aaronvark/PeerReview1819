@@ -22,7 +22,7 @@ public class Ring
 	}
 
 	/// <summary>
-	/// Instantiates Block objects from a list of Block prefabs
+	/// Instantiates Block objects from a list of Block prefabs in the shape of a ring
 	/// </summary>
 	/// <param name="spawner">The spawner root</param>
 	/// <param name="blockCount">The number of blocks to spawn</param>
@@ -31,20 +31,21 @@ public class Ring
 	{
 		for (int i = 0; i < blockCount; i++)
 		{
-			// Generate a random index
+			// Generate a random index for the prefab
 			int _prefabIndex = Random.Range(0, blockPrefabs.Length);
-			// Create the block and add it to the list
-			blocks.Add(GameObject.Instantiate(blockPrefabs[_prefabIndex], spawner.transform));
-
-			SetBlockPositionAndRotation(blocks[i], spawner.Radius, i);
+			
+			Block block = GameObject.Instantiate(blockPrefabs[_prefabIndex], spawner.transform);
+			
+			ApplyBlockPositionAndRotation(block, spawner.Radius, i);
+			blocks.Add(block);
 		}
 	}
 
-	private void SetBlockPositionAndRotation(Block block, float radius, int index)
+	private void ApplyBlockPositionAndRotation(Block block, float radius, int index)
 	{
-		// Calculate the angle each block between each block
+		// Calculate the angle between each block
 		float _distrAngle = 360f / blocks.Capacity;
-		// Calculate the angle of this current block
+		// Calculate the angle this current block is at
 		float _pointAngle = _distrAngle * index;
 
 		// Convert angle to radians for use in (co)sine functions

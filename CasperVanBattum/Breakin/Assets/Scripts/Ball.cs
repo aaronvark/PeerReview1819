@@ -36,7 +36,7 @@ public class Ball : MonoBehaviour
 		startPos = transform.localPosition;
 		startScale = transform.localScale;
 
-		// Lock the ball at the start of the game
+		// The ball should start locked at to the bat at the beginning of the game
 		Lock();
 	}
 
@@ -61,12 +61,14 @@ public class Ball : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Checks if the ball has left the playing field and if it has, subtract a ball and reset the ball to the bat.
+	/// Checks if the ball has left the playing field and if it has, subtract a life and reset the ball to the bat.
 	/// </summary>
 	private void CheckOutOfRange()
 	{
-		// Calculate if the distance from the center to the ball is greater than the bat radius plus 0.5
-		if (Vector2.Distance(transform.position, Vector2.zero) > bat.Radius + .5)
+		float _margin = .5f;
+		// A life is subtracted when the ball is no longer inside the range of the bat. This adds a little margin (0.5)
+		// to add a slight delay between leaving this range and actually losing a life/getting reset
+		if (Vector2.Distance(transform.position, Vector2.zero) > bat.Radius + _margin)
 		{
 			Lives -= 1;
 			Lock();
@@ -83,7 +85,7 @@ public class Ball : MonoBehaviour
 		// Add velocity in the inverse direction of the bat (inwards) with a magnitude of the speed parameter
 		rb.velocity = -bat.Dir * speed;
 
-		// Remove bat as parent
+		// Remove bat as parent to move the ball freely
 		transform.SetParent(null);
 	}
 
@@ -94,10 +96,10 @@ public class Ball : MonoBehaviour
 	{
 		locked = true;
 
-		// Remove any velocity currently acting on the ball
+		// Stop any possible ball movement
 		rb.velocity = Vector2.zero;
 
-		// Set bat as parent
+		// Parent ball to bat to give the feeling the ball is attached to the bat
 		transform.SetParent(bat.transform);
 		// Re-initialize all the transform values to their defaults
 		transform.localPosition = startPos;

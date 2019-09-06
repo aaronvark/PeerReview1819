@@ -17,10 +17,10 @@ public class BatMovement : MonoBehaviour
 
 	private void Update()
 	{
-		GetAngleFromMousePos();
+		UpdateAngleFromMousePos();
 
-		SetRotation();
-		SetPosition();
+		ApplyRotation();
+		ApplyPosition();
 	}
 
 	private void OnDrawGizmos()
@@ -33,7 +33,7 @@ public class BatMovement : MonoBehaviour
 	/// <summary>
 	/// Calculate the angle from the center of the ring towards the mouse cursor
 	/// </summary>
-	private void GetAngleFromMousePos()
+	private void UpdateAngleFromMousePos()
 	{
 		// Get the mouse pos in pixels
 		Vector3 _mousePos = Input.mousePosition;
@@ -44,19 +44,13 @@ public class BatMovement : MonoBehaviour
 		Angle = Vector2.SignedAngle(Vector2.right, _mousePosWorld.normalized);
 	}
 
-	/// <summary>
-	/// Apply rotation
-	/// </summary>
-	private void SetRotation()
+	private void ApplyRotation()
 	{
 		// Set angle as the z-component of the rotation
 		transform.localRotation = Quaternion.Euler(0, 0, Angle);
 	}
 
-	/// <summary>
-	/// Apply position based on angle
-	/// </summary>
-	private void SetPosition()
+	private void ApplyPosition()
 	{
 		// Convert angle to radians
 		float _rad = Angle * Mathf.Deg2Rad;
