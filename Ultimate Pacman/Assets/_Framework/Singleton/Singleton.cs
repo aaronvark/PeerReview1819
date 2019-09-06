@@ -49,6 +49,11 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     private static readonly object lockObject = new object();
     private static bool shuttingDown = false;
 
+    public Singleton()
+    {
+        shuttingDown = false;
+    }
+
     [Header("Singleton")]
     [SerializeField]
     private bool dontDestroyOnLoad = true;
