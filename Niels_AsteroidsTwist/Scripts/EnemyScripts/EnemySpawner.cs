@@ -5,18 +5,21 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField]
-    private GameObject asteroid;
+    private GameObject[] asteroids;
     [SerializeField]
     private float spawnTime;
     private float timestamp = 0.0f;
     private Transform thePlayer;
-    private void Start() { 
+    private void Start()
+    { 
         timestamp = Time.time + 0.0f;
         thePlayer = GameObject.Find("Player").transform;
     }
 
-    private void Update() { 
-        if(Time.time > timestamp && thePlayer != null) {
+    private void Update()
+    { 
+        if(Time.time > timestamp && thePlayer != null)
+        {
             // Gets random position on the edges of the screen
             float _randomX = Random.Range(-15, 15);
             float _randomY = Random.Range(-9, 9);
@@ -31,7 +34,18 @@ public class EnemySpawner : MonoBehaviour
             Quaternion _tempRot = Quaternion.AngleAxis(_angle, Vector3.forward);
 
             // Spawns asteroid
-            GameObject _tempAsteroid = Instantiate(asteroid, _spawnPoint, _tempRot);
+            int _chosenInt;
+            int _randomInt = Random.Range(0, 100);
+            if(_randomInt < 20)
+            {
+                _chosenInt = 1;
+            }
+            else
+            {
+                _chosenInt = 0;
+            }
+
+            GameObject _tempAsteroid = Instantiate(asteroids[_chosenInt], _spawnPoint, _tempRot);
 
             timestamp = Time.time + spawnTime;
         }

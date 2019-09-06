@@ -4,26 +4,30 @@ using UnityEngine;
 
 public class PlayerFire : MonoBehaviour
 {
+    public Weapon chosenWeapon;
     private float timestamp = 0.0f;
-    [SerializeField]
-    private Weapon chosenWeapon;
     [SerializeField]
     private Transform bulletSpawnPosition;
 
-    private void Start() {
+    private void Start()
+    {
         timestamp = Time.time + 0.0f;   
     }
 
-    private void Update() {
-        if (Input.GetKey(KeyCode.Space)) {
-            if (Time.time > timestamp) {
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if (Time.time > timestamp)
+            {
                 Fire();
             }
         }
     }
 
     // Fires weapon
-    private void Fire() { 
+    private void Fire()
+    { 
         timestamp = Time.time + (chosenWeapon.rateOfFire / 60);
         GameObject _tempBullet = Instantiate(chosenWeapon.weaponEntity, bulletSpawnPosition.position, bulletSpawnPosition.rotation);
     }
