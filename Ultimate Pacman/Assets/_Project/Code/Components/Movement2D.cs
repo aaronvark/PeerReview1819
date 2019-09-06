@@ -10,8 +10,8 @@ public class Movement2D : MonoBehaviour
 
     private Rigidbody2D rigidbody2D;
 
-    private Vector2 CurrentPosition { get => rigidbody2D.position; }
-    private float CurrentRotation { get => rigidbody2D.rotation; }
+    private Vector2 CurrentPosition => rigidbody2D.position;
+    private float CurrentRotation => rigidbody2D.rotation;
 
     private void Awake()
     {

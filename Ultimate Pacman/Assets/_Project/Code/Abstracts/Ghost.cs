@@ -13,14 +13,14 @@ public abstract class Ghost : MonoBehaviour, IScore
 
     public float ScoreValue => scoreValue;
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
-        target = Player.instance.transform;
+        target = Player.Instance.transform;
         movement = GetComponent<Movement2D>();
     }
 
     public void Consume()
     {
-        ScoreManager.instance.AddScore(scoreValue);
+        ScoreManager.Instance.AddScore(ScoreValue);
     }
 }

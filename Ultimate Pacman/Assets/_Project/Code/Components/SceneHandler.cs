@@ -5,17 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class SceneHandler : Singleton<SceneHandler>
 {
-    public void LoadScene(string _name) {
+    public void LoadScene(string _name)
+    {
         SceneManager.LoadScene(_name);
     }
 
-    public void LoadNextScene() {
+    public void LoadNextScene()
+    {
         int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
 
-        if (currentBuildIndex < SceneManager.sceneCountInBuildSettings - 1) {
+        if (currentBuildIndex < SceneManager.sceneCountInBuildSettings - 1)
+        {
             SceneManager.LoadScene(currentBuildIndex + 1);
         }
-        else {
+        else
+        {
             SceneManager.LoadScene(0);
         }
     }

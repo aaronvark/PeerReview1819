@@ -16,7 +16,7 @@ public class PelletManager : Singleton<PelletManager>
     {
         if (Pellet.PelletCount == 0)
         {
-            SceneHandler.instance.LoadScene(nextScene);
+            SceneHandler.Instance.LoadScene(nextScene);
         }
     }
 }
