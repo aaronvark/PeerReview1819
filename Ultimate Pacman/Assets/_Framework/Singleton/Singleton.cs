@@ -2,6 +2,8 @@
 
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 #endif
@@ -14,14 +16,38 @@ using MonoBehaviour = Sirenix.OdinInspector.SerializedMonoBehaviour;
 /// Generic Implementation of a Singleton MonoBehaviour.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class Singleton<T> : MonoBehaviour, ISerializationCallbackReceiver where T : MonoBehaviour
+public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     /// <summary>
     /// Returns the instance of this singleton.
     /// </summary>
-    public static T instance;
+    public static T Instance
+    {
+        get
+        {
+            if (shuttingDown)
+            {
+                var singletonObject = new GameObject();
+                T t = singletonObject.AddComponent<T>();
+                DestroyImmediate(singletonObject);
+                return t;
+            }
 
-    [HideInInspector] [SerializeField] private T cashedInstance = null;
+            lock (lockObject)
+            {
+                if (instance == null)
+                {
+                    instance = FindObjectOfType<T>();
+                }
+
+                return instance;
+            }
+        }
+    }
+
+    private static T instance = null;
+    private static readonly object lockObject = new object();
+    private static bool shuttingDown = false;
 
     [Header("Singleton")]
     [SerializeField]
@@ -30,61 +56,93 @@ public class Singleton<T> : MonoBehaviour, ISerializationCallbackReceiver where 
     private void Awake()
     {
         T thisIstance = transform.GetComponent<T>();
-        if (instance == null) 
+        if (instance == null)
         {
             instance = thisIstance;
         }
-
-        if (!instance.Equals(thisIstance)) 
+        else if (!instance.Equals(thisIstance))
         {
             Destroy(gameObject);
+            return;
         }
-        else if (dontDestroyOnLoad)
+
+        if (dontDestroyOnLoad)
         {
             DontDestroyOnLoad(gameObject);
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        OnDestroy();
+    }
+
     private void OnDestroy()
     {
+        if (shuttingDown)
+            return;
+
         instance = null;
-    }
-
-    void ISerializationCallbackReceiver.OnBeforeSerialize()
-    {
-        cashedInstance = instance;
-    }
-
-    void ISerializationCallbackReceiver.OnAfterDeserialize()
-    {
-        instance = cashedInstance;
+        shuttingDown = true;
     }
 
 #if UNITY_EDITOR
     private void Reset()
     {
-        if (instance == null || cashedInstance != null)
+        GameObject gameObject = this.gameObject;
+
+        if (gameObject.scene.GetRootGameObjects()
+            .Any(go => go.GetComponentInChildren<T>(true) 
+                && !go.GetComponentInChildren<T>(true).gameObject.Equals(gameObject))
+            )
         {
-            instance = transform.GetComponent<T>();
-        }
-        else
-        {
-            GameObject gameObject = this.gameObject;
             DestroyImmediate(this);
 
-            MemberInfo memberInfo = instance.GetType(); //monoInstanceCaller.GetType();
-            RequireComponent[] requiredComponentsAtts = Attribute.GetCustomAttributes(
-                memberInfo, typeof(RequireComponent), true) as RequireComponent[];
-            Array.Reverse(requiredComponentsAtts);
-            Component[] components = gameObject.GetComponents<Component>();
+            List<Type> requiredComponentsType = new List<Type>();
+            FindRequiredComponentsOfType(typeof(T));
+            requiredComponentsType.Reverse();
 
-            foreach (RequireComponent rc in requiredComponentsAtts)
+            Stack<Component> components = new Stack<Component>(gameObject.GetComponents<Component>());
+
+            foreach (var type in requiredComponentsType)
             {
-                if (components[components.Length - 1].GetType() == rc.m_Type0)
+                if (components.Pop().GetType() == type)
                 {
-                    Array.Resize(ref components, components.Length - 1);
-                    Undo.DestroyObjectImmediate(gameObject.GetComponent(rc.m_Type0));
+                    Undo.DestroyObjectImmediate(gameObject.GetComponent(type));
                     Undo.IncrementCurrentGroup();
+                }
+                else break;
+            }
+
+            void FindRequiredComponentsOfType(Type type)
+            {
+                if (type == null)
+                    return;
+
+                MemberInfo memberInfo = type;
+                RequireComponent[] requiredComponentsOfType =
+                    Attribute.GetCustomAttributes(memberInfo, typeof(RequireComponent), true)
+                    as RequireComponent[];
+
+                for (int i = 0; i < requiredComponentsOfType.Length; i++)
+                {
+                    RequireComponent rc = requiredComponentsOfType[i];
+
+                    HandleType(rc.m_Type0);
+                    HandleType(rc.m_Type1);
+                    HandleType(rc.m_Type2);
+                }
+
+                void HandleType(Type rcType)
+                {
+                    if (rcType == null || rcType == typeof(Transform))
+                        return;
+
+                    if (!requiredComponentsType.Contains(rcType))
+                    {
+                        FindRequiredComponentsOfType(rcType);
+                        requiredComponentsType.Add(rcType);
+                    }
                 }
             }
         }
