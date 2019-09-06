@@ -7,42 +7,69 @@ using UnityEngine;
 /// </summary>
 public class MainBlockManager : MonoBehaviour {
 
-    [SerializeField] private Vector2 spawnCoordinate;
-    private MainBlock mainBlock;
+    [SerializeField] private Vector2 spawnCoordinate { get; }
+    private Vector2 currentMainBlockCoordinate;
+    private Shape currentShape;
 
-    public void SpawnMainBlock() {
+    private Color baseColor;
 
-        Shape _currentShape = ChooseRandomShape();
-        mainBlock = Grid.allBlocks[spawnCoordinate].gameObject.AddComponent<MainBlock>();
+    private List<Shape> availableShapes = new List<Shape>();
 
-        //Temporary
-        FindObjectOfType<PlayerInput>().currentMainBlock = mainBlock;
+    private void AddShapes() {
 
-        mainBlock.AssignColor(_currentShape.color);
-        mainBlock.shapeCode = _currentShape.shape;
+        availableShapes.Add(new Shape(new int[] {1, 1, 1, 1, 1, 1, 1, 1 }, Color.blue));
     }
 
-    public void ResetMainBlock() {
+    public void SpawnShape() {
 
-        mainBlock.SetAttachedBlocks();
+        currentMainBlockCoordinate = spawnCoordinate;
+        currentShape = ChooseRandomShape();
+        Grid.allBlocks[spawnCoordinate].AssignColor(currentShape.color);
+        ColorShapeAroundMainBlock(currentShape.color);
+    }
 
-        Shape _currentShape = ChooseRandomShape();
+    //Moves shape down by 1
+    public void MoveShapeDown() {
 
-        //Assigns color to the spawnVector2 block
-        Grid.allBlocks[spawnCoordinate].AssignColor(_currentShape.color);
-        Grid.allBlocks[spawnCoordinate].SetBlock();
+        //Resets current shape to base color
+        ColorShapeAroundMainBlock(baseColor);
 
-        //Switches the mainblock with the spawnCoordinate block
-        mainBlock.SwitchWithBlock(spawnCoordinate);
+        //Moves the main block down
+        MoveMainBlockDown();
 
-        //Gives the mainblock his new shape information
-        mainBlock.AssignColor(_currentShape.color);
-        mainBlock.shapeCode = _currentShape.shape;
-        mainBlock.UpdateAttachedBlocks();
+        //Colors the shape around the main block
+        ColorShapeAroundMainBlock(currentShape.color);
+
+    }
+
+    //Colors the shape around the mian block
+    private void ColorShapeAroundMainBlock(Color _color) {
+
+        //TODO Check if coords are viable
+
+        List<Vector2> _coordsOfShape = ShapeCodeProcessor.ShapeCodeToCoords(currentShape.shape, currentMainBlockCoordinate);
+
+        for (int i = 0; i < _coordsOfShape.Count; i++) {
+
+            Grid.allBlocks[_coordsOfShape[i]].AssignColor(_color);
+        }
+    }
+
+    private void MoveMainBlockDown() {
+
+        //Resets current block to base color
+        Grid.allBlocks[currentMainBlockCoordinate].AssignColor(baseColor);
+
+        //Picks new block
+        currentMainBlockCoordinate = new Vector2(currentMainBlockCoordinate.x, currentMainBlockCoordinate.y - 1);
+
+        //Colors the new block
+        Grid.allBlocks[currentMainBlockCoordinate].AssignColor(currentShape.color);
+
     }
 
     private Shape ChooseRandomShape() {
 
-        return MainBlockShapeList.shapeList[Random.Range(0, MainBlockShapeList.shapeList.Count - 1)];
+        return availableShapes[Random.Range(0, MainBlockShapeList.shapeList.Count - 1)];
     }
 }

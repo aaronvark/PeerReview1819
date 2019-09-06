@@ -6,21 +6,32 @@ using UnityEngine;
 public class ShapeCodeProcessor : MonoBehaviour {
     
     //TODO int to string then to array
-    public static int[] ShapeCodeToInt(int _shapeCode) {
+    public static List<Vector2> ShapeCodeToCoords(int[] _shapeCode, Vector2 _fromCoordinate) {
 
-        //Calculates the number of blocks based on the position within the number
-        //EXAMPLE the number 234 would be
-        //up = 2
-        //left = 3
-        //right = 4
+        if (_shapeCode.Length == 8) {
 
-        int _up = (int)((float)_shapeCode/100);
-        int _left = Mathf.RoundToInt((((float)_shapeCode /100) % 1) * 10);
-        int _right = Mathf.RoundToInt((((float)_shapeCode / 10) % 1) * 10);
+            List<Vector2> _coordList = new List<Vector2>();
 
-        int[] _shapeCodeArray = { _up, _left, _right };
+            //Calculates the coords based of the position and size of the number within the shapecode
 
-        return _shapeCodeArray;
+            _coordList.Add(new Vector2(_fromCoordinate.x, _fromCoordinate.y + _shapeCode[0]));                      //up
+            _coordList.Add(new Vector2(_fromCoordinate.x + _shapeCode[1], _fromCoordinate.y));                      //right
+            _coordList.Add(new Vector2(_fromCoordinate.x, _fromCoordinate.y - _shapeCode[2]));                      //down
+            _coordList.Add(new Vector2(_fromCoordinate.x - _shapeCode[3], _fromCoordinate.y));                      //left
+
+            _coordList.Add(new Vector2(_fromCoordinate.x - _shapeCode[4], _fromCoordinate.y + _shapeCode[4]));      //up-left
+            _coordList.Add(new Vector2(_fromCoordinate.x + _shapeCode[5], _fromCoordinate.y + _shapeCode[5]));      //up-right
+            _coordList.Add(new Vector2(_fromCoordinate.x + _shapeCode[6], _fromCoordinate.y - _shapeCode[6]));      //down-right
+            _coordList.Add(new Vector2(_fromCoordinate.x - _shapeCode[7], _fromCoordinate.y - _shapeCode[7]));      //down-left
+
+
+
+            return _coordList;
+        } else {
+
+            Debug.LogError("You have submitted a shapeCode which had the wrong size!");
+            return null;
+        }
 
     }
 

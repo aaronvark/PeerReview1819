@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space)) {
 
-            tempVar.SpawnMainBlock();
+            tempVar.SpawnShape();
         }
 
         if (Input.GetKeyDown(KeyCode.DownArrow)) {

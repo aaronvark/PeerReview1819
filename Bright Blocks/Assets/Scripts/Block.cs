@@ -18,7 +18,7 @@ public class Block : MonoBehaviour
         coordinate = _coordinate;
     }
 
-    public virtual void AssignColor(Color _color) {
+    public void AssignColor(Color _color) {
 
         rend.material.SetColor("_BaseColor", _color);
     }
