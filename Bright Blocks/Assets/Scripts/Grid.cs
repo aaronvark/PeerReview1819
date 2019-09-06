@@ -13,6 +13,8 @@ public class Grid : MonoBehaviour
     [SerializeField] private Vector2Int gridSize;
     [SerializeField] private GameObject blockPrefab;
 
+    [SerializeField] private Demonstration_MeshProcessing meshOutliner;
+
     private void Awake() {
         CreateGrid();
     }
@@ -80,9 +82,8 @@ public class Grid : MonoBehaviour
 
         for (int y = 0; y < gridSize.y; y++) {
             for (int x = 0; x < gridSize.x; x++) {
-                //DISCUSS
 
-                //Saves the current Vector2Ints for later use
+                //Saves the current coordinates for later use
                 Vector2Int _currentCoordinate = new Vector2Int(x, y);
 
                 //Creates a block, then adds the Block script to the object
@@ -93,6 +94,8 @@ public class Grid : MonoBehaviour
                 
 
                 allBlocks.Add(_currentCoordinate, _newBlock);
+
+                meshOutliner.OutlineMesh(_newBlock.gameObject);
             }
         }
     }
