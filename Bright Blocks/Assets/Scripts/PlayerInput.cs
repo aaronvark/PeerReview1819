@@ -8,7 +8,6 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     public MainBlockManager tempVar;
-    public MainBlock currentMainBlock;
 
     private void Update() {
 
@@ -19,13 +18,13 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
 
-            currentMainBlock.MoveTo(Direction.Down);
+            tempVar.MoveShapeTowards(Direction.Down);
         } else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
 
-            currentMainBlock.MoveTo(Direction.Left);
+            tempVar.MoveShapeTowards(Direction.Left);
         } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
 
-            currentMainBlock.MoveTo(Direction.Right);
+            tempVar.MoveShapeTowards(Direction.Right);
         }
     }
 }
