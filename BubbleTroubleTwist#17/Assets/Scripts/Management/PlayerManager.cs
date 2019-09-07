@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
-[System.Serializable]
-public class PlayerData : StatsBase
-{
-    public string id;
-    public string horizontalAxis;
-    public string verticalAxis;
-    public int level;
-    public Vector3 spawnVector;
-}
-
 public class PlayerManager : MonoBehaviour, IPlayer
 {
     public List<PlayerData> playersStats;
@@ -33,9 +23,11 @@ public class PlayerManager : MonoBehaviour, IPlayer
     {
         foreach(PlayerData playerStats in playersStats)
         {
-            GameObject playerGameObject = ObjectPooler.Instance.SpawnFromPool(playerStats.id, playerStats.spawnVector, Quaternion.identity);
-            //playerGameObject.GetComponent<Player>().entityDataHandler += SetPlayerData;
-            playerGameObject.GetComponent<IStats<PlayerData>>().SetStats(playerStats);
+            //Spawn a player foreach player in the PlayerData list
+            GameObject playerGameObject = ObjectPooler.Instance.SpawnFromPool(player.name, playerStats.spawnVector, Quaternion.identity);
+            //Get the interface of each player and give it its stats
+            var component = playerGameObject.GetComponent<IStats<PlayerData>>();
+            component.SetStats(playerStats);
         }
     }
 }

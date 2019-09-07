@@ -5,11 +5,17 @@ using Bas.Interfaces;
 
 public class PlayerMovement : AbstractAvatarClass, IStats<PlayerData>
 {
-    public PlayerData playerInput;
+    private PlayerData playerInput;
+
+    public override void Start()
+    {
+        base.Start();
+ 
+    }
 
     private void FixedUpdate()
     {
-        //if (currentPlayerData != null)
+        if (playerInput != null)
             Movement();
     }
 

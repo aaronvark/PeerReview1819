@@ -21,7 +21,7 @@ public abstract class AbstractAvatarClass : MonoBehaviour, IDamagable<int>
     public event OnDeath OnDeathHandler;
     public Rigidbody rBody;
 
-    public StatsBase entityStats;
+    //public StatsBase entityStats;
 
     public virtual void Start()
     {

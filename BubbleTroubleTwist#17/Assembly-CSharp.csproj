@@ -69,10 +69,17 @@
     <Compile Include="Assets\Oefeningen\SpawnSpheres.cs" />
     <Compile Include="Assets\Oefeningen\Wall.cs" />
     <Compile Include="Assets\Scripts\Enemies\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Enemies\EnemyData.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IDamagable.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\ILevel.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IPlayer.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IPooler.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IStats.cs" />
+    <Compile Include="Assets\Scripts\Level\Level.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
+    <Compile Include="Assets\Scripts\Management\EnemyManager.cs" />
+    <Compile Include="Assets\Scripts\Management\EventManager.cs" />
+    <Compile Include="Assets\Scripts\Management\GameManager.cs" />
     <Compile Include="Assets\Scripts\Management\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Management\StatsBase.cs" />
     <Compile Include="Assets\Scripts\ObjectPool\ObjectPooler.cs" />
@@ -81,6 +88,7 @@
     <Compile Include="Assets\Scripts\Player\AbstractAvatarClass.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerCollisions.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Projectile.cs" />
     <Compile Include="Assets\Scripts\Weapons\Weapon.cs" />
