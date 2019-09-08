@@ -34,7 +34,6 @@ public class Grid : MonoBehaviour
         return AreTheseCoordinatesAvailable(_potentialCoordinates, _direction);
     }
 
-
     public static bool AreTheseCoordinatesAvailable(List<Vector2Int> _coordinates, Direction _direction = Direction.Left) {
 
         //Checks if the potential coordinates exist within the grid and are not already occupied by colored blocks
@@ -45,6 +44,7 @@ public class Grid : MonoBehaviour
                 //Checks if the block has reached the bottom or a colored block
                 if (_coordinates[i].y < 0 || (_direction == Direction.Down && allBlocks[_coordinates[i]].isSet)) {
 
+                    //Delegate potential
                     FindObjectOfType<MainBlockManager>().SetShape();
                     return false;
                 }
@@ -98,6 +98,53 @@ public class Grid : MonoBehaviour
                 meshOutliner.OutlineMesh(_newBlock.gameObject);
             }
         }
+    }
+
+    private void ClearBlocks(List<Block> _blocks) {
+
+        for (int i = 0; i < _blocks.Count; i++) {
+
+            _blocks[i].ClearBlock();
+        }
+    }
+
+    //TODO only check the lines a shape has interacted with
+    //Check if all the blocks in a horizontal lines have the isSet bool as true
+    public List<Block> GetAllMadeLines() {
+
+        List<Block> _allBlocksInMadeLines = new List<Block>();
+
+        for (int y = 0; y < gridSize.y; y++) {
+            if (CheckIfBlocksAreSet(GetBlocksAtY(y))) {
+                _allBlocksInMadeLines.AddRange(GetBlocksAtY(y));
+            }
+        }
+
+        return _allBlocksInMadeLines;
+        
+    }
+
+    private bool CheckIfBlocksAreSet(List<Block> _blockList) {
+
+        for (int i = 0; i < _blockList.Count; i++) {
+            if (!_blockList[i].isSet) {
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private List<Block> GetBlocksAtY(int _y) {
+
+        List<Block> _blocks = new List<Block>();
+
+        for (int x = 0; x < gridSize.x; x++) {
+            _blocks.Add(allBlocks[new Vector2Int(x, _y)]);
+        }
+
+        return _blocks;
     }
 
 }

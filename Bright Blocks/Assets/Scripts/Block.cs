@@ -12,6 +12,7 @@ public class Block : MonoBehaviour
     public Vector2Int coordinate;
 
     private Renderer rend;
+    private Color baseColor;
 
     public void Initialize(Vector2Int _coordinate) {
         rend = GetComponent<Renderer>();
@@ -26,6 +27,12 @@ public class Block : MonoBehaviour
     public void SetBlock() {
 
         isSet = true;
+    }
+
+    public void ClearBlock() {
+
+        isSet = false;
+        AssignColor(baseColor);
     }
 
 }
