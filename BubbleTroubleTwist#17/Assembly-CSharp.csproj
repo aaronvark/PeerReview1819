@@ -70,6 +70,7 @@
     <Compile Include="Assets\Oefeningen\Wall.cs" />
     <Compile Include="Assets\Scripts\Enemies\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyData.cs" />
+    <Compile Include="Assets\Scripts\ExtensionMethods.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IDamagable.cs" />
     <Compile Include="Assets\Scripts\Interfaces\ILevel.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IPlayer.cs" />

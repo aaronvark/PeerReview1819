@@ -28,6 +28,7 @@ public class PlayerManager : MonoBehaviour, IPlayer
             //Get the interface of each player and give it its stats
             var component = playerGameObject.GetComponent<IStats<PlayerData>>();
             component.SetStats(playerStats);
+            LevelManager.Instance.AddPlayer(playerGameObject);
         }
     }
 }

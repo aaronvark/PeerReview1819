@@ -9,5 +9,6 @@ namespace Bas.Interfaces
     public interface ILevel
     {
         void UpdateLevel();
+        void AddPlayer(GameObject player);
     }
 }

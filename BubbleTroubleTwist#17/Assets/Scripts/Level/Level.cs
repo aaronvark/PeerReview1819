@@ -8,5 +8,5 @@ public class Level
     public int enemyAmounts;
     public int enemiesAlive;
     public bool done;
-    public Transform levelPosition;
+    public Transform nextLevelPosition;
 }
