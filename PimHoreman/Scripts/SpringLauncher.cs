@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class SpringLauncher : MonoBehaviour
 {
+	//[SerializeField] private GameObject ball;
+	[SerializeField] private int plungerForce;
+
 	private float pullSpeed = 0.5f;
 	private float resetSpeed = 10f;
 	private bool isResetting;
 	private bool isActive;
 	private Vector3 startPos;
+	private Vector3 pullBackAmount;
+	private float deltaPos;
 
-	[SerializeField] private GameObject ball;
+	[SerializeField] private Ball ball;
 
 	private void Start()
 	{
@@ -28,13 +33,14 @@ public class SpringLauncher : MonoBehaviour
 		if (!isResetting && isActive && Input.GetKey(KeyCode.Space) && Mathf.Abs(gameObject.transform.position.y - startPos.y) < 1f)
 		{
 			isResetting = false;
-			Vector3 _pullBackAmount = new Vector3(0f, -pullSpeed * Time.deltaTime, 0f);
-			gameObject.transform.Translate(_pullBackAmount);
+			pullBackAmount = new Vector3(0f, -pullSpeed * Time.deltaTime, 0f);
+			gameObject.transform.Translate(pullBackAmount);
 		}
 
 		if (Input.GetKeyUp(KeyCode.Space))
 		{
-			ball.GetComponent<Rigidbody>().AddForce(Vector3.up * 10, ForceMode.Force);
+			deltaPos = startPos.y - gameObject.transform.position.y;
+			ball.VelocityBall(deltaPos, plungerForce);
 			isResetting = true;
 			isActive = false;
 		}

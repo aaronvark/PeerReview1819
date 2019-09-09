@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class ResetZone : MonoBehaviour
 {
+	[SerializeField] private Vector3 startPosition;
+
 	private void OnTriggerEnter(Collider collision)
 	{
-		if(collision.gameObject.tag == Tags.Ball)
+		if (collision.gameObject.tag == Tags.Ball)
 		{
 			IReset iReset = (IReset)collision.gameObject.GetComponent(typeof(IReset));
 
-			if(iReset != null)
+			if (iReset != null)
 			{
-				iReset.ResetBall();
+				iReset.ResetPosition = startPosition;
+				iReset.ResetObject();
 			}
 		}
 	}

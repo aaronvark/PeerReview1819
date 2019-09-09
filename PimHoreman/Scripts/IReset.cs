@@ -1,4 +1,8 @@
-﻿public interface IReset 
+﻿using UnityEngine;
+
+public interface IReset 
 {
-   void ResetBall();
+	Vector3 ResetPosition { get; set; }
+
+	void ResetObject();
 }

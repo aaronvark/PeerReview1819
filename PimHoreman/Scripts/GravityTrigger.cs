@@ -2,10 +2,13 @@
 
 public class GravityTrigger : MonoBehaviour
 {
+	[SerializeField] private GameObject gate;
+	
 	private void OnTriggerStay(Collider other)
 	{
-		if(other.gameObject.tag == Tags.Ball)
+		if (other.gameObject.tag == Tags.Ball)
 		{
+			gate.SetActive(false);
 			other.GetComponent<Rigidbody>().useGravity = true;
 		}
 	}
@@ -14,6 +17,7 @@ public class GravityTrigger : MonoBehaviour
 	{
 		if(other.gameObject.tag == Tags.Ball)
 		{
+			gate.SetActive(true);
 			other.GetComponent<Rigidbody>().useGravity = false;
 		}
 	}
