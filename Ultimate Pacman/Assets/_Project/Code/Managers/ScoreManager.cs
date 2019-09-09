@@ -6,14 +6,14 @@ public class ScoreManager : Singleton<ScoreManager>
 {
     public float CurrentScore { get; private set; } = 0f;
 
-    public void AddScore(float value)
+    public void AddScore(IScore score)
     {
-        CurrentScore += value;
+        CurrentScore += score.ScoreValue;
     }
 
-    public void SubtractScore(float value)
+    public void SubtractScore(IScore score)
     {
-        CurrentScore -= value;
+        CurrentScore -= score.ScoreValue;
     }
 
     public void Reset()
