@@ -36,10 +36,15 @@ namespace Prototype1
 				// Generate a random index for the prefab
 				int _prefabIndex = Random.Range(0, blockPrefabs.Length);
 
-				Block block = GameObject.Instantiate(blockPrefabs[_prefabIndex], spawner.transform);
-
-				ApplyBlockPositionAndRotation(block, spawner.Radius, i);
-				blocks.Add(block);
+				Block _block = GameObject.Instantiate(blockPrefabs[_prefabIndex], spawner.transform);
+				
+				if (_block.GetType() == typeof(BasicBlock))
+				{
+					((BasicBlock) _block).Value = 1;
+				}
+ 
+				ApplyBlockPositionAndRotation(_block, spawner.Radius, i);
+				blocks.Add(_block);
 			}
 		}
 
