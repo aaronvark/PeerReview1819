@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
 
-public class Ball : MonoBehaviour
+public class Ball : MonoBehaviour, IReset
 {
 	[SerializeField] private float speed = 10f;
-
+	[SerializeField] private Vector3 startPos;
 	private Rigidbody rb;
 
 	private void Awake()
     {
 		rb = GetComponent<Rigidbody>();
-		//rb.velocity = Vector2.up * speed;
+	}
+
+	public void ResetBall()
+	{
+		rb.angularVelocity = Vector3.zero;
+		rb.velocity = Vector3.zero;
+		transform.position = startPos;
 	}
 
 	private void OnCollisionEnter(Collision collision)

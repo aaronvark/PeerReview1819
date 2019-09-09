@@ -10,6 +10,8 @@ public class SpringLauncher : MonoBehaviour
 	private bool isActive;
 	private Vector3 startPos;
 
+	[SerializeField] private GameObject ball;
+
 	private void Start()
 	{
 		isActive = true;
@@ -32,6 +34,7 @@ public class SpringLauncher : MonoBehaviour
 
 		if (Input.GetKeyUp(KeyCode.Space))
 		{
+			ball.GetComponent<Rigidbody>().AddForce(Vector3.up * 10, ForceMode.Force);
 			isResetting = true;
 			isActive = false;
 		}
@@ -52,7 +55,6 @@ public class SpringLauncher : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		Debug.Log("Colliding with " + collision);
 		isActive = true;
 	}
 }
