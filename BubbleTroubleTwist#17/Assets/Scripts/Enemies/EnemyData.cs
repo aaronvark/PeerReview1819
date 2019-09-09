@@ -8,6 +8,6 @@ public class EnemyData
     public string splitChildName;
     public float speed;
     public int level;
-    public Transform[] splitPoints;
+    public List<Transform> splitPoints;
     public Transform spawnPoint;
 }

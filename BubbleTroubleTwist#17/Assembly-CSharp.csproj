@@ -70,6 +70,7 @@
     <Compile Include="Assets\Oefeningen\Wall.cs" />
     <Compile Include="Assets\Scripts\Enemies\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyData.cs" />
+    <Compile Include="Assets\Scripts\Environment\FPSdisplay.cs" />
     <Compile Include="Assets\Scripts\ExtensionMethods.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IDamagable.cs" />
     <Compile Include="Assets\Scripts\Interfaces\ILevel.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Assets\Scripts\Interfaces\IStats.cs" />
     <Compile Include="Assets\Scripts\Level\Level.cs" />
     <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
+    <Compile Include="Assets\Scripts\Management\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Management\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\Management\EventManager.cs" />
     <Compile Include="Assets\Scripts\Management\GameManager.cs" />

@@ -123,14 +123,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25572b90c00d8a4e8d1876d1af8a30e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPooler: {fileID: 0}
-  damage: 0
-  speed: 0
-  health: 0
-  SplitChildName: Ball
-  spawnPoints:
-  - {fileID: 6505261965191340245}
-  - {fileID: 3747175605356577686}
+  rBody: {fileID: 0}
+  enemyInput:
+    splitChildName: Ball
+    speed: 0
+    level: 0
+    splitPoints: []
+    spawnPoint: {fileID: 0}
 --- !u!1 &2968971935115950239
 GameObject:
   m_ObjectHideFlags: 0

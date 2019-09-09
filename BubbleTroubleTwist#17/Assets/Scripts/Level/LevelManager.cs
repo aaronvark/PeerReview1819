@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour, ILevel
     private void Start()
     {
         //EventManager.AddHandler(EVENT.MyEvent2, UpdateLevel);
-        EventManager.onUpdateCallerHandler += UpdateLevel;
+        EventManager.onLevelUpdateHandler += UpdateLevel;
     }
 
     public void UpdateLevel()
@@ -61,7 +61,7 @@ public class LevelManager : MonoBehaviour, ILevel
 
     private void OnDestroy()
     {
-        EventManager.onUpdateCallerHandler -= UpdateLevel;
+        EventManager.onLevelUpdateHandler -= UpdateLevel;
     }
 
     public void AddPlayer(GameObject player)

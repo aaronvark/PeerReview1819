@@ -8,7 +8,7 @@ public static class EventManager
 {
     //Static delegates
     public delegate void OnUpdateCaller();
-    public static OnUpdateCaller onUpdateCallerHandler;
+    public static OnUpdateCaller onLevelUpdateHandler;
 
     #region Different way for handling events
     // Stores the delegates that get called when an event is fired

@@ -6,25 +6,35 @@ using Bas.Interfaces;
 public class Enemy : AbstractAvatarClass, IStats<EnemyData>
 {
     public OnLevelUpdate onLevelUpdateHandler;
-    private EnemyData enemyInput;
+    public EnemyData enemyInput;
 
     private void OnDestroy()
     {
         OnDeathHandler -= OnDeath;
     }
 
+    public override void Start()
+    {
+        base.Start();
+        for(int childIndex = 0; childIndex < transform.childCount; childIndex++)
+        {
+            enemyInput.splitPoints.Add(transform.GetChild(childIndex));
+        }
+    }
+
     public void SplitEnemy()
     {
-        /*
         if (enemyInput == null) return;
-        foreach (Transform point in enemyInput.splitPoints)
+        if (enemyInput.level < 3)
         {
-            GameObject child = ObjectPooler.Instance.SpawnFromPool(enemyInput.splitChildName, point.position, Quaternion.identity);
-            child.transform.localScale = new Vector3(child.transform.localScale.x / 2, child.transform.localScale.y / 2, child.transform.localScale.z / 2);
-        }*/
-        //LevelManager.Instance.UpdateLevel();
-        //EventManager.Broadcast(EVENT.MyEvent2);
-        EventManager.onUpdateCallerHandler();
+            foreach (Transform point in enemyInput.splitPoints)
+            {
+                GameObject child = ObjectPooler.Instance.SpawnFromPool(enemyInput.splitChildName, point.position, Quaternion.identity);
+                child.transform.localScale = new Vector3(child.transform.localScale.x / 2, child.transform.localScale.y / 2, child.transform.localScale.z / 2);
+                child.GetComponent<Enemy>().enemyInput.level++;
+            }
+        }
+        EventManager.onLevelUpdateHandler();
         gameObject.SetActive(false);
     }
 
