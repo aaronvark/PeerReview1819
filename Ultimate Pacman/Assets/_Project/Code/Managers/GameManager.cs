@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public sealed class GameManager : Singleton<GameManager>
 {
     [SerializeField]
     private string nextScene = "";
 
+    public Collider2D collider { get; private set; }
     private List<Ghost> ghosts = new List<Ghost>();
 
     private float duration = 0f;
@@ -16,6 +17,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+        collider = GetComponentInChildren<Collider2D>();
         CheckPellets();
     }
 
@@ -42,7 +44,7 @@ public class GameManager : Singleton<GameManager>
 
         foreach (var ghost in ghosts)
         {
-            ghost.Blink(false);
+            ghost.body.Blink(false);
             ghost.SetVulnerable(true);
         }
 
@@ -52,7 +54,8 @@ public class GameManager : Singleton<GameManager>
             {
                 foreach (var ghost in ghosts)
                 {
-                    ghost.Blink(Mathf.Ceil(duration / .25f) % 2 == 0);
+                    if (ghost.state == Ghost.State.Vulnerable)
+                        ghost.body.Blink(Mathf.Ceil(duration / .25f) % 2 == 0);
                 }
             }
 
