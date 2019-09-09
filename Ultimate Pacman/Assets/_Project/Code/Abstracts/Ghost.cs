@@ -1,44 +1,51 @@
 ﻿using Shapes2D;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Movement2D))]
 [RequireComponent(typeof(Animator))]
 public abstract class Ghost : MonoBehaviour, IScore
 {
-    protected Transform target = null;
-    protected Movement2D movement;
-    protected Animator animator;
-
     [SerializeField]
     private Color ghostColor = new Color(2f / 30f, .2f, 1f);
     [SerializeField]
+    private int regeneratingLoops = 2;
+    [SerializeField]
     private float scoreValue = 200f;
 
-    [HideInInspector]
+    protected Vector2? target = null;
+    protected Movement2D movement;
+    protected Animator animator;
+    protected Collider2D[] colliders;
+    protected Coroutine regenerateCoroutine = null;
+
     [SerializeField]
-    private List<Transform> colorParts = new List<Transform>();
     [HideInInspector]
-    [SerializeField]
-    private List<GameObject> hiddenParts = new List<GameObject>();
-    [HideInInspector]
-    [SerializeField]
-    private List<Transform> blinkingParts = new List<Transform>();
+    public Body body { get; protected set; }
+
+    private const float onTargetDistance = 0.1f;
+    private const float regenerateLoopDistance = 0.2f;
 
     public float ScoreValue => scoreValue;
 
-    public bool Vulnerable { get; private set; } = false;
+    public State state { get; protected set; } = State.Default;
 
-    private static readonly Color vulnerableColor = new Color(2f / 30f, .2f, 1f);
-    private static readonly Color blinkingColor1 = Color.white;
-    private static readonly Color blinkingColor2 = new Color(1f, .2f, 2f / 30f);
+    public enum State
+    {
+        Default,
+        Vulnerable,
+        Regenerating,
+    }
 
     protected virtual void Awake()
     {
-        target = Player.Instance.transform;
         movement = GetComponent<Movement2D>();
         animator = GetComponent<Animator>();
+        colliders = GetComponents<Collider2D>();
+        body = new Body(transform);
     }
 
     protected virtual void OnEnable()
@@ -53,97 +60,213 @@ public abstract class Ghost : MonoBehaviour, IScore
 
     public void SetVulnerable(bool _vulnerable)
     {
-        if (Vulnerable == _vulnerable)
-            return;
+        State targetState = (_vulnerable) ? State.Vulnerable : State.Default;
 
-        Vulnerable = _vulnerable;
-
-        if (_vulnerable)
+        switch (state)
         {
-            SetColor(vulnerableColor);
-            ToggleHiddenParts();
-            movement.moveSpeed /= 2;
+            case State.Regenerating:
+            case State s when s == targetState:
+                return;
+            default:
+                state = targetState;
+                break;
         }
-        else
+
+        switch (state)
         {
-            ResetColor();
-            ToggleHiddenParts();
-            movement.moveSpeed *= 2;
+            case State.Vulnerable:
+                body.SetColorVulnerable();
+                body.ToggleHiddenParts();
+                movement.moveSpeed /= 2;
+                break;
+            default:
+                body.SetColor(ghostColor);
+                body.ToggleHiddenParts();
+                movement.moveSpeed *= 2;
+                break;
         }
     }
 
     public void Consume()
     {
-        ScoreManager.Instance.AddScore(ScoreValue);
-    }
+        ScoreManager.Instance.AddScore(this);
 
-    public void ResetColor()
-    {
-        SetColor(ghostColor);
-    }
-
-    private void ToggleHiddenParts()
-    {
-        for (int i = 0; i < hiddenParts.Count; i++)
+        foreach (var collider in colliders)
         {
-            hiddenParts[i].SetActive(!hiddenParts[i].activeSelf);
+            collider.enabled = false;
         }
+
+        body.SetColor(new Color(0, 0, 0, 0));
+        body.ToggleHiddenParts();
+        movement.moveSpeed *= 2;
+        SetRegenerateTarget();
+        state = State.Regenerating;
     }
 
-    private void SetColor(Color _color)
+    private void SetRegenerateTarget()
     {
-        foreach (var colorPart in colorParts)
-        {
-            Shape shape = colorPart.GetComponent<Shape>();
-            shape.settings.fillColor = _color;
-        }
+        Collider2D borderCollider = GameManager.Instance.collider;
+        Vector2 closestBoundsPoint = borderCollider.ClosestPoint(transform.position);
+        Vector2 newTargetDirection = (closestBoundsPoint - (Vector2)transform.position).normalized;
+        Vector2 newTarget = closestBoundsPoint + newTargetDirection;
+        target = newTarget;
     }
 
-    public void Blink(bool _white)
+    private IEnumerator Regenerate()
     {
-        if (_white)
+        Vector2 regenerationPosition = transform.position;
+        int loops = regeneratingLoops * 2;
+        Vector2 direction = Vector2.right;
+
+        while (loops >= 0)
         {
-            SetColor(blinkingColor1);
-            foreach (Transform blinkingPart in blinkingParts)
+            movement.Move(direction);
+            yield return null;
+
+            if (Vector2.Distance(regenerationPosition, transform.position) >= regenerateLoopDistance)
             {
-                Shape shape = blinkingPart.GetComponent<Shape>();
-                shape.settings.fillColor = blinkingColor2;
+                transform.position = regenerationPosition + direction * regenerateLoopDistance;
+                yield return null;
+
+                direction *= -1;
+                loops--;
+                yield return null;
             }
         }
-        else
+
+        while (Vector2.Distance(regenerationPosition, transform.position) >= onTargetDistance)
+        {
+            movement.Move(direction);
+            yield return null;
+        }
+
+        transform.position = regenerationPosition;
+
+        body.SetColor(ghostColor);
+
+        foreach (var collider in colliders)
+        {
+            collider.enabled = true;
+        }
+
+        state = State.Default;
+        regenerateCoroutine = null;
+
+        yield return null;
+    }
+
+    protected virtual void Update()
+    {
+        switch (state)
+        {
+            case State.Regenerating:
+                if (regenerateCoroutine == null &&
+                    target != null &&
+                    Vector2.Distance(transform.position, (Vector2)target) <= onTargetDistance)
+                {
+                    target = null;
+                    regenerateCoroutine = StartCoroutine(Regenerate());
+                }
+                break;
+            default:
+                target = Player.Instance.transform.position;
+                break;
+        }
+    }
+
+    protected virtual void OnValidate()
+    {
+        if (body != null)
+            body.SetColor(ghostColor);
+    }
+
+    protected virtual void Reset()
+    {
+        body = new Body(transform);
+    }
+
+    [Serializable]
+    public class Body
+    {
+        [SerializeField]
+        private List<Transform> colorParts = new List<Transform>();
+        [SerializeField]
+        private List<GameObject> hiddenParts = new List<GameObject>();
+        [SerializeField]
+        private List<Transform> blinkingParts = new List<Transform>();
+
+        private readonly Color vulnerableColor = new Color(2f / 30f, .2f, 1f);
+        private readonly Color blinkingColor1 = Color.white;
+        private readonly Color blinkingColor2 = new Color(1f, .2f, 2f / 30f);
+
+        public Body(Transform _transform)
+        {
+            colorParts.Add(_transform.Find("Head"));
+            colorParts.Add(_transform.Find("Head/Body"));
+            foreach (Transform spike in _transform.Find("Head/Body"))
+            {
+                colorParts.Add(spike);
+            }
+
+            hiddenParts.Add(_transform.Find("Head/Eye Left/Pupil").gameObject);
+            hiddenParts.Add(_transform.Find("Head/Eye Right/Pupil").gameObject);
+            hiddenParts.Add(_transform.Find("Head/Mouth").gameObject);
+
+            blinkingParts.Add(_transform.Find("Head/Eye Left"));
+            blinkingParts.Add(_transform.Find("Head/Eye Right"));
+            foreach (Transform mouthPiece in _transform.Find("Head/Mouth"))
+            {
+                blinkingParts.Add(mouthPiece);
+            }
+        }
+
+        public void Reset()
+        {
+
+        }
+
+        public void SetColor(Color _color)
+        {
+            foreach (var colorPart in colorParts)
+            {
+                Shape shape = colorPart.GetComponent<Shape>();
+                shape.settings.fillColor = _color;
+            }
+        }
+
+        public void SetColorVulnerable()
         {
             SetColor(vulnerableColor);
-            foreach (Transform blinkingPart in blinkingParts)
+        }
+
+        public void ToggleHiddenParts()
+        {
+            for (int i = 0; i < hiddenParts.Count; i++)
             {
-                Shape shape = blinkingPart.GetComponent<Shape>();
-                shape.settings.fillColor = Color.white;
+                hiddenParts[i].SetActive(!hiddenParts[i].activeSelf);
             }
         }
-    }
 
-    private void OnValidate()
-    {
-        ResetColor();
-    }
-
-    private void Reset()
-    {
-        colorParts.Add(transform.Find("Head"));
-        colorParts.Add(transform.Find("Head/Body"));
-        foreach (Transform spike in transform.Find("Head/Body"))
+        public void Blink(bool _white)
         {
-            colorParts.Add(spike);
-        }
-
-        hiddenParts.Add(transform.Find("Head/Eye Left/Pupil").gameObject);
-        hiddenParts.Add(transform.Find("Head/Eye Right/Pupil").gameObject);
-        hiddenParts.Add(transform.Find("Head/Mouth").gameObject);
-
-        blinkingParts.Add(transform.Find("Head/Eye Left"));
-        blinkingParts.Add(transform.Find("Head/Eye Right"));
-        foreach (Transform mouthPiece in transform.Find("Head/Mouth"))
-        {
-            blinkingParts.Add(mouthPiece);
+            if (_white)
+            {
+                SetColor(blinkingColor1);
+                foreach (Transform blinkingPart in blinkingParts)
+                {
+                    Shape shape = blinkingPart.GetComponent<Shape>();
+                    shape.settings.fillColor = blinkingColor2;
+                }
+            }
+            else
+            {
+                SetColor(vulnerableColor);
+                foreach (Transform blinkingPart in blinkingParts)
+                {
+                    Shape shape = blinkingPart.GetComponent<Shape>();
+                    shape.settings.fillColor = Color.white;
+                }
+            }
         }
     }
 }
