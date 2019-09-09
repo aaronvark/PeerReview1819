@@ -24,7 +24,7 @@ public class Pellet : MonoBehaviour, IScore
     public virtual void Consume()
     {
         Destroy(gameObject);
-        ScoreManager.Instance.AddScore(ScoreValue);
+        ScoreManager.Instance.AddScore(this);
         GameManager.Instance.CheckPellets();
     }
 }
