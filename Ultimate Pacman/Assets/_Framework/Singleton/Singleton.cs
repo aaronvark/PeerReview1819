@@ -29,8 +29,12 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             {
                 var singletonObject = new GameObject();
                 T t = singletonObject.AddComponent<T>();
-                DestroyImmediate(singletonObject);
+                DestroyImmediate(singletonObject, false);
                 return t;
+            }
+            else if (destroyed)
+            {
+                // O_O don't know yet
             }
 
             lock (lockObject)
@@ -47,10 +51,12 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     private static T instance = null;
     private static readonly object lockObject = new object();
+    private static bool destroyed = false;
     private static bool shuttingDown = false;
 
     public Singleton()
     {
+        destroyed = false;
         shuttingDown = false;
     }
 
@@ -79,16 +85,14 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        OnDestroy();
+        shuttingDown = true;
+        instance = null;
     }
 
     private void OnDestroy()
     {
-        if (shuttingDown)
-            return;
-
+        destroyed = true;
         instance = null;
-        shuttingDown = true;
     }
 
 #if UNITY_EDITOR
