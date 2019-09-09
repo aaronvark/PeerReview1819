@@ -59,13 +59,13 @@ public class Player : Singleton<Player>
         shape.settings.endAngle = 360f - mouthAngle.Current;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void HandleGhostCollision(Collision2D collision)
     {
         Ghost ghost = collision.transform.GetComponent<Ghost>();
         if (!ghost)
             return;
 
-        if (ghost.Vulnerable)
+        if (ghost.state == Ghost.State.Vulnerable)
         {
             ghost.Consume();
         }
@@ -75,9 +75,14 @@ public class Player : Singleton<Player>
         }
     }
 
-    public void Die()
+    private void Die()
     {
         Destroy(gameObject);
-        SceneHandler.Instance.LoadScene("Game Over");
+        SceneHandler.Instance.LoadScene("Game Over"); // FIX: This is a magic number!
+    }
+
+    public void TestMethod(Collider2D collider)
+    {
+        Debug.Log(collider.name);
     }
 }
