@@ -18,7 +18,7 @@ public class GroundedChecker : MonoBehaviour
         if (other.tag == "Box")
         {
             Walled = true;
-            Opposite = -(other.transform.position - transform.position);
+            Opposite = (transform.position - other.transform.position);
         }
     }
 
@@ -31,7 +31,7 @@ public class GroundedChecker : MonoBehaviour
         if (other.tag == "Box")
         {
             Walled = false;
-            Opposite = -(other.transform.position - transform.position);
+            Opposite = (transform.position - other.transform.position);
         }
     }
 }

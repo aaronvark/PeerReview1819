@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //Delegates
+    public delegate void OnScoreChanged();
+    public OnScoreChanged onScoreChanged;
+
     //Singleton
     public static GameManager Instance;
 
@@ -11,15 +15,25 @@ public class GameManager : MonoBehaviour
     public GameObject Player;
 
     //Public Variables
-    public float Score;
+    public float MaxHeight;
 
     private void Awake()
     {
         Instance = this;
+        onScoreChanged += ChangeScore;
     }
 
-    public void AddScore(float score)
+    public void ChangeScore()
     {
-        score += Score;
+        float currentHeight = Player.transform.position.y;
+        MaxHeight = currentHeight;
+    }
+
+    private void Update()
+    {
+        if(Player.transform.position.y > MaxHeight)
+        {
+            onScoreChanged();
+        }
     }
 }

@@ -27,7 +27,7 @@ public class Box : MonoBehaviour
     //Randomize size
     void Initialize()
     {
-        float randomSize = Random.Range(1, 3.1f);
+        float randomSize = Random.Range(1, 3.6f);
         transform.localScale = new Vector3(randomSize, randomSize, randomSize);
         CanBeHalted = true;
     }

@@ -17,21 +17,32 @@ public class PlayerMovement : MonoBehaviour
     //Public variables
     public float Speed;
     public float JumpForce;
+    public float WallJumpForce;
     public float GravityModifier;
+    public float AgainstWallGravityModifier;
+    public float WallJumpMoveCooldown;
 
+    //Private variables
     Vector3 moveDirection;
+    bool walled;
+    bool canMove;
 
     private void Start()
     {
         gameManager = GameManager.Instance;
         Player = gameManager.Player;
         characterController = Player.GetComponent<CharacterController>();
+        walled = false;
+        canMove = true;
     }
 
     void Update()
     {
-        Move();
-        Jump();
+        if(canMove)
+        {
+            Move();
+            Jump();
+        }
         ApplyGravity();
 
         characterController.Move(moveDirection * Time.deltaTime);
@@ -59,12 +70,46 @@ public class PlayerMovement : MonoBehaviour
             {
                 moveDirection.y = JumpForce;
             }
+
         }
     }
 
     void ApplyGravity()
     {
-        moveDirection.y = moveDirection.y + Physics.gravity.y * GravityModifier * Time.deltaTime;
+        if(walled)
+        {
+            moveDirection.y = moveDirection.y + Physics.gravity.y * GravityModifier * Time.deltaTime * AgainstWallGravityModifier;
+
+        }
+        else
+        {
+            moveDirection.y = moveDirection.y + Physics.gravity.y * GravityModifier * Time.deltaTime;
+        }
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(!characterController.isGrounded && hit.normal.y < 0.1f)
+        {
+            walled = true;
+            Debug.DrawRay(hit.point, hit.normal, Color.red, 1.25f);
+            if(Input.GetButtonDown("Jump"))
+            {
+                StartCoroutine(MoveCooldown());
+                Debug.DrawRay(hit.point, hit.normal, Color.blue, 1.25f);
+                moveDirection = new Vector3(hit.normal.x * WallJumpForce, JumpForce, hit.normal.z * WallJumpForce);
+                //moveDirection.y = JumpForce;
+
+            }
+        }
+        walled = false;
+    }
+
+    private IEnumerator MoveCooldown()
+    {
+        canMove = false;
+        yield return new WaitForSeconds(WallJumpMoveCooldown);
+        canMove = true;
     }
 
 }
