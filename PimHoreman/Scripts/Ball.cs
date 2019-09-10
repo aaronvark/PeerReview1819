@@ -7,12 +7,14 @@ public class Ball : MonoBehaviour, IReset
 	private float ballSpeed;
 	private Vector3 startPosition;
 	private Rigidbody rb;
+	[SerializeField] private TrailRenderer trailRen;
 
 	public void ResetObject()
 	{
 		rb.angularVelocity = Vector3.zero;
 		rb.velocity = Vector3.zero;
 		transform.position = startPosition;
+		trailRen.Clear();
 	}
 
 	public void VelocityBall(float _deltaPosition, int _force)
