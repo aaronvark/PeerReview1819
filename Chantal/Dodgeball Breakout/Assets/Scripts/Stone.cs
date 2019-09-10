@@ -20,6 +20,7 @@ public class Stone : MonoBehaviour, IDamageable
 		manager = GameObject.FindObjectOfType<Manager>();
 	}
 
+	//recieve damage when the ball hits the stone
 	public void TakeDamage(float _damage) 
 	{
 		HealthPoints -= _damage;

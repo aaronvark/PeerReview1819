@@ -10,11 +10,21 @@ public class Manager : MonoBehaviour
 		set;
 	}
 
-	private List<GameObject> stoneList = new List<GameObject>();
+	[SerializeField]
+	private Transform enemyPrefab, enemySpawnSpot;
 
-	private void Start() 
+	[SerializeField]
+	private int enemyCount, rocksPerEnemy;
+
+	private List<GameObject> stoneList = new List<GameObject>();
+	private RockPool rockPool;
+
+	private void Awake() 
 	{
+		rockPool = FindObjectOfType<RockPool>();
 		FillStoneList();
+		int _rocksToSpawn = (enemyCount * rocksPerEnemy) - rockPool.RockPoolSize();
+		rockPool.SpawnRock(_rocksToSpawn);
 	}
 
 	//TODO: fill the list

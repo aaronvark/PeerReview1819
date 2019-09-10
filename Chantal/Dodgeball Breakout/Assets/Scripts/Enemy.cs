@@ -5,47 +5,50 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
 	[SerializeField]
-	private float moveSpeed, minThrowDelay, maxThrowDelay;
+	private float moveSpeed, minThrowDelay, maxThrowDelay, throwTime;
 	[SerializeField]
-	private Transform rockPool, rockSpawn, player;
+	private Transform rockSpawn, player;
 	[SerializeField]
 	private Transform[] movePoints;
+	private RockPool rockPool;
 
-    void Start()
+
+	private void Start()
     {
+		rockPool = FindObjectOfType<RockPool>();
 		StartCoroutine(Throw());
     }
 
-	void Movement() 
+	private void Movement() 
 	{
-
+		//allow enemies to move?
 	}
 
-	Transform GetRockFromPool() 
+	//throws a rock towards the player
+	private IEnumerator Throw() 
 	{
-		Transform _rock = rockPool.GetChild(0);
-		_rock.parent = null;
-		_rock.localPosition = rockSpawn.localPosition;
-		return _rock;
-	}
+		while (true) 
+		{
+			float _throwDelay = Random.Range(minThrowDelay, maxThrowDelay);
+			yield return new WaitForSeconds(_throwDelay);
 
-	IEnumerator Throw() 
-	{
-		float _throwDelay = Random.Range(minThrowDelay, maxThrowDelay);
-		yield return new WaitForSeconds(_throwDelay);
+			Transform _rock = rockPool.GetRockFromPool();
 
+			if(_rock != null) 
+			{
+				_rock.GetComponent<Rock>().rockPool = rockPool;
+				_rock.localPosition = rockSpawn.localPosition;
+				Vector3 _destination = player.position;
+				float time = 0;
+			
+				while(time < throwTime) 
+				{
+					_rock.position = Vector3.Lerp(rockSpawn.localPosition, _destination, (time / throwTime));
+					time += Time.deltaTime;
 
-		Vector3 _destination = player.position;
-		float time = 0;
-		float delay = 2;
-
-		while(time < delay) {
-			GetRockFromPool().position = Vector3.Lerp(rockSpawn.localPosition, _destination, (time / delay));
-			time += Time.deltaTime;
-
-			// Yield here
-			yield return null;
+					yield return null;
+				}
+			}
 		}
-	}
-    
+	} 
 }

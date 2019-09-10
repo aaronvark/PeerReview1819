@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour 
 {
 	[SerializeField]
-	private float moveSpeed, lives;
+	private float moveSpeed, lives, minPosClamp, maxPosClamp;
 	private Manager manager;
 	private Rigidbody rb;
 
@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
 		Movement();
 	}
 
+	//reduces health if a rock hits the player
 	public void Health() 
 	{
 		lives--;
@@ -30,11 +31,16 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	//moves the player based on input and 
+	//limits the player to stay within the gamefield
 	private void Movement() 
 	{
 		float _xAxis = Input.GetAxis("Horizontal");
 		Vector3 _movement = new Vector3(_xAxis, 0, 0) * moveSpeed * Time.deltaTime;
-
-		rb.MovePosition(transform.position + _movement);
+		Vector3 _newPosition = transform.position + _movement;
+		float _newPosX = Mathf.Clamp(_newPosition.x, minPosClamp, maxPosClamp);
+		_newPosition.x = _newPosX;
+		
+		rb.MovePosition(_newPosition);
 	}
 }
