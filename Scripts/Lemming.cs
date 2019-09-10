@@ -31,6 +31,7 @@ public class Lemming : MonoBehaviour
     private void Update()
     {
         CalculateBehaviour();
+        CheckForInteractables();
     }
 
     private void FixedUpdate()
@@ -94,6 +95,18 @@ public class Lemming : MonoBehaviour
         else changedDimension = false;
     }
 
+    private void CheckForInteractables()
+    {
+        Collider[] _cols = Physics.OverlapBox(transform.position, transform.localScale/2);
+
+        foreach (var _col in _cols)
+        {
+            IInteractable _interactable = _col.transform.GetComponent<IInteractable>();
+            if(_interactable != null) _interactable.Interact(gameObject);      
+        }
+        
+    }
+
     private bool Grounded()
     {
         bool _returnValue = false;
@@ -108,8 +121,8 @@ public class Lemming : MonoBehaviour
         if (RaycastDown(new Vector3(_size.x * _scale.x, _yOffset, 0))) _returnValue = true; //Raycast from right edge
         if (RaycastDown(new Vector3(-_size.x * _scale.x, -transform.localScale.y / 2, 0))) _returnValue = true; //Raycast from left edge
 
-        if (RaycastDown(new Vector3(_size.z * _scale.z, _yOffset, 0))) _returnValue = true; //Raycast from front edge
-        if (RaycastDown(new Vector3(-_size.z * _scale.z, _yOffset, 0))) _returnValue = true; //Raycast from back edge
+        if (RaycastDown(new Vector3(0, _yOffset, _size.z * _scale.z))) _returnValue = true; //Raycast from front edge
+        if (RaycastDown(new Vector3(0, _yOffset, -_size.z * _scale.z))) _returnValue = true; //Raycast from back edge
 
         return isGrounded = _returnValue;
     }
@@ -186,6 +199,8 @@ public class Lemming : MonoBehaviour
         Gizmos.DrawLine(transform.position + new Vector3(GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2, 0), transform.position + new Vector3(GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2 + velocity.y * groundDetectionHeight, 0));
         Gizmos.DrawLine(transform.position + new Vector3(-GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2, 0), transform.position + new Vector3(-GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2 + velocity.y * groundDetectionHeight, 0));
         Gizmos.DrawLine(transform.position + new Vector3(0, -transform.localScale.y / 2, 0), transform.position + new Vector3(0, -transform.localScale.y / 2 + velocity.y * 0.1f, 0));
+
+        //Gizmos.DrawCube(transform.position, transform.localScale);
     }
 
     public bool IsDimensionalLemming()
