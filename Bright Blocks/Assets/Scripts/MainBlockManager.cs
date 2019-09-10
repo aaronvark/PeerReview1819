@@ -8,13 +8,13 @@ using UnityEngine;
 public class MainBlockManager : MonoBehaviour
 {
 
-    public List<Block> currentUsedBlocks = new List<Block>();
+    private List<Block> currentUsedBlocks = new List<Block>();
 
-    [SerializeField] private Color baseColor;
     [SerializeField] private Vector2Int spawnCoordinate;
     private Vector2Int currentMainBlockCoordinate;
     private Shape currentShape;
 
+    [SerializeField] private Material[] MaterialsOfShapes;
     private List<Shape> availableShapes = new List<Shape>();
 
     private Grid grid;
@@ -22,7 +22,7 @@ public class MainBlockManager : MonoBehaviour
     private void Start()
     {
         grid = FindObjectOfType<Grid>();
-        baseColor = Grid.allBlocks[spawnCoordinate].GetComponent<Renderer>().material.color;
+        //baseColor = Grid.allBlocks[spawnCoordinate].GetComponent<Renderer>().material.color;
         AddShapes();
     }
 
@@ -46,7 +46,7 @@ public class MainBlockManager : MonoBehaviour
         {
 
             //Resets current shape to base color
-            ColorShapeAroundMainBlock(baseColor);
+            //ColorShapeAroundMainBlock(baseColor);                                       FIXME WITH MATERIAL
 
             //Moves the main block down
             MoveMainBlockTowards(grid.DirectionToCoords(_direction, currentMainBlockCoordinate));
@@ -68,7 +68,7 @@ public class MainBlockManager : MonoBehaviour
         {
 
             //Resets current shape to base color
-            ColorShapeAroundMainBlock(baseColor);
+            //ColorShapeAroundMainBlock(baseColor);                                         FIXME WITH MATERIAL
 
             //RotatesShape
             currentShape.shape = ShapeCodeProcessor.RotateShapeCode(currentShape.shape);
@@ -126,7 +126,7 @@ public class MainBlockManager : MonoBehaviour
     {
 
         //Resets current block to base color
-        Grid.allBlocks[currentMainBlockCoordinate].AssignColor(baseColor);
+        //Grid.allBlocks[currentMainBlockCoordinate].AssignColor(baseColor);            FIXME WITH MATERIAL
 
         //Picks new block
         currentMainBlockCoordinate = _coordinate;
