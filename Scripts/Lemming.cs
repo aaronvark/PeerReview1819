@@ -4,52 +4,50 @@ using UnityEngine;
 
 public class Lemming : MonoBehaviour
 {
-    public enum LemmingTypes { Basic, Stopper, Dimensional, Parachuter, Climber }
-    [SerializeField] private LemmingTypes lemmingType = LemmingTypes.Basic;
-    [SerializeField] private LayerMask terrainHitMask;
+    //TODO verander parachuter naar een boolean, aangezien een lemming zowel een type moet kunnen zijn als een parachute moet kunnen hebben.
+    public enum LemmingTypes { Basic, Stopper, Dimensional, Parachuter, Climber } 
+    [SerializeField] LemmingTypes lemmingType = LemmingTypes.Basic;
+    [SerializeField] LayerMask terrainHitMask;
+    [SerializeField] float movementSpeed;
 
-    [SerializeField] private float groundDetectionHeight = 0.1f;
-    [SerializeField] private bool isGrounded = false;
+    [SerializeField] float groundDetectionHeight = 0.1f;
+    [SerializeField] bool isGrounded = false;
 
-    [SerializeField] private Material stopperMat;
-    [SerializeField] private Material dimensionalMat;
+    [SerializeField] Material stopperMat;
+    [SerializeField] Material dimensionalMat;
 
+    [SerializeField] bool dirRight;
+    [SerializeField] bool onXAxis = true;
+    [SerializeField] bool changedDimension;
 
-    [SerializeField] private bool dirRight;
-    [SerializeField] private bool onXAxis = true;
-    [SerializeField] private bool changedDimension;
-
-    //private Rigidbody rb;
     private Vector3 velocity;
+    private MeshRenderer meshRend;
 
-    private void Awake() {
-        //rb = GetComponent<Rigidbody>();
+    private void Awake()
+    {
+        meshRend = GetComponent<MeshRenderer>();
     }
 
-    private void Update() {
+    private void Update()
+    {
         CalculateBehaviour();
     }
 
-    private void FixedUpdate() {
+    private void FixedUpdate()
+    {
         transform.position += velocity * Time.deltaTime;
-        //rb.velocity = velocity;
     }
 
-    private void CalculateBehaviour() {
-
-        //if (!isStopper) {
-        //    rb.velocity = new Vector3(rb.velocity.y != 0 ? 0 : (dirRight ? 3 : -3), rb.velocity.y, 0);
-        //    CheckForCollision();
-        //}
-        //else
-        //    rb.velocity = new Vector3(0, rb.velocity.y, 0);
-
-        if (Grounded()) {
-            switch (lemmingType) {
+    private void CalculateBehaviour()
+    {
+        if (Grounded())
+        {
+            switch (lemmingType)
+            {
                 default:
                 case LemmingTypes.Basic:
                     CheckForCollision();
-                    velocity = new Vector3(onXAxis ? (dirRight ? 3 : -3) : 0, 0, onXAxis ? 0 : (dirRight ? 3 : -3));
+                    velocity = DefaultVelocity();
                     break;
                 case LemmingTypes.Stopper:
                     velocity = Vector3.zero;
@@ -60,117 +58,129 @@ public class Lemming : MonoBehaviour
                 case LemmingTypes.Climber:
                     break;
             }
+        }
 
-        }
-        else if (lemmingType == LemmingTypes.Parachuter) {
-            velocity = new Vector3(0, -1, 0);
-        }
-        else {
-            velocity = new Vector3(0, -5, 0);
-        }
+        else if (lemmingType == LemmingTypes.Parachuter) velocity = new Vector3(0, -1, 0);
+
+        else velocity = new Vector3(0, -5, 0);
+       
     }
 
-    private void CheckForCollision() {
-
+    private void CheckForCollision()
+    {
         RaycastHit _hit;
 
-        if (Physics.Raycast(transform.position, CurrentDirection(), out _hit, 0.5f, terrainHitMask)) {
-
+        if (Physics.Raycast(transform.position, CurrentDirection(), out _hit, 0.5f, terrainHitMask))
+        {
             Lemming _lemming = _hit.transform.GetComponent<Lemming>();
 
-            if (_lemming != null && _lemming.IsDimensionalLemming()) {
-
-                if (!changedDimension) {
+            if (_lemming != null && _lemming.IsDimensionalLemming())
+            {
+                if (!changedDimension)
+                {
                     transform.position = _lemming.transform.position;
                     onXAxis = onXAxis ? false : true;
                     changedDimension = true;
                 }
             }
 
-            else {
+            else
+            {
                 dirRight = dirRight ? false : true;
                 changedDimension = false;
             }
         }
 
-        else {
-            changedDimension = false;
-        }
+        else changedDimension = false;
     }
 
-    private bool Grounded() {
-
+    private bool Grounded()
+    {
         bool _returnValue = false;
 
-        if (Physics.Raycast(transform.position + new Vector3(GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2, 0), Vector3.down, groundDetectionHeight, terrainHitMask)) _returnValue = true;
-        if (Physics.Raycast(transform.position + new Vector3(-GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2, 0), Vector3.down, groundDetectionHeight, terrainHitMask)) _returnValue = true;
+        Vector3 _size = meshRend.bounds.size;
+        Vector3 _scale = transform.localScale;
 
-        if (Physics.Raycast(transform.position + new Vector3(0, -transform.localScale.y / 2, GetComponent<MeshRenderer>().bounds.size.z * transform.localScale.z), Vector3.down, groundDetectionHeight, terrainHitMask)) _returnValue = true;
-        if (Physics.Raycast(transform.position + new Vector3(0, -transform.localScale.y / 2, -GetComponent<MeshRenderer>().bounds.size.z * transform.localScale.z), Vector3.down, groundDetectionHeight, terrainHitMask)) _returnValue = true;
+        float _yOffset = -transform.localScale.y / 2;
 
-        if (Physics.Raycast(transform.position + new Vector3(0, -transform.localScale.y / 2, 0), Vector3.down, groundDetectionHeight, terrainHitMask)) _returnValue = true;
+        if (RaycastDown(new Vector3(0, _yOffset, 0))) _returnValue = true; //Raycast from center
 
-        //if (Physics.Linecast(transform.position + new Vector3(0, -transform.localScale.y / 2, 0), transform.position + new Vector3(0, -transform.localScale.y / 2 + velocity.y * 0.1f, 0))) _returnValue = true;
+        if (RaycastDown(new Vector3(_size.x * _scale.x, _yOffset, 0))) _returnValue = true; //Raycast from right edge
+        if (RaycastDown(new Vector3(-_size.x * _scale.x, -transform.localScale.y / 2, 0))) _returnValue = true; //Raycast from left edge
 
-        //if (Physics.Linecast(transform.position + new Vector3(0, -transform.localScale.y / 2, GetComponent<MeshRenderer>().bounds.size.z * transform.localScale.z),
-        //    transform.position + new Vector3(0, -transform.localScale.y / 2 + velocity.y * groundDetectionHeight,
-        //    GetComponent<MeshRenderer>().bounds.size.z * transform.localScale.z))) _returnValue = true;
-
-        //if (Physics.Linecast(transform.position + new Vector3(0, -transform.localScale.y / 2, -GetComponent<MeshRenderer>().bounds.size.z * transform.localScale.z),
-        //    transform.position + new Vector3(0, -transform.localScale.y / 2 + velocity.y * groundDetectionHeight, 
-        //    -GetComponent<MeshRenderer>().bounds.size.z * transform.localScale.z))) _returnValue = true;
-
-        //if (Physics.Linecast(transform.position + new Vector3(GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2, 0),
-        //    transform.position + new Vector3(GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x,
-        //    -transform.localScale.y / 2 + velocity.y * groundDetectionHeight, 0))) _returnValue = true;
-
-        //if (Physics.Linecast(transform.position + new Vector3(-GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2, 0),
-        //    transform.position + new Vector3(-GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x,
-        //    -transform.localScale.y / 2 + velocity.y * groundDetectionHeight, 0))) _returnValue = true;
+        if (RaycastDown(new Vector3(_size.z * _scale.z, _yOffset, 0))) _returnValue = true; //Raycast from front edge
+        if (RaycastDown(new Vector3(-_size.z * _scale.z, _yOffset, 0))) _returnValue = true; //Raycast from back edge
 
         return isGrounded = _returnValue;
     }
 
     /// <summary>
-    /// Return the current direction that the lemming should be facing.
+    /// Fires a ray downwards to check for ground.
+    /// </summary>
+    /// <param name="_originOffset"></param>
+    /// <returns></returns>
+    private bool RaycastDown(Vector3 _originOffset)
+    {
+        return Physics.Raycast(transform.position + _originOffset, Vector3.down, groundDetectionHeight, terrainHitMask);
+    }
+
+    /// <summary>
+    /// Returns the current direction that the lemming should be facing.
     /// </summary>
     /// <returns></returns>
-    private Vector3 CurrentDirection() {
+    private Vector3 CurrentDirection()
+    {
         return onXAxis ? (dirRight ? Vector3.right : Vector3.left) : (dirRight ? Vector3.forward : Vector3.back);
     }
 
-    private void OnMouseDown() {
+    /// <summary>
+    /// Returns the velocity that the lemming should have when in a default state.
+    /// </summary>
+    /// <returns></returns>
+    private Vector3 DefaultVelocity()
+    {
+        float _newMoveSpeed = dirRight ? movementSpeed : -movementSpeed; 
+        return new Vector3(onXAxis ? _newMoveSpeed : 0, 0, onXAxis ? 0 : _newMoveSpeed);
 
-        switch (CameraBehaviour.Instance.CurrentType) {
+        //DISCUSS Ik heb zoals je zei de nested ternary operator in deze functie gezet en heb hem zo aangepast dat hij niet meer nested is. Ik ben het er volkomen mee eens dat het erg onleesbaar wordt
+        //zodra je ze gaat nesten, wel vind ik dat de manier waarop ik ze hierboven gebruik erg efficiënt is en zeer leesbaar blijft. De regels hieronder zouden mijn alternatief zijn geweest om het 
+        //zonder ternary operator te maken, maar zelf vind ik dit geen hele efficiënte code. Had ik dit anders kunnen doen, of is er een andere reden om geen ternary operator te gebruiken?
 
-            default:
-            case 1:
-                if (Grounded()) {
+        //float _newMoveSpeed = movementSpeed;
+        //if (dirRight ?) _newMoveSpeed = -_newMoveSpeed;
+
+        //Vector3 _newVelocity = Vector3.zero;
+        //if (onXAxis) _newVelocity.x = _newMoveSpeed;
+        //else _newVelocity.z = _newMoveSpeed;
+
+        //return _newVelocity;
+    }
+
+    private void OnMouseDown()
+    {
+        if (Grounded() && lemmingType == LemmingTypes.Basic) 
+        {
+            switch (CameraBehaviour.Instance.CurrentType)
+            {
+                default:
+                case 1:
                     lemmingType = LemmingTypes.Stopper;
                     gameObject.layer = 9; //Make lemming part of the terrain
                     GetComponent<Renderer>().material = stopperMat;
-                }
-                break;
-            case 2:
-                if (Grounded()) {
+                    break;
+                case 2:
                     lemmingType = LemmingTypes.Dimensional;
                     gameObject.layer = 9; //Make lemming part of the terrain
                     GetComponent<Renderer>().material = dimensionalMat;
                     GetComponent<Collider>().isTrigger = true;
-                }
-                break;
+                    break;
+            }
         }
-
-        //if(Grounded()) {
-        //    lemmingType = LemmingTypes.Dimensional;
-        //    gameObject.layer = 9; //Make lemming part of the terrain
-        //    GetComponent<Renderer>().material = dimensionalMat;
-        //    GetComponent<Collider>().isTrigger = true;
-        //}
     }
 
-    private void OnDrawGizmos() {
-
+    private void OnDrawGizmos()
+    {
+        //De code hier is nog erg slordig, maar aangezien dit puur een tijdelijke debug is vind ik het zonde van mijn tijd om het op te schonen.
         Gizmos.DrawLine(transform.position, transform.position + CurrentDirection());
 
         Gizmos.DrawLine(transform.position + new Vector3(GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2, 0), transform.position + new Vector3(GetComponent<MeshRenderer>().bounds.size.x * transform.localScale.x, -transform.localScale.y / 2 + velocity.y * groundDetectionHeight, 0));
@@ -178,15 +188,8 @@ public class Lemming : MonoBehaviour
         Gizmos.DrawLine(transform.position + new Vector3(0, -transform.localScale.y / 2, 0), transform.position + new Vector3(0, -transform.localScale.y / 2 + velocity.y * 0.1f, 0));
     }
 
-    //private void OnTriggerExit(Collider other) {
-    //    Lemming _lemming = other.transform.GetComponent<Lemming>();
-    //    Debug.Log(_lemming);
-    //    if (_lemming != null && _lemming.IsDimensionalLemming() && changedDimension)
-    //        changedDimension = false;
-    //}
-
-    public bool IsDimensionalLemming() {
+    public bool IsDimensionalLemming()
+    {
         return lemmingType == LemmingTypes.Dimensional ? true : false;
     }
-
 }
