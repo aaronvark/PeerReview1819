@@ -6,17 +6,17 @@ public class Block : MonoBehaviour, IDamagable
 {
 
     [SerializeField]
-    private Rigidbody _myRb;
+    private Rigidbody myRb;
 
     [Range(0, 1)]
     [SerializeField]
-    private float _rotateMultiplier;
+    private float rotateMultiplier;
     [Range(0, 1)]
     [SerializeField]
-    private float _movementMultiplier;
+    private float movementMultiplier;
     [Range(0, 10)]
     [SerializeField]
-    private float _gravityModifier;
+    private float gravityModifier;
 
     public delegate void BlockCallBack(Block b);
     public BlockCallBack _onHitGround;
@@ -28,63 +28,70 @@ public class Block : MonoBehaviour, IDamagable
     }
 
     [SerializeField]
-    private Renderer _renderer;
+    private Renderer renderer;
 
     [SerializeField]
-    private Material[] _materials;
+    private Material[] materials;
 
-    public void Start()
+    protected void Start()
     {
-        InputManager.Instance._horizontalMovement += Move;
-        InputManager.Instance._rotateMovement += Rotate;
+        InputManager.Instance.horizontalMovement += Move;
+        InputManager.Instance.rotateMovement += Rotate;
     }
 
-    public void Update()
+    protected void OnBecameInvisible()
+    {
+        gameObject.SetActive(false);
+    }
+
+    protected void Update()
     {
         Fall();
     }
-    public void GetDamage(float damage)
+    public void GetDamage(float _damage)
     {
-        Hitpoints -= damage;
+        Hitpoints -= _damage;
+        if (Hitpoints < 0)
+            Pool.Instance.ReturnObjectToPool<Block>(this);
     }
 
 
-    public void Fall()
+    private void Fall()
     {
-        _myRb.AddForce(Vector3.down * _gravityModifier);
+        myRb.AddForce(Vector3.down * gravityModifier);
     }
 
     /// <summary>
     /// Rotating the Tetris block
     /// </summary>
     /// <param name="rotateMultiplier"></param>
-    public void Rotate(float rotate)
+    private void Rotate(float _rotate)
     {
-        _myRb.AddTorque(new Vector3(_myRb.rotation.x, _myRb.rotation.y, _myRb.rotation.z + (rotate * _rotateMultiplier)));
+        myRb.AddTorque(new Vector3(myRb.rotation.x, myRb.rotation.y, myRb.rotation.z + (_rotate * rotateMultiplier)));
     }
 
     /// <summary>
     /// Moving the Tetris block
     /// </summary>
     /// <param name="moveMultiplier"></param>
-    public void Move(float movement)
+    public void Move(float _movement)
     {
-        Vector3 vector = new Vector3(movement * _movementMultiplier, 0, 0);
-        _myRb.MovePosition(transform.position + vector);
+        Vector3 _vector = new Vector3(_movement * movementMultiplier, 0, 0);
+        myRb.MovePosition(transform.position + _vector);
     }
 
     /// <summary>
     /// When the block hit the ground or a block it will update Delegates 
     /// </summary>
-    /// <param name="coll"></param>
-    public void OnCollisionEnter(Collision coll)
+    public virtual void OnCollisionEnter(Collision _coll)
     {
-        Block block = coll.gameObject.GetComponent<Block>();
-        if (coll.gameObject.layer == LayerMask.NameToLayer("Ground") || block != null)
+        Block _block = _coll.gameObject.GetComponent<Block>();
+        if (_coll.gameObject.layer == LayerMask.NameToLayer("Ground") || _block != null)
         {
             _onHitGround?.Invoke(this);
-            InputManager.Instance._horizontalMovement -= Move;
-            InputManager.Instance._rotateMovement -= Rotate;
+
+            InputManager.Instance.horizontalMovement -= Move;
+            InputManager.Instance.rotateMovement -= Rotate;
         }
     }
 }

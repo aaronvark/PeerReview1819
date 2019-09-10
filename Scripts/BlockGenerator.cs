@@ -5,28 +5,28 @@ using UnityEngine;
 public class BlockGenerator : MonoBehaviour
 {
     [SerializeField]
-    private GameObject[] _blockCollection;
+    private GameObject[] blockCollection;
 
     public void Start()
     {
-        GenerateNewBlock();
+        GenerateNewBlock<Block>();
     }
 
     /// <summary>
     /// Generating the new block.
     /// </summary>
-    public void GenerateNewBlock()
+    public void GenerateNewBlock<T>() where T : Block
     {
-        int randomNumber = Random.Range(0, _blockCollection.Length);
-        GameObject block = _blockCollection[randomNumber];
+        T block = Pool.Instance.GetObjectFromPool<T>();
 
-        Instantiate<GameObject>(block).GetComponent<Block>()._onHitGround += BlockHitGround;
-
+        block.gameObject.SetActive(true);
+        block._onHitGround += BlockHitGround;
     }
 
     private void BlockHitGround(Block block)
     {
         block._onHitGround -= BlockHitGround;
-        GenerateNewBlock();
+
+        GenerateNewBlock<Block>();
     }
 }
