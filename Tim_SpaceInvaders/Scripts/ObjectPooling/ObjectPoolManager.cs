@@ -23,6 +23,7 @@ public class ObjectPoolManager : MonoBehaviour
     private void Start()
     {
         poolDictionary = new Dictionary<Pool, Queue<GameObject>>();
+        pools = new List<Pool>();
     }
 
     //Add a new pool type to the pool dictionary of the manager.
@@ -31,31 +32,32 @@ public class ObjectPoolManager : MonoBehaviour
         if (!pools.Contains(pool))
         {
             pools.Add(pool);
-        }
-        
-        Queue<GameObject> objectPool = new Queue<GameObject>();
-        GameObject parentObject = new GameObject();
 
-        parentObject.name = pool.poolName + " Pool";
 
-        for (int i = 0; i < pool.size; i++)
-        {
-            GameObject obj = Instantiate(pool.prefab);
-            obj.SetActive(false);
-            obj.transform.parent = parentObject.transform;
-            objectPool.Enqueue(obj);
-        }
+            Queue<GameObject> objectPool = new Queue<GameObject>();
+            GameObject parentObject = new GameObject();
+            parentObject.name = pool.poolName + " Pool";
 
-        poolDictionary.Add(pool, objectPool);
+            for (int i = 0; i < pool.size; i++)
+            {
+                GameObject obj = Instantiate(pool.prefab);
+                obj.SetActive(false);
+                obj.transform.parent = parentObject.transform;
+                objectPool.Enqueue(obj);
+            }
+
+            poolDictionary.Add(pool, objectPool);
+       }
     }
 
 
     //Enable/'spawn' an object from the defined pool, with given position and rotation.
-    public GameObject SpawnFromPool(Pool pool, Vector3 position , Quaternion rotation)
+    public GameObject SpawnFromPool(Pool pool, Vector3 position, Quaternion rotation)
     {
-        
-        if (!pools.Contains(pool)){
-            Debug.LogWarning("Pool with tag " + tag + " does not exist.");
+
+        if (!pools.Contains(pool))
+        {
+            Debug.LogWarning("Pool " + pool.poolName + " does not exist.");
             return null;
         }
 
@@ -66,16 +68,16 @@ public class ObjectPoolManager : MonoBehaviour
 
         IPoolObject pooledObj = objectToSpawn.GetComponent<IPoolObject>();
 
-        if(pooledObj != null)
+        if (pooledObj != null)
         {
             pooledObj.OnObjectSpawn();
         }
 
         poolDictionary[pool].Enqueue(objectToSpawn);
-        
+
 
         return objectToSpawn;
-        
+
 
     }
 

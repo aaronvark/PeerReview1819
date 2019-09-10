@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class Player : MonoBehaviour, IDamagable
 {
@@ -11,6 +13,7 @@ public class Player : MonoBehaviour, IDamagable
     private void Awake()
     {
         Instance = this;
+
     }
     #endregion
 
@@ -43,23 +46,28 @@ public class Player : MonoBehaviour, IDamagable
 
     [Space]
     [Header("Health Settings")]
-    [SerializeField] int health;
+    [SerializeField] int maxHealth;
+    int health;
+    [SerializeField] Image healthBar;
 
     //ObjectPool
     private ObjectPoolManager objectPool;
 
     private void Start()
     {
-        objectPool = ObjectPoolManager.Instance;
 
-        if (!objectPool.pools.Contains(bulletPool))
-        {
-            objectPool.AddPool(bulletPool);
-        }
+        objectPool = ObjectPoolManager.Instance;
+        objectPool.AddPool(bulletPool);
 
         cameraObject = GetComponentInChildren<Camera>().gameObject;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        health = maxHealth;
+
+        healthBar.fillAmount = (float)health / (float)maxHealth;
+
     }
 
     private void Update()
@@ -77,11 +85,11 @@ public class Player : MonoBehaviour, IDamagable
     {
         float _horizontalAxis = Input.GetAxis("Horizontal");
 
-        Vector3 newPlayerPostion = transform.position;
-        newPlayerPostion = new Vector3(transform.position.x + _horizontalAxis * moveSpeed, transform.position.y, transform.position.z);
-        newPlayerPostion.x = Mathf.Clamp(newPlayerPostion.x, movementRestrictions.x, movementRestrictions.y);
+        Vector3 _newPlayerPostion = transform.position;
+        _newPlayerPostion = new Vector3(transform.position.x + _horizontalAxis * moveSpeed, transform.position.y, transform.position.z);
+        _newPlayerPostion.x = Mathf.Clamp(_newPlayerPostion.x, movementRestrictions.x, movementRestrictions.y);
 
-        transform.position = newPlayerPostion;
+        transform.position = _newPlayerPostion;
 
         //transform.position = Vector3.Lerp(transform.position, newPlayerPostion, Time.deltaTime * 0.5f);
     }
@@ -105,7 +113,7 @@ public class Player : MonoBehaviour, IDamagable
         for (int i = 0; i < spawnPositions.Length; i++)
         {
             Debug.DrawRay(spawnPositions[i].transform.position, spawnPositions[i].transform.forward, Color.red);
-            
+
             GameObject _bulletClone = objectPool.SpawnFromPool(bulletPool, spawnPositions[i].transform.position, spawnPositions[i].transform.rotation);
             _bulletClone.GetComponent<Bullet>().bulletDamage = bulletDamage;
 
@@ -117,6 +125,17 @@ public class Player : MonoBehaviour, IDamagable
     public void Damage(int damage)
     {
 
+
+        if (health <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            health -= damage;
+
+            healthBar.fillAmount = (float)health / (float)maxHealth;
+        }
     }
 
     public void Die()

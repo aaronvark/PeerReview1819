@@ -27,6 +27,7 @@ public class Bullet : MonoBehaviour, IPoolObject
     public void OnObjectDespawn()
     {
         this.gameObject.SetActive(false);
+
         rb.velocity = Vector3.zero;
         GetComponent<TrailRenderer>().Clear();
     }

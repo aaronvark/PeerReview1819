@@ -12,6 +12,8 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Vector2 spawnAmountRange;
 
     private BoxCollider spawnCollider;
+    private float spawnHeight;
+    private int randomSpawnNumber;
 
     public static Vector3 randomPointInBounds(Bounds bounds)
     {
@@ -25,25 +27,42 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         objectPool = ObjectPoolManager.Instance;
-        for (int i = 0; i < spawnables.Count; i++)
-        {
-            objectPool.AddPool(spawnables[i]);
-        }
-
         spawnCollider = GetComponent<BoxCollider>();
 
-        for (int i = 0; i < Random.Range(spawnAmountRange.x, spawnAmountRange.y); i++)
+        spawnHeight = spawnCollider.bounds.center.y;
+
+        randomSpawnNumber = (int)Random.Range(spawnAmountRange.x, spawnAmountRange.y);
+
+        for (int j = 0; j < spawnables.Count; j++)
         {
-            SpawnEnemy();
-            //Debug.Log("Spawn Enemy");
+            objectPool.AddPool(spawnables[j]);
         }
+
+        for (int j = 0; j < 3; j++)
+        {
+            SpawnRow();
+        }   
     }
 
-    private void SpawnEnemy()
+    void SpawnRow()
+    {
+        float _difference = spawnCollider.bounds.size.x / randomSpawnNumber;
+
+        for (int i = 0; i < randomSpawnNumber; i++)
+        {
+            Vector3 _spawnPos = new Vector3(spawnCollider.bounds.min.x + _difference * i, spawnHeight, spawnCollider.bounds.center.z);
+
+            SpawnEnemy(_spawnPos);
+        }
+
+        spawnHeight += 100f;
+
+    }
+
+    private void SpawnEnemy(Vector3 _spawnPosition)
     {
         Pool _poolToSpawn = spawnables[Random.Range(0, spawnables.Count)];
 
-
-        objectPool.SpawnFromPool(_poolToSpawn, randomPointInBounds(spawnCollider.bounds), _poolToSpawn.prefab.transform.rotation);
+        objectPool.SpawnFromPool(_poolToSpawn, _spawnPosition, _poolToSpawn.prefab.transform.rotation);
     }
 }
