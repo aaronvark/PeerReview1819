@@ -9,7 +9,7 @@ public class AsteroidSpawner : MonoBehaviour
     private static AsteroidSpawner instance;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         instance = this;
         PoolManager.instance.CreatePool(asteroidObject, 10);

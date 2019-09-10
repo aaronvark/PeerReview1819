@@ -7,6 +7,9 @@ public class Asteroid : FloatingEntity , IDestroyable
 
     private int health = 3;
 
+    private float baseScale = 5f;
+    private float scaleIncremention = 2f;
+
     public override void OnObjectReuse()
     {
         transform.Rotate(new Vector3(0, 0, Random.Range(0, 360)));
@@ -48,7 +51,7 @@ public class Asteroid : FloatingEntity , IDestroyable
         }
         set {
             health = value;
-            transform.localScale = new Vector2(health * 2, health * 2);
+            transform.localScale = new Vector2(baseScale + health * scaleIncremention, baseScale + health * scaleIncremention);
         }
     }
 }

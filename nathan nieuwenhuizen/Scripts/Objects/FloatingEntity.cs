@@ -20,4 +20,9 @@ public class FloatingEntity : PoolObject
     {
         base.Destroy();
     }
+    public Rigidbody2D RigidBody
+    {
+        get { return rb; }
+        set { rb = value; }
+    }
 }

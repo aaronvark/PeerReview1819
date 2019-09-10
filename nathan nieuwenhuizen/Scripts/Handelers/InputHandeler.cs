@@ -19,8 +19,17 @@ public class InputHandeler : MonoBehaviour
             character.CancelJump();
         }
 
-        if (Input.GetButtonDown("Fire1")){
-            character.Shoot();
+        if (Input.GetButtonDown("Fire1"))
+        {
+            character.Trigger();
+        }
+        if (Input.GetButton("Fire1"))
+        {
+            character.TriggerHold();
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            character.Untrigger();
         }
     }
 }
