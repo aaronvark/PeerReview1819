@@ -12,7 +12,7 @@ public class EntityExtraForce : Entity
         foreach(Collider2D col in colliders)
         {
             Entity _tempEntity = col.transform.gameObject.GetComponent<Entity>();
-            _tempEntity.DamageEntity(damage);
+            _tempEntity?.DamageEntity(damage);
 
             Rigidbody2D rb = col.GetComponent<Rigidbody2D>();
             if(rb != null && rb.transform.name != "Player")

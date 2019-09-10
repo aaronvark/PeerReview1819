@@ -10,6 +10,7 @@ public class EnemySpawner : MonoBehaviour
     private float spawnTime;
     private float timestamp = 0.0f;
     private Transform thePlayer;
+
     private void Start()
     { 
         timestamp = Time.time + 0.0f;
@@ -33,21 +34,22 @@ public class EnemySpawner : MonoBehaviour
             float _angle = (Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg) - 90f;
             Quaternion _tempRot = Quaternion.AngleAxis(_angle, Vector3.forward);
 
-            // Spawns asteroid
-            int _chosenInt;
-            int _randomInt = Random.Range(0, 100);
-            if(_randomInt < 20)
-            {
-                _chosenInt = 1;
-            }
-            else
-            {
-                _chosenInt = 0;
-            }
+            // Spawns large asteroid when the % is smaller than 20, if percentage is larger than 20 then spawn small asteroid
+            int _randomInt = Random.Range(0, 100) < 20 ? 1 : 0;
+            //if(_randomInt < 20)
+            //{
+            //    _chosenInt = 1;
+            //}
+            //else
+            //{
+            //    _chosenInt = 0;
+            //}
 
-            GameObject _tempAsteroid = Instantiate(asteroids[_chosenInt], _spawnPoint, _tempRot);
+            GameObject _tempAsteroid = Instantiate(asteroids[_randomInt], _spawnPoint, _tempRot);
 
             timestamp = Time.time + spawnTime;
         }
     }
+
+
 }
