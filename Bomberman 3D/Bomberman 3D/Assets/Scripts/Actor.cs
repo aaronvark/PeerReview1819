@@ -8,6 +8,14 @@ public class Actor : MonoBehaviour, IDamagable
     public GameObject bombDummy;
     public Bomb bomb;
 
+    protected UIManager uiManager;
+
+    private void Start()
+    {
+        //uiManager = GetComponent<UIManager>();
+        uiManager = FindObjectOfType<UIManager>();
+    }
+
     // Update is called once per frame
     private void Update()
     {
@@ -18,10 +26,9 @@ public class Actor : MonoBehaviour, IDamagable
         }
     }
 
-    public void Damage()
+    public virtual void Damage()
     {
         health -= 1;
-        Debug.Log(health);
         if (health <= 0)
         {
             Die();

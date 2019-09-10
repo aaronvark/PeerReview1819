@@ -4,22 +4,23 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-
     public delegate void CanDeployBomb();
-
-    public event CanDeployBomb _canDeploy;
-
     public delegate void TimerCallBack();
 
+    public event CanDeployBomb _canDeploy;
     public event TimerCallBack _timerCallBack;
 
     public bool bombDeployCheck = true;
 
     [SerializeField] private float explodeTime;
     [SerializeField] private float bombTimer;
+    [SerializeField] private float particleTimer;
     [SerializeField] private float raycastLength;
+    [SerializeField] private GameObject particles;
 
-    private Actor actor;
+    private float maxBombTimer;
+    private bool particlesOn = false;
+
     private RaycastHit[] hit;
     private Vector3[] directions;
 
@@ -32,24 +33,25 @@ public class Bomb : MonoBehaviour
 
     private void Start()
     {
-        actor = Actor.FindObjectOfType<Actor>();
         directions = new Vector3[] { Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
         hit = new RaycastHit[directions.Length];
+
+        maxBombTimer = bombTimer;
     }
 
     private void Update()
     {
-        Timer();
+        bombTimer = Timer(bombTimer);
 
-        if (Timer() < 0)
+        if (bombTimer < 0)
         {
             Explode();
         }
     }
 
-    private float Timer()
+    private float Timer(float timer)
     {
-        return bombTimer -= Time.deltaTime;
+        return timer -= Time.deltaTime;
     }
 
     public void Deployed()
@@ -64,16 +66,21 @@ public class Bomb : MonoBehaviour
 
     private void Explode()
     {
+        _canDeploy.Invoke();
+        _timerCallBack.Invoke();
+
+        particles.SetActive(true);
+        particles.transform.position = transform.position;
 
         for (int i = 0; i < directions.Length; i++)
         {
             if (Physics.Raycast(transform.position, directions[i], out hit[i], raycastLength))
             {
                 Debug.DrawRay(transform.position, directions[i], Color.red);
-
                 try
                 {
                     hit[i].collider.GetComponent<IDamagable>().Damage();
+                    hit[i].collider.GetComponent<DestructableWall>().waitForDestroy = particleTimer;
                 }
                 catch
                 {
@@ -81,19 +88,21 @@ public class Bomb : MonoBehaviour
                 }
             }
         }
-        _canDeploy.Invoke();
-        _timerCallBack.Invoke();
+
+
+        
         gameObject.SetActive(false);
+
     }
 
     private void ResetTime()
     {
-        bombTimer = 5;
+        bombTimer = maxBombTimer;
+        particles.SetActive(false);
     }
 
     private void CanDeploy()
     {
         bombDeployCheck = !bombDeployCheck;
-        Debug.Log(bombDeployCheck);
     }
 }
