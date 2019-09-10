@@ -6,11 +6,15 @@ public class Middle : MonoBehaviour
 {
     public void UpdateMiddle()
     {
-        transform.Rotate(new Vector3(0,0, GameManager.Instance.middleRotateSpeed * 1));
+        transform.Rotate(new Vector3(0, 0, GameManager.Instance.middleRotateSpeed * 1));
 
-        foreach( Block block in GameManager.Instance.GetBlocks())
+        List<Block> blocks = GameManager.Instance.GetBlocks();
+        if (blocks != null)
         {
-            block.GetRigidB().AddForce(-block.transform.position.normalized * GameManager.Instance.middleForce);
+            foreach (Block block in blocks)
+            {
+                block.GetRigidB().AddForce(-block.transform.position.normalized * GameManager.Instance.middleForce);
+            }
         }
     }
 }

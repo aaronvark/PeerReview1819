@@ -11,13 +11,13 @@ public class GameManager : MonoBehaviour {
     public float middleForce = 1;
     public float middleRotateSpeed = 1;
 
-    private List<Block> blocks;
+    private List<Block> blocks = new List<Block>();
+    //is this usefull or unneccesary?
     public List<Block> GetBlocks() { return blocks; }
-    public void AddBlock(Block _block) { blocks.Add(_block); }
+    public void AddBlock(Block _block) { blocks.Add(_block);}
     public void RemoveBlock(Block _block) { blocks.Remove(_block); }
 
-    private GameObject[] blockPrefabs;
-    public GameObject[] GetBlocksPrefabs() { return blockPrefabs; }
+    public GameObject blockPrefab;
 
     //TODO: other way without player references?
     public Player[] players = new Player[2];
@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
 
     private PlayerInput playerInput;
     private Middle middle;
+    public BlockPool blockPool;
 
     private void Awake()
     {
@@ -36,7 +37,8 @@ public class GameManager : MonoBehaviour {
 
     private void Start()
     {
-        playerInput = GetComponent<PlayerInput>();
+        playerInput = new PlayerInput();
+        blockPool = new BlockPool(blockPrefab,20);
         middle = FindObjectOfType<Middle>();
 
         GetInput += playerInput.GetInput;

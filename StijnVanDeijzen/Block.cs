@@ -4,82 +4,87 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    [SerializeField] private Color _color;
+    [SerializeField] private int type = 0; //types from 0-5
     public Player owner;
     public HashSet<Block> connected = new HashSet<Block>();
     private Rigidbody2D rigidB;
     public Rigidbody2D GetRigidB() { return rigidB; }
-    private LineRenderer lineR;
 
     private float _firstTouch = Mathf.Infinity;
 
     void Start()
     {
-        //TODO: Set sprite color based on block color
-        rigidB = GetComponent<Rigidbody2D>();
-        lineR = GetComponentInChildren<LineRenderer>();
-        lineR.startColor = owner.playerColor;
-        lineR.endColor = lineR.startColor;
+        if (rigidB == null) { rigidB = GetComponent<Rigidbody2D>(); }
+        Randomize();
     }
 
-
-    void Update()
+    public void Randomize()
     {
-        //disable lineRenderer after 1 sec
-        //if (Time.time > _firstTouch + 1f)
-        //{
-        //    lineR.startColor = new Color(0, 0, 0, 0);
-        //    lineR.endColor = lineR.startColor;
-        //}
+        transform.GetChild(type).gameObject.SetActive(false);
+        type = Random.Range(0,6);
+        transform.GetChild(type).gameObject.SetActive(true);
     }
 
     public void Move(float _x, float _y)
     {
-        rigidB.velocity = new Vector2(_x, _y) * GameManager.Instance.blockSpeed;        
+        rigidB.velocity = new Vector2(_x, _y) * GameManager.Instance.blockSpeed;
     }
 
     public void Rotate(float _direction)
     {
-        transform.Rotate(new Vector3(0, 0, _direction * -1f));        
+        transform.Rotate(new Vector3(0, 0, _direction * -1f));
     }
 
     //TODO: when block hits trigger event?
     private void OnTriggerEnter2D(Collider2D _other)
     {
-        if (Time.time < _firstTouch) {
-            owner.Invoke("NewBlock", 1f);
+        if (Time.time < _firstTouch)
+        {
+            owner.Invoke("NewBlock", 1f); //TODO: change delay without invoke, because delay needs to be instant if it connects a pair
             _firstTouch = Time.time;
             GameManager.Instance.AddBlock(this);
         }
-        Block _otherBlock = _other.transform.parent.GetComponent<Block>();
-        if (_otherBlock != null) {
-            
-            //Adding connected blocks of same color to hashset
-            if (_otherBlock._color == _color)
+        Block _otherBlock = _other.transform.parent?.parent?.GetComponent<Block>();
+        if (_otherBlock != null)
+        {
+
+            //Adding connected blocks of same type to hashset
+            if (_otherBlock.type == type)
             {
                 connected.Add(_otherBlock);
-                foreach (Block b in _otherBlock.connected) {
+                foreach (Block b in _otherBlock.connected)
+                {
                     connected.Add(b);
                 }
             }
 
             //If 3 blocks are connected remove them and award points
-            if ( connected.Count >= 3)
+            if (connected.Count >= 3)
             {
-                    owner.AddScore(30);
-                    foreach (Block b in connected)
-                    {
-                        GameManager.Instance.RemoveBlock(b);
-                        Destroy(b.gameObject, Time.deltaTime);
-                    }
-                
+
+                if (transform.position.x < 0)
+                {
+                    GameManager.Instance.players[0].AddScore(30);
+                }
+                else
+                {
+                    GameManager.Instance.players[1].AddScore(30);
+                }
+
+                connected.Remove(this);
+                foreach (Block b in new HashSet<Block>(connected))
+                {
+                    GameManager.Instance.RemoveBlock(b);
+                    GameManager.Instance.blockPool.Return(b.gameObject);
+                }
+                GameManager.Instance.blockPool.Return(this.gameObject);
             }
         }
     }
 
     private void OnTriggerExit2D(Collider2D _other)
     {
-        Block _otherBlock = _other.transform.parent.GetComponent<Block>();
+        Block _otherBlock = _other.transform.parent?.parent?.GetComponent<Block>();
         if (_otherBlock != null) { connected.Remove(_otherBlock); }
     }
 }
