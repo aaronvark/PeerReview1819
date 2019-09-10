@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : PoolableBehaviour
 {
     public float speed;
     public int damage;
@@ -14,11 +14,12 @@ public class Projectile : MonoBehaviour
             Enemy _enemy = collision.gameObject.GetComponent<Enemy>();
             _enemy.SplitEnemy();
             _enemy.TakeDamage(damage);
+            EventManager.Broadcast(EVENT.MyEvent2);
+            Recycle();
         }
         if (collision.gameObject.tag != "Projectile")
         {
-            gameObject.SetActive(false);
-
+            Recycle();
         }
     }
 }

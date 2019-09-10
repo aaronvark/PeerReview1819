@@ -448,6 +448,8 @@ GameObject:
   m_Component:
   - component: {fileID: 296670209}
   - component: {fileID: 296670208}
+  - component: {fileID: 296670210}
+  - component: {fileID: 296670211}
   m_Layer: 0
   m_Name: ObjectPooler
   m_TagString: Untagged
@@ -475,7 +477,7 @@ MonoBehaviour:
   - tag: Ball
     prefab: {fileID: 2381273675624277185, guid: fb9b86a68ff052b45bec7a831b4b38fc,
       type: 3}
-    size: 100
+    size: 10
   - tag: Player
     prefab: {fileID: 7790578033780216300, guid: 5eff4129470b44245bec1b8ab5a935f1,
       type: 3}
@@ -494,6 +496,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &296670210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296670207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96ea1c69c554b694baae1090ea84775d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_prefab: {fileID: 1761001932}
+  m_size: 50
+--- !u!114 &296670211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296670207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a688a8287bfe24443be1143f397c7b52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 5299671328839668858, guid: b46d08fd774f82245bc790c89d3e6e33, type: 3}
+  size: 20
 --- !u!1 &318071246
 GameObject:
   m_ObjectHideFlags: 0
@@ -1285,96 +1315,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playersStats:
-  - entityStats:
-      entityStats:
-        entityStats:
-          entityStats:
-            entityStats:
-              entityStats:
-                entityStats:
-                  id: 
-                  horizontalAxis: 
-                  verticalAxis: 
-                  level: 0
-                  spawnVector: {x: 0, y: 0, z: 0}
-                id: 
-                horizontalAxis: 
-                verticalAxis: 
-                level: 0
-                spawnVector: {x: 0, y: 0, z: 0}
-              id: 
-              horizontalAxis: 
-              verticalAxis: 
-              level: 0
-              spawnVector: {x: 0, y: 0, z: 0}
-            id: 
-            horizontalAxis: 
-            verticalAxis: 
-            level: 0
-            spawnVector: {x: 0, y: 0, z: 0}
-          id: 
-          horizontalAxis: 
-          verticalAxis: 
-          level: 0
-          spawnVector: {x: 0, y: 0, z: 0}
-        id: 
-        horizontalAxis: 
-        verticalAxis: 
-        level: 0
-        spawnVector: {x: 0, y: 0, z: 0}
-      id: 
-      horizontalAxis: 
-      verticalAxis: 
-      level: 0
-      spawnVector: {x: 0, y: 0, z: 0}
-    id: Player
+  - id: Player
     horizontalAxis: Horizontal
     verticalAxis: Vertical
     level: 1
     spawnVector: {x: 0, y: 1.135, z: 0}
-  - entityStats:
-      entityStats:
-        entityStats:
-          entityStats:
-            entityStats:
-              entityStats:
-                entityStats:
-                  id: 
-                  horizontalAxis: 
-                  verticalAxis: 
-                  level: 0
-                  spawnVector: {x: 0, y: 0, z: 0}
-                id: 
-                horizontalAxis: 
-                verticalAxis: 
-                level: 0
-                spawnVector: {x: 0, y: 0, z: 0}
-              id: 
-              horizontalAxis: 
-              verticalAxis: 
-              level: 0
-              spawnVector: {x: 0, y: 0, z: 0}
-            id: 
-            horizontalAxis: 
-            verticalAxis: 
-            level: 0
-            spawnVector: {x: 0, y: 0, z: 0}
-          id: 
-          horizontalAxis: 
-          verticalAxis: 
-          level: 0
-          spawnVector: {x: 0, y: 0, z: 0}
-        id: 
-        horizontalAxis: 
-        verticalAxis: 
-        level: 0
-        spawnVector: {x: 0, y: 0, z: 0}
-      id: 
-      horizontalAxis: 
-      verticalAxis: 
-      level: 0
-      spawnVector: {x: 0, y: 0, z: 0}
-    id: Player
+  - id: Player
     horizontalAxis: Horizontal1
     verticalAxis: Vertical1
     level: 2
@@ -1417,8 +1363,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
-  - enemyAmounts: 7
-    enemiesAlive: 7
+  - enemyAmounts: 5
+    enemiesAlive: 5
     done: 0
     nextLevelPosition: {fileID: 908133673}
   - enemyAmounts: 14
@@ -2735,6 +2681,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2381273676823998836}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1761001932 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5299671328839668859, guid: b46d08fd774f82245bc790c89d3e6e33,
+    type: 3}
+  m_PrefabInstance: {fileID: 5299671329117957226}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 515e6e3dd5df7984b93128a1e95d59ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1832696981
 GameObject:
   m_ObjectHideFlags: 0

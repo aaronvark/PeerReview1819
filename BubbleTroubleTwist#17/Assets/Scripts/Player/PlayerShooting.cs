@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Player class with all player related functionality
+/// Player behaviour with all player shooting related functionality
 /// </summary>
-public class Player : AbstractAvatarClass
+public class PlayerShooting : AbstractAvatarClass
 {
     public Transform firePoint;
     public float cooldown;

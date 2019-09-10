@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
-/*
-public class EntityManager<T> : MonoBehaviour
-{
-    public List<T> entitiesStats;
-    public GameObject entityGameObject;
 
-    public void InitEntities()
+public class EntityManager<T> where T : MonoBehaviour
+{
+    public List<T> entityManagers;
+    public GameObject entityManagerGameObject;
+
+    public void InitEntities(T entity, T entityStats)
     {
-        foreach (T entityStats in entitiesStats)
+
+    }
+
+    public void InitEntityManagers(T _entityManager)
+    {
+        foreach(T entyManager in entityManagers)
         {
-            //Spawn a player foreach player in the PlayerData list
-            GameObject enemyGameObject = ObjectPooler.Instance.SpawnFromPool(entityGameObject.name, entityStats.spawnPoint.position, Quaternion.identity);
-            //Get the interface of each player and give it its stats
-            var component = enemyGameObject.GetComponent<IStats<EnemyData>>();
-            component.SetStats(entityStats);
+            //entityManagerGameObject.AddComponent<entyManager>();
         }
     }
-}*/
+}
 
 public class EnemyManager : MonoBehaviour
 {

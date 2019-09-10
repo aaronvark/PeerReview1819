@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
-public class LevelManager : MonoBehaviour, ILevel
+public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
 {
     public List<Level> levels;
 
@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour, ILevel
 
     public OnLevelUpdate onLevelUpdate;
 
+    /*
     #region Singleton
     private static LevelManager instance;
     public static ILevel Instance
@@ -28,11 +29,12 @@ public class LevelManager : MonoBehaviour, ILevel
         instance = this;
     }
     #endregion
+    */
 
     private void Start()
     {
         //EventManager.AddHandler(EVENT.MyEvent2, UpdateLevel);
-        EventManager.onLevelUpdateHandler += UpdateLevel;
+        EventManager.OnLevelUpdateHandler += UpdateLevel;
     }
 
     public void UpdateLevel()
@@ -61,7 +63,7 @@ public class LevelManager : MonoBehaviour, ILevel
 
     private void OnDestroy()
     {
-        EventManager.onLevelUpdateHandler -= UpdateLevel;
+        EventManager.OnLevelUpdateHandler -= UpdateLevel;
     }
 
     public void AddPlayer(GameObject player)

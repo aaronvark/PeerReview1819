@@ -143,6 +143,8 @@ MonoBehaviour:
   timeBetween: 0.2
   currentProjectileName: CubeStreamProjectile
   usingWeaponData:
+    projectileGameObject: {fileID: 5299671328839668858, guid: b46d08fd774f82245bc790c89d3e6e33,
+      type: 3}
     projectileName: CubeStreamProjectile
     firePoint: {fileID: 7790578034072351145}
     damage: 1

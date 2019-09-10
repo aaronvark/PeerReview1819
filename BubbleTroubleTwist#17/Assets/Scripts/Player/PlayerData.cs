@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class PlayerData : StatsBase<PlayerData>
+public class PlayerData 
 {
     public string id;
     public string horizontalAxis;
