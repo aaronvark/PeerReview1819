@@ -16,6 +16,8 @@ public class Bullet : FloatingEntity
     //disappears when hitting something
     private void OnCollisionEnter2D(Collision2D _collision)
     {
+        //Debug.Log(myOwner.gameObject);
+        //Debug.Log(_collision.gameObject);
         if (_collision.gameObject != myOwner.gameObject)
         {
             MonoBehaviour[] list = _collision.gameObject.GetComponents<MonoBehaviour>();
@@ -25,9 +27,14 @@ public class Bullet : FloatingEntity
                 {
                     IDestroyable breakable = (IDestroyable)mb;
                     breakable.TakeDamage(1);
-                    base.Destroy();
+                    //base.Destroy();
+                    myOwner.gun.LoadBullet();
+
                 }
             }
+        } else
+        {
+            myOwner.gun.LoadBullet();
         }
     }
 }

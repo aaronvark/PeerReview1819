@@ -15,7 +15,7 @@ public class Character : MonoBehaviour, IDestroyable
 
     //components
     [SerializeField]
-    private Gun gun;
+    public Gun gun;
     private Rigidbody2D rb;
 
     //states
@@ -68,9 +68,19 @@ public class Character : MonoBehaviour, IDestroyable
         }
     }
 
-    public void Shoot()
+    public void Trigger()
     {
-        gun.Shoot();
+        gun.Trigger();
+    }
+
+    public void TriggerHold()
+    {
+        gun.TriggerHold();
+    }
+
+    public void Untrigger()
+    {
+        gun.Untrigger();
     }
 
     public int Health
