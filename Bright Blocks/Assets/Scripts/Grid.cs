@@ -15,37 +15,51 @@ public class Grid : MonoBehaviour
 
     [SerializeField] private Demonstration_MeshProcessing meshOutliner;
 
-    private void Awake() {
+    private void Awake()
+    {
         CreateGrid();
     }
 
-    public static bool CanShapeMove(List<Vector2Int> _fromCoordinates, Direction _direction) {
+    public bool CanShapeMove(List<Vector2Int> _fromCoordinates, Direction _direction)
+    {
 
         List<Vector2Int> _potentialCoordinates = new List<Vector2Int>();
 
         //Adds all potential coordinates to a list
-        for (int i = 0; i < _fromCoordinates.Count; i++) {
+        for (int i = 0; i < _fromCoordinates.Count; i++)
+        {
 
             _potentialCoordinates.Add(DirectionToCoords(_direction, _fromCoordinates[i]));
         }
 
-        
+
 
         return AreTheseCoordinatesAvailable(_potentialCoordinates, _direction);
     }
 
-    public static bool AreTheseCoordinatesAvailable(List<Vector2Int> _coordinates, Direction _direction = Direction.Left) {
+    public bool AreTheseCoordinatesAvailable(List<Vector2Int> _coordinates, Direction _direction = Direction.Left)
+    {
 
         //Checks if the potential coordinates exist within the grid and are not already occupied by colored blocks
-        for (int i = 0; i < _coordinates.Count; i++) {
+        for (int i = 0; i < _coordinates.Count; i++)
+        {
 
-            if (!allBlocks.ContainsKey(_coordinates[i]) || allBlocks[_coordinates[i]].isSet) {
+            if (!allBlocks.ContainsKey(_coordinates[i]) || allBlocks[_coordinates[i]].isSet)
+            {
 
                 //Checks if the block has reached the bottom or a colored block
-                if (_coordinates[i].y < 0 || (_direction == Direction.Down && allBlocks[_coordinates[i]].isSet)) {
+                if (_coordinates[i].y < 0 || (_direction == Direction.Down && allBlocks[_coordinates[i]].isSet))
+                {
 
                     //Delegate potential
                     FindObjectOfType<MainBlockManager>().SetShape();
+                    List<Block> _madeBlocks = GetAllMadeLines();
+                    if (_madeBlocks.Count >= gridSize.x)
+                    {
+                        ClearBlocks(GetAllMadeLines());
+                        MoveAllUsedBlocksDown(_madeBlocks.Count / gridSize.x, GetLowestYBlock(_madeBlocks));
+
+                    }
                     return false;
                 }
                 return false;
@@ -55,11 +69,13 @@ public class Grid : MonoBehaviour
         return true;
     }
 
-    public static Vector2Int DirectionToCoords(Direction _direction, Vector2Int _coordinate) {
+    public Vector2Int DirectionToCoords(Direction _direction, Vector2Int _coordinate)
+    {
 
         Vector2Int _newCoordinate = Vector2Int.zero;
 
-        switch (_direction) {
+        switch (_direction)
+        {
             case Direction.Down:
                 _newCoordinate = new Vector2Int(_coordinate.x, _coordinate.y - 1);
                 break;
@@ -76,12 +92,15 @@ public class Grid : MonoBehaviour
         return _newCoordinate;
     }
 
-    
 
-    private void CreateGrid() {
 
-        for (int y = 0; y < gridSize.y; y++) {
-            for (int x = 0; x < gridSize.x; x++) {
+    private void CreateGrid()
+    {
+
+        for (int y = 0; y < gridSize.y; y++)
+        {
+            for (int x = 0; x < gridSize.x; x++)
+            {
 
                 //Saves the current coordinates for later use
                 Vector2Int _currentCoordinate = new Vector2Int(x, y);
@@ -91,7 +110,7 @@ public class Grid : MonoBehaviour
 
                 //Initializes the newBlock with the Vector2Ints
                 _newBlock.Initialize(_currentCoordinate);
-                
+
 
                 allBlocks.Add(_currentCoordinate, _newBlock);
 
@@ -100,34 +119,58 @@ public class Grid : MonoBehaviour
         }
     }
 
-    private void ClearBlocks(List<Block> _blocks) {
+    private void ClearBlocks(List<Block> _blocks)
+    {
 
-        for (int i = 0; i < _blocks.Count; i++) {
+        for (int i = 0; i < _blocks.Count; i++)
+        {
 
             _blocks[i].ClearBlock();
         }
     }
 
+    private void MoveAllUsedBlocksDown(int _linesToMove, int _lowestYCoordinate)
+    {
+        for (int i = 0; i < _linesToMove; i++)
+        {
+            for (int y = _lowestYCoordinate; y < gridSize.y; y++)
+            {
+                for (int x = 0; x < gridSize.x; x++)
+                {
+
+                    allBlocks[new Vector2Int(x, y)].TransferColorDown();
+                }
+            }
+        }
+
+    }
+
     //TODO only check the lines a shape has interacted with
     //Check if all the blocks in a horizontal lines have the isSet bool as true
-    public List<Block> GetAllMadeLines() {
+    public List<Block> GetAllMadeLines()
+    {
 
         List<Block> _allBlocksInMadeLines = new List<Block>();
 
-        for (int y = 0; y < gridSize.y; y++) {
-            if (CheckIfBlocksAreSet(GetBlocksAtY(y))) {
+        for (int y = 0; y < gridSize.y; y++)
+        {
+            if (CheckIfBlocksAreSet(GetBlocksAtY(y)))
+            {
                 _allBlocksInMadeLines.AddRange(GetBlocksAtY(y));
             }
         }
 
         return _allBlocksInMadeLines;
-        
+
     }
 
-    private bool CheckIfBlocksAreSet(List<Block> _blockList) {
+    private bool CheckIfBlocksAreSet(List<Block> _blockList)
+    {
 
-        for (int i = 0; i < _blockList.Count; i++) {
-            if (!_blockList[i].isSet) {
+        for (int i = 0; i < _blockList.Count; i++)
+        {
+            if (!_blockList[i].isSet)
+            {
 
                 return false;
             }
@@ -136,15 +179,33 @@ public class Grid : MonoBehaviour
         return true;
     }
 
-    private List<Block> GetBlocksAtY(int _y) {
+    private List<Block> GetBlocksAtY(int _y)
+    {
 
         List<Block> _blocks = new List<Block>();
 
-        for (int x = 0; x < gridSize.x; x++) {
+        for (int x = 0; x < gridSize.x; x++)
+        {
             _blocks.Add(allBlocks[new Vector2Int(x, _y)]);
         }
 
         return _blocks;
+    }
+
+    private int GetLowestYBlock(List<Block> _blockList)
+    {
+        int _lowestY = gridSize.y + 2;
+
+        for (int i = 0; i < _blockList.Count; i++)
+        {
+            if (_lowestY > _blockList[i].coordinate.y)
+            {
+
+                _lowestY = _blockList[i].coordinate.y;
+            }
+        }
+
+        return _lowestY;
     }
 
 }

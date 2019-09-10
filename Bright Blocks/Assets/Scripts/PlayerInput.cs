@@ -9,25 +9,31 @@ public class PlayerInput : MonoBehaviour
 {
     public MainBlockManager tempVar;
 
-    private void Update() {
+    private void Update()
+    {
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
 
             tempVar.SpawnShape();
         }
 
-        
 
-        if (Input.GetKeyDown(KeyCode.DownArrow)) {
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
 
             tempVar.MoveShapeTowards(Direction.Down);
-        } else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+        } else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
 
             tempVar.MoveShapeTowards(Direction.Left);
-        } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+        } else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
 
             tempVar.MoveShapeTowards(Direction.Right);
-        } else if (Input.GetKeyDown(KeyCode.UpArrow)) {
+        } else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
 
             tempVar.RotateShape();
         }

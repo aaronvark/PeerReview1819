@@ -5,22 +5,30 @@ using UnityEngine;
 /// <summary>
 /// Spawns the mainBlocks
 /// </summary>
-public class MainBlockManager : MonoBehaviour {
+public class MainBlockManager : MonoBehaviour
+{
+
+    public List<Block> currentUsedBlocks = new List<Block>();
 
     [SerializeField] private Color baseColor;
     [SerializeField] private Vector2Int spawnCoordinate;
     private Vector2Int currentMainBlockCoordinate;
     private Shape currentShape;
-    private List<Block> currentUsedBlocks = new List<Block>();
 
     private List<Shape> availableShapes = new List<Shape>();
 
-    private void Start() {
+    private Grid grid;
+
+    private void Start()
+    {
+        grid = FindObjectOfType<Grid>();
         baseColor = Grid.allBlocks[spawnCoordinate].GetComponent<Renderer>().material.color;
         AddShapes();
     }
 
-    public void SpawnShape() {
+
+    public void SpawnShape()
+    {
 
         currentMainBlockCoordinate = spawnCoordinate;
         currentShape = ChooseRandomShape();
@@ -30,16 +38,18 @@ public class MainBlockManager : MonoBehaviour {
     }
 
 
-    public void MoveShapeTowards(Direction _direction) {
+    public void MoveShapeTowards(Direction _direction)
+    {
 
         //Checks if shape can move towards specified direction
-        if (Grid.CanShapeMove(ShapeCodeProcessor.ShapeCodeToCoordinates(currentShape.shape, currentMainBlockCoordinate), _direction)) {
+        if (grid.CanShapeMove(ShapeCodeProcessor.ShapeCodeToCoordinates(currentShape.shape, currentMainBlockCoordinate), _direction))
+        {
 
             //Resets current shape to base color
             ColorShapeAroundMainBlock(baseColor);
 
             //Moves the main block down
-            MoveMainBlockTowards(Grid.DirectionToCoords(_direction, currentMainBlockCoordinate));
+            MoveMainBlockTowards(grid.DirectionToCoords(_direction, currentMainBlockCoordinate));
 
             //Updates the list of blocks the shape is made of
             UpdateCurrentUsedBlocks();
@@ -50,10 +60,12 @@ public class MainBlockManager : MonoBehaviour {
 
     }
 
-    public void RotateShape() {
+    public void RotateShape()
+    {
 
         //Checks if shape can rotate
-        if (Grid.AreTheseCoordinatesAvailable(ShapeCodeProcessor.RotateAndGiveCoordinates(currentShape.shape, currentMainBlockCoordinate))) {
+        if (grid.AreTheseCoordinatesAvailable(ShapeCodeProcessor.RotateAndGiveCoordinates(currentShape.shape, currentMainBlockCoordinate)))
+        {
 
             //Resets current shape to base color
             ColorShapeAroundMainBlock(baseColor);
@@ -67,13 +79,15 @@ public class MainBlockManager : MonoBehaviour {
             //Colors the shape around the main block
             ColorShapeAroundMainBlock(currentShape.color);
         }
-        
+
     }
 
-    public void SetShape() {
+    public void SetShape()
+    {
 
         Grid.allBlocks[currentMainBlockCoordinate].SetBlock();
-        for (int i = 0; i < currentUsedBlocks.Count; i++) {
+        for (int i = 0; i < currentUsedBlocks.Count; i++)
+        {
 
             currentUsedBlocks[i].SetBlock();
             //TODO Assign the shapecode within the blocks
@@ -82,7 +96,8 @@ public class MainBlockManager : MonoBehaviour {
         SpawnShape();
     }
 
-    private void UpdateCurrentUsedBlocks() {
+    private void UpdateCurrentUsedBlocks()
+    {
 
         //Clears the list
         currentUsedBlocks.Clear();
@@ -90,21 +105,25 @@ public class MainBlockManager : MonoBehaviour {
         List<Vector2Int> _currentUsedBlocksCoordinates = ShapeCodeProcessor.ShapeCodeToCoordinates(currentShape.shape, currentMainBlockCoordinate);
 
         //Finds the blocks linked with the coordinates and adds them to the list
-        for (int i = 0; i < _currentUsedBlocksCoordinates.Count; i++) {
+        for (int i = 0; i < _currentUsedBlocksCoordinates.Count; i++)
+        {
 
             currentUsedBlocks.Add(Grid.allBlocks[_currentUsedBlocksCoordinates[i]]);
         }
     }
 
-    private void ColorShapeAroundMainBlock(Color _color) {
+    private void ColorShapeAroundMainBlock(Color _color)
+    {
 
-        for (int i = 0; i < currentUsedBlocks.Count; i++) {
+        for (int i = 0; i < currentUsedBlocks.Count; i++)
+        {
 
             currentUsedBlocks[i].AssignColor(_color);
         }
     }
 
-    private void MoveMainBlockTowards(Vector2Int _coordinate) {
+    private void MoveMainBlockTowards(Vector2Int _coordinate)
+    {
 
         //Resets current block to base color
         Grid.allBlocks[currentMainBlockCoordinate].AssignColor(baseColor);
@@ -118,7 +137,8 @@ public class MainBlockManager : MonoBehaviour {
     }
 
 
-    private void AddShapes() {
+    private void AddShapes()
+    {
 
         availableShapes.Add(new Shape(new int[] { 4, 0, 0, 0, 0, 0, 0, 0 }, Color.cyan));
         availableShapes.Add(new Shape(new int[] { 0, 2, 2, 0, 0, 0, 2, 0 }, Color.yellow));
@@ -129,8 +149,9 @@ public class MainBlockManager : MonoBehaviour {
         availableShapes.Add(new Shape(new int[] { 2, 2, 0, 0, 0, 0, 2, 0 }, Color.green));
     }
 
-    private Shape ChooseRandomShape() {
-
+    private Shape ChooseRandomShape()
+    {
         return availableShapes[Random.Range(0, availableShapes.Count)];
     }
+
 }
