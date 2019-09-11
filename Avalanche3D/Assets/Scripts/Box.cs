@@ -30,6 +30,7 @@ public class Box : MonoBehaviour
         float randomSize = Random.Range(1, 3.6f);
         transform.localScale = new Vector3(randomSize, randomSize, randomSize);
         CanBeHalted = true;
+        IsPlaced = false;
     }
 
     //Set rigidbody to kinematic when hitting something

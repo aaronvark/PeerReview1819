@@ -6,6 +6,7 @@ public class Lava : MonoBehaviour
 {
     public float DamageGiven;
     public float DamageInterval;
+    public float RiseSpeed;
 
     bool CanDamage;
 
@@ -14,7 +15,18 @@ public class Lava : MonoBehaviour
         CanDamage = true;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
+    {
+        Rise();
+    }
+
+    void Rise()
+    {
+        //TODO-Optional: Add logic for speeding up over time.
+        transform.Translate(new Vector3(0, RiseSpeed / 100, 0));
+    }
+
+    private void OnTriggerStay(Collider other)
     {
         IDamagable damageTaker = other.GetComponent<IDamagable>();
         if(damageTaker != null)

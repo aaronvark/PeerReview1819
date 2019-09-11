@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\IDamagable.cs" />
     <Compile Include="Assets\Scripts\Lava.cs" />
     <Compile Include="Assets\Scripts\ObjectPooler.cs" />
+    <Compile Include="Assets\Scripts\PlayerDamagable.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementV2.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
