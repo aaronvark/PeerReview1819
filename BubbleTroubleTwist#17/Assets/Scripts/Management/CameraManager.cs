@@ -13,7 +13,13 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
+
+        //using untiy system.Action()
         EventManager.AddHandler(EVENT.gameUpdateEvent, UpdateCamera);
+        //using unity delegate
+        //EventManager.OnSaveLevelHandler += ResetCamera;
+
+        EventManagerGen<float>.AddHandler(EVENT.reloadGame, ResetCamera);
     }
 
     public void UpdateCamera()
@@ -21,4 +27,8 @@ public class CameraManager : MonoBehaviour
         mainCamera.transform.LerpTransform(new Vector3(mainCamera.transform.position.x + cameraTravelDistance, mainCamera.transform.position.y, mainCamera.transform.position.z), cameraSpeed);
     }
 
+    public void ResetCamera(float xPosition)
+    {
+        mainCamera.transform.position = new Vector3(xPosition, mainCamera.transform.position.y, mainCamera.transform.position.z);
+    }
 }

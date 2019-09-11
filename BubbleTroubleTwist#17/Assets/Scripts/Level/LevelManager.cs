@@ -35,12 +35,12 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     {
         //EventManager.AddHandler(EVENT.MyEvent2, UpdateLevel);
         EventManager.OnLevelUpdateHandler += UpdateLevel;
+        EventManagerGen<Level>.AddHandler(EVENT.reloadGame, ResetLevel);
     }
 
     public void UpdateLevel()
     {
         Level level = levels?.Find(l => l.done.Equals(false));
-        
         if(level != null)
         {
             if(CheckEnemiesAlive(level))
@@ -59,6 +59,19 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
                 EventManager.Broadcast(EVENT.gameUpdateEvent);
             }
         }
+    }
+
+    public void ResetLevel(Level _level)
+    {
+        foreach(GameObject player in players)
+        {
+            player.transform.position = _level.currentLevelPostion;
+        }
+    }
+
+    public List<Level> GiveLevels()
+    {
+        return levels;
     }
 
     private void OnDestroy()

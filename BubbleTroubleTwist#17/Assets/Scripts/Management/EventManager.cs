@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum EVENT { gameUpdateEvent, MyEvent2 }; // ... Other events
+public enum EVENT { gameUpdateEvent, reloadGame }; // ... Other events
 public static class EventManager
 {
     //Static delegates
@@ -25,8 +25,11 @@ public static class EventManager
     public delegate void OnPlayerHit(int damage);
     public static OnPlayerHit OnPlayerHitHandler { get; set; }
 
+    public delegate void OnSaveLevel();
+    public static OnSaveLevel OnSaveLevelHandler { get; set; }
 
-    #region Different way for handling events
+
+    #region Handling events using System.Action()
     // Stores the delegates that get called when an event is fired
     private static Dictionary<EVENT, Action> eventTable
                  = new Dictionary<EVENT, Action>();
@@ -45,3 +48,29 @@ public static class EventManager
     }
     #endregion
 }
+
+public static class EventManagerGen<T>
+{
+    public delegate void GenericDelegate<T>(T c);
+    static Dictionary<EVENT, GenericDelegate<T>> genericEventTable = new Dictionary<EVENT, GenericDelegate<T>>();
+
+    // Stores the delegates that get called when an event is fired
+    private static Dictionary<EVENT, Action> eventTable
+                 = new Dictionary<EVENT, Action>();
+
+    // Adds a delegate to get called for a specific event
+    public static void AddHandler(EVENT evnt, GenericDelegate<T> action)
+    {
+        if (!genericEventTable.ContainsKey(evnt)) genericEventTable[evnt] = action;
+        else genericEventTable[evnt] += action;
+    }
+
+    // Fires the event
+    public static void Broadcast(EVENT evnt, T c)
+    {
+        if (genericEventTable[evnt] != null) genericEventTable[evnt](c);
+    }
+}
+
+
+

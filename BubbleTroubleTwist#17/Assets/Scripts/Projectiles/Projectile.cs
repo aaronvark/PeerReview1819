@@ -14,7 +14,7 @@ public class Projectile : PoolableBehaviour
             Enemy _enemy = collision.gameObject.GetComponent<Enemy>();
             _enemy.SplitEnemy();
             _enemy.TakeDamage(damage);
-            EventManager.Broadcast(EVENT.MyEvent2);
+            EventManager.Broadcast(EVENT.reloadGame);
             Recycle();
             //gameObject.SetActive(false);
         }

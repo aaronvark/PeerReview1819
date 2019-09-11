@@ -31,7 +31,7 @@ public class Weapon : MonoBehaviour
     {
         //if(projectilePool == null)
         //projectilePool = new GenericObjectPooler<Projectile>(thisWeaponData.projectileGameObject, 30);
-        EventManager.AddHandler(EVENT.MyEvent2, StopOnHit);
+        EventManager.AddHandler(EVENT.reloadGame, StopOnHit);
     }
 
     public void FireWeapon(int _damage)

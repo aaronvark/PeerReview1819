@@ -1492,6 +1492,12 @@ MonoBehaviour:
     level: 2
     spawnVector: {x: 2, y: 1.135, z: 0}
   player: {fileID: 7790578033780216300, guid: 5eff4129470b44245bec1b8ab5a935f1, type: 3}
+  lives: 3
+  livesImages:
+  - {fileID: 1418222056}
+  - {fileID: 1602802909}
+  - {fileID: 1136897451}
+  testing: 1
 --- !u!114 &1005098590
 MonoBehaviour:
   m_ObjectHideFlags: 0

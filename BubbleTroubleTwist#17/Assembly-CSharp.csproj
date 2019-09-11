@@ -80,8 +80,10 @@
     <Compile Include="Assets\Scripts\Interfaces\IPlayer.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IPooler.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IStats.cs" />
+    <Compile Include="Assets\Scripts\Level\JsonHelper.cs" />
     <Compile Include="Assets\Scripts\Level\Level.cs" />
     <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelSaver.cs" />
     <Compile Include="Assets\Scripts\Management\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Management\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\Management\EventManager.cs" />

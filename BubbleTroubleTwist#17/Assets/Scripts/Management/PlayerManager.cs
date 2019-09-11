@@ -57,11 +57,13 @@ public class PlayerManager : MonoBehaviour, IPlayer
          * waar de speler zich bevindt opslaat. 
          */
         lives -= _amount;
+        EventManager.OnSaveLevelHandler();
+        //EventManagerGen<T>.Broadcast(EVENT.reloadGame, );
         if(lives < 1)
         {
             EventManager.OnGameOverHandler();
         }
-        for (int attackTimes = 0; attackTimes <= _amount; attackTimes++)
+        for (int attackTimes = 0; attackTimes <= _amount-1; attackTimes++)
         {
             if (lives > 0)
             {

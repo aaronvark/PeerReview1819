@@ -10,5 +10,6 @@ namespace Bas.Interfaces
     {
         void UpdateLevel();
         void AddPlayer(GameObject player);
+        List<Level> GiveLevels();
     }
 }
