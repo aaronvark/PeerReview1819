@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 66011774145299391}
   - component: {fileID: 2048424568}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Box
   m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,3 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de49eae793487f489f7b16d0f8dd5c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsPlaced: 0
+  CanBeHalted: 0

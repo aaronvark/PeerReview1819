@@ -20,6 +20,6 @@ public class Spawner : MonoBehaviour
     void SpawnCube()
     {
         Vector3 position = new Vector3(transform.position.x + Random.Range(-4f, 4f), transform.position.y,transform.position.z +  Random.Range(-4f, 4f));
-        objectPooler.SpawnFromPool("Cube", position, Quaternion.identity);
+        objectPooler.SpawnFromPool("Box", position, Quaternion.identity);
     }
 }

@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     //References
     GameObject Player;
     public GroundedChecker groundedChecker;
+    Animator animator;
 
     //Components
     CharacterController characterController;
@@ -32,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
         gameManager = GameManager.Instance;
         Player = gameManager.Player;
         characterController = Player.GetComponent<CharacterController>();
+        animator = Player.GetComponent<Animator>();
         walled = false;
         canMove = true;
     }
@@ -68,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetButtonDown("Jump"))
             {
+                animator.SetTrigger("Jump");
                 moveDirection.y = JumpForce;
             }
 

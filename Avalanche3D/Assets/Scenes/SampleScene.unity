@@ -1229,7 +1229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DamageGiven: 0.5
   DamageInterval: 0.5
-  RiseSpeed: 0.6
+  RiseSpeed: 0.65
 --- !u!65 &1142252463
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1588,9 +1588,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - tag: Cube
+  - tag: Box
     prefab: {fileID: 66011774145299376, guid: 9283d6876baa6674da0f92f810f01c70, type: 3}
-    size: 300
+    size: 400
 --- !u!4 &1492359649
 Transform:
   m_ObjectHideFlags: 0
@@ -1818,6 +1818,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1761086084}
+  - component: {fileID: 1761086087}
   - component: {fileID: 1761086081}
   - component: {fileID: 1761086086}
   - component: {fileID: 1761086085}
@@ -1940,6 +1941,25 @@ MonoBehaviour:
   GravityModifier: 5
   AgainstWallGravityModifier: 0.5
   WallJumpMoveCooldown: 0.15
+--- !u!95 &1761086087
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761086080}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 03641d982b977d4498e5d320341ff30b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1823490531
 GameObject:
   m_ObjectHideFlags: 0
