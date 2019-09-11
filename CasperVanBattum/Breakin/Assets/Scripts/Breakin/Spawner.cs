@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Prototype1
+namespace Breakin
 {
 	public class Spawner : MonoBehaviour
 	{

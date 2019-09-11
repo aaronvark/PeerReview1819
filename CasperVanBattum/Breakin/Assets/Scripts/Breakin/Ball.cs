@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Prototype1
+namespace Breakin
 {
 	[RequireComponent(typeof(Rigidbody2D))]
 	public class Ball : MonoBehaviour

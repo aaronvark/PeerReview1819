@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Prototype1
+namespace Breakin
 {
 	public abstract class Block : MonoBehaviour
 	{

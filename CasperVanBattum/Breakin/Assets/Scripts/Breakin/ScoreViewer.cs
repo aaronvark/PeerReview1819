@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Prototype1
+namespace Breakin
 {
     public class ScoreViewer : MonoBehaviour
     {
@@ -15,7 +14,13 @@ namespace Prototype1
 
         private void Start()
         {
-            ScoreManager.Instance.OnScoreChanged += UpdateScore;
+            // When the score in the score manager is being updated, the displayed score should be updated
+            ScoreManager.Instance.ScoreChanged += UpdateScore;
+        }
+
+        private void OnDisable()
+        {
+            ScoreManager.Instance.ScoreChanged -= UpdateScore;
         }
 
         private void UpdateScore()
