@@ -6,5 +6,5 @@
         set;
     }
 
-    void GetDamage(float hitpoints);
+    void GetDamage(float _hitpoints);
 }
