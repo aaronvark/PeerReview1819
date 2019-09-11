@@ -26,12 +26,22 @@ public class Lava : MonoBehaviour
         transform.Translate(new Vector3(0, RiseSpeed / 100, 0));
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         IDamagable damageTaker = other.GetComponent<IDamagable>();
         if(damageTaker != null)
         {
             StartCoroutine(Damage(damageTaker));
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        IDamagable damageTaker = other.GetComponent<IDamagable>();
+        if (damageTaker != null)
+        {
+            StopAllCoroutines();
+            CanDamage = true;
         }
     }
 
@@ -42,7 +52,8 @@ public class Lava : MonoBehaviour
             damageTaker.TakeDamage(DamageGiven);
             CanDamage = false;
             yield return new WaitForSeconds(DamageInterval);
-            CanDamage = true;         
+            CanDamage = true;
+            StartCoroutine(Damage(damageTaker));
         }
         else
         {

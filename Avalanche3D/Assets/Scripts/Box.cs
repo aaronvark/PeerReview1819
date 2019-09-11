@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Box : MonoBehaviour
+public class Box : MonoBehaviour, IStopper
 {
     //References
     Rigidbody rigidbody;
@@ -31,6 +31,7 @@ public class Box : MonoBehaviour
         transform.localScale = new Vector3(randomSize, randomSize, randomSize);
         CanBeHalted = true;
         IsPlaced = false;
+        rigidbody.isKinematic = false;
     }
 
     //Set rigidbody to kinematic when hitting something
@@ -38,7 +39,7 @@ public class Box : MonoBehaviour
     {
         if (CanBeHalted)
         {
-            if (collision.gameObject.tag == "Box" || collision.gameObject.tag == "Ground")
+            if (collision.gameObject.GetComponent<IStopper>() != null)
             {
                 IsPlaced = true;
                 rigidbody.isKinematic = true;
