@@ -62,8 +62,11 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Box.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\DamagableEntity.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GroundedChecker.cs" />
+    <Compile Include="Assets\Scripts\IDamagable.cs" />
+    <Compile Include="Assets\Scripts\Lava.cs" />
     <Compile Include="Assets\Scripts\ObjectPooler.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerMovementV2.cs" />
