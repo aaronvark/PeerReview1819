@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Bas.Interfaces;
 
 /// <summary>
 /// Player behaviour with all player shooting related functionality
@@ -14,7 +15,11 @@ public class PlayerShooting : AbstractAvatarClass
 
     public WeaponData usingWeaponData;
 
-    Weapon currentWeapon;
+    private Weapon currentWeapon;
+
+    private void OnEnable()
+    {
+    }
 
     void Awake()
     {
@@ -25,8 +30,10 @@ public class PlayerShooting : AbstractAvatarClass
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && currentWeapon.WeaponReady())
+        if (Input.GetKeyDown(playerInput.fireKey) && currentWeapon.WeaponReady())
             Fire();
+
+        Debug.Log(Input.GetKeyDown(playerInput.fireKey));
     }
 
     private void Fire()

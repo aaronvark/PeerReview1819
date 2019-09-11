@@ -18,6 +18,7 @@ public class ProjectilePool : GenericSingleton<ProjectilePool, IPooler>, IPooler
     public GameObject SpawnFromPool(Vector3 position, Quaternion rotation)
     {
         GameObject obj = objPool.GetNext().gameObject;
+        obj.gameObject.SetActive(true);
         obj.transform.position = position;
         obj.transform.rotation = rotation;
         return obj;

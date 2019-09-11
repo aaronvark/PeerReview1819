@@ -16,10 +16,12 @@ public class Projectile : PoolableBehaviour
             _enemy.TakeDamage(damage);
             EventManager.Broadcast(EVENT.MyEvent2);
             Recycle();
+            //gameObject.SetActive(false);
         }
         if (collision.gameObject.tag != "Projectile")
         {
             Recycle();
+            //gameObject.SetActive(false);
         }
     }
 }

@@ -15,6 +15,13 @@ public static class ExtensionMethods
     {
         return basCurrentHelper.ActivateCoroutineLerpTransformPositions(currentTransform, targetPosition, speed);
     }
+
+    public static List<T> ToList<T>(this T[] array) where T : class
+    {
+        List<T> output = new List<T>();
+        output.AddRange(array);
+        return output;
+    }
 }
 
 public class BasExtensionHelpers : MonoBehaviour

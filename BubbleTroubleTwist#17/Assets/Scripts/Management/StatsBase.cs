@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
-public class StatsBase<T> : IStats<T>
+[System.Serializable]
+public class StatsBase<T> 
 {
-    public T entityStats;
+    public List<T> genericData;
 
-    //public event OnStatsHandler<T> onStatsHandler;
-
-    public void SetStats(T data)
+    /*
+    public StatsBase(List<T> genericDataList)
     {
-        entityStats = data;
-    }
+        genericData = genericDataList;
+    }*/
+       
 }

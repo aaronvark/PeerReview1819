@@ -13,6 +13,19 @@ public static class EventManager
     public delegate void OnEnemyHit();
     public static OnEnemyHit OnEnemyHitHandler { get; set; }
 
+    public delegate void EntityDataHandler(PlayerData stats);
+    public static EntityDataHandler OnEntityDataHandler { get; set; }
+
+    public delegate void OnScoreChanged(int _amount);
+    public static OnScoreChanged OnScoreChangedHandler { get; set; }
+
+    public delegate void OnGameOver();
+    public static OnGameOver OnGameOverHandler { get; set; }
+
+    public delegate void OnPlayerHit(int damage);
+    public static OnPlayerHit OnPlayerHitHandler { get; set; }
+
+
     #region Different way for handling events
     // Stores the delegates that get called when an event is fired
     private static Dictionary<EVENT, Action> eventTable

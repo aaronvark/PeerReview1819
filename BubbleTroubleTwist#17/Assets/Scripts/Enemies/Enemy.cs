@@ -3,26 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
+/// <summary>
+/// Enemy base class, inherits from abstract avatar base and uses IStats interface to regulate its entity data
+/// </summary>
 public class Enemy : AbstractAvatarClass, IStats<EnemyData>
 {
-    public OnLevelUpdate onLevelUpdateHandler;
+    /// <summary>
+    /// Input of this enemy instance
+    /// </summary>
     public EnemyData enemyInput;
+    /// <summary>
+    /// Maximum level the enemy and his childs should be able to reach
+    /// </summary>
     public int MaxLevel = 2;
 
-    private void OnDestroy()
-    {
-        OnDeathHandler -= OnDeath;
-    }
-
+    /// <summary>
+    /// Overriden start method
+    /// </summary>
     public override void Start()
     {
+        ///First we call the base
         base.Start();
-        for(int childIndex = 0; childIndex < transform.childCount; childIndex++)
+        /// We add all children to the splitPoints list stored in the enemyInput data
+        for (int childIndex = 0; childIndex < transform.childCount; childIndex++)
         {
             enemyInput.splitPoints.Add(transform.GetChild(childIndex));
         }
     }
 
+    /// <summary>
+    /// Handles the activations and regulation of the children 
+    /// </summary>
     public void SplitEnemy()
     {
         if (enemyInput == null) return;
@@ -41,12 +52,24 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
             gameObject.SetActive(false);
         }
         EventManager.OnLevelUpdateHandler();
-        //gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Implemented SetStats from the interface, here we set the enemy input
+    /// </summary>
+    /// <param name="data"></param>
     public void SetStats(EnemyData data)
     {
         enemyInput = data;
+    }
+
+
+    /// <summary>
+    /// When this enemy gets destoryed we need to unsubscribe 
+    /// </summary>
+    private void OnDestroy()
+    {
+        OnDeathHandler -= OnDeath;
     }
 
 }

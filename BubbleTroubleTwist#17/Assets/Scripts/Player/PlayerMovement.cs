@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
-public class PlayerMovement : AbstractAvatarClass, IStats<PlayerData>
+public class PlayerMovement : AbstractAvatarClass
 {
-    private PlayerData playerInput;
-
-    public override void Start()
+    private void OnEnable()
     {
-        base.Start();
- 
     }
 
     private void FixedUpdate()
@@ -24,10 +20,5 @@ public class PlayerMovement : AbstractAvatarClass, IStats<PlayerData>
         float _vertical = Input.GetAxis(playerInput.verticalAxis);
         float _horizontal = Input.GetAxis(playerInput.horizontalAxis);
         rBody.velocity = new Vector3(_horizontal * speed, rBody.velocity.y, _vertical * speed);
-    }
-
-    public void SetStats(PlayerData data)
-    {
-        playerInput = data;
     }
 }
