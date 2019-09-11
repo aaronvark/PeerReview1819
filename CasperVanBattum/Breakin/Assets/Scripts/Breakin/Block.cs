@@ -1,9 +1,21 @@
-﻿using UnityEngine;
+﻿using Breakin.Pooling;
+using UnityEngine;
 
 namespace Breakin
 {
-	public abstract class Block : MonoBehaviour
+	public abstract class Block : MonoBehaviour, IPoolable
 	{
+		private bool isActive;
+		public bool IsActive
+		{
+			get => isActive;
+			set
+			{
+				gameObject.SetActive(value);
+				isActive = value;
+			}
+		}
+
 		/// <summary>
 		/// This function is called each time the ball hits a block
 		/// </summary>
