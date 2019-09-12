@@ -14,7 +14,7 @@
 			if (strength <= 0)
 			{
 				ScoreManager.Instance.Score += Value;
-				IsActive = false;
+				OnBreak();
 			}
 		}
 	}

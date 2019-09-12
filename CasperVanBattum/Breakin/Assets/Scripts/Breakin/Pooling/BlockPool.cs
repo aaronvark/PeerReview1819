@@ -38,6 +38,7 @@ namespace Breakin.Pooling
             if (!_b)
             {
                 _b = Spawn(prefabKey);
+                Debug.Log("Pool expansion for prefab " + prefabKey.name + " to size " + blockLists[prefabKey].Count);
             }
 
             _b.IsActive = true;
