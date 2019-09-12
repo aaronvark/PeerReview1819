@@ -12,6 +12,8 @@ public class Box : MonoBehaviour, IStopper
     public bool IsPlaced;
     public bool CanBeHalted;
 
+    GameManager gameManager;
+
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();

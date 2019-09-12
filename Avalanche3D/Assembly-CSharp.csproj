@@ -73,7 +73,6 @@
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\SpawnerHeightChanger.cs" />
-    <Compile Include="Assets\Scripts\Toolbox.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />
     <Reference Include="Cinemachine">
       <HintPath>D:/PeerReview1819/Avalanche3D/Library/ScriptAssemblies/Cinemachine.dll</HintPath>

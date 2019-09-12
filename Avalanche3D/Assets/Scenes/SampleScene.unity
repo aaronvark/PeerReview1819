@@ -1229,7 +1229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DamageGiven: 0.5
   DamageInterval: 0.5
-  RiseSpeed: 0.65
+  RiseSpeed: 0.7
 --- !u!65 &1142252463
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1587,10 +1587,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b3ea10fc2d3c11489720cbcbe7ffe6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pools:
-  - tag: Box
-    prefab: {fileID: 66011774145299376, guid: 9283d6876baa6674da0f92f810f01c70, type: 3}
-    size: 400
+  Pools:
+  - Tag: Box
+    Prefab: {fileID: 66011774145299376, guid: 9283d6876baa6674da0f92f810f01c70, type: 3}
+    Size: 400
 --- !u!4 &1492359649
 Transform:
   m_ObjectHideFlags: 0
