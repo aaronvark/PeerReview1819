@@ -112,6 +112,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &22710031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 22710032}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &22710032
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22710031}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 40, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &97792706
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -523,7 +553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 5299671328839668858, guid: b46d08fd774f82245bc790c89d3e6e33, type: 3}
-  size: 20
+  size: 100
 --- !u!1 &318071246
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,7 +1527,7 @@ MonoBehaviour:
   - {fileID: 1418222056}
   - {fileID: 1602802909}
   - {fileID: 1136897451}
-  testing: 1
+  testing: 0
 --- !u!114 &1005098590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1537,16 +1567,31 @@ MonoBehaviour:
   levels:
   - enemyAmounts: 5
     enemiesAlive: 5
+    spawnRangeMax: {x: 12, y: 1.5, z: 12}
+    spawnRangeMin: {x: -12, y: 1.5, z: -12}
     done: 0
-    nextLevelPosition: {fileID: 908133673}
+    nextLevelPosition: {x: 40, y: 0, z: 0}
+    currentLevelPostion: {x: 0, y: 0, z: 0}
+    currentCameraX: 0
+    levelPrefab: {fileID: 1511344302}
   - enemyAmounts: 10
     enemiesAlive: 10
+    spawnRangeMax: {x: 12, y: 2.5, z: 12}
+    spawnRangeMin: {x: -12, y: 1.5, z: -12}
     done: 0
-    nextLevelPosition: {fileID: 1678646606}
+    nextLevelPosition: {x: 80, y: 0, z: 0}
+    currentLevelPostion: {x: 40, y: 0, z: 0}
+    currentCameraX: 40
+    levelPrefab: {fileID: 1266661965}
   - enemyAmounts: 15
     enemiesAlive: 15
+    spawnRangeMax: {x: 12, y: 2.5, z: 12}
+    spawnRangeMin: {x: -12, y: 1.5, z: -12}
     done: 0
-    nextLevelPosition: {fileID: 2074869384}
+    nextLevelPosition: {x: 120, y: 0, z: 0}
+    currentLevelPostion: {x: 80, y: 0, z: 0}
+    currentCameraX: 80
+    levelPrefab: {fileID: 538096874}
   players: []
 --- !u!114 &1005098592
 MonoBehaviour:
@@ -3738,7 +3783,7 @@ PrefabInstance:
     - target: {fileID: 2381273675624277197, guid: fb9b86a68ff052b45bec7a831b4b38fc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.68329453
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2381273675624277197, guid: fb9b86a68ff052b45bec7a831b4b38fc,
         type: 3}
@@ -3748,7 +3793,7 @@ PrefabInstance:
     - target: {fileID: 2381273675624277197, guid: fb9b86a68ff052b45bec7a831b4b38fc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.57226706
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2381273675624277197, guid: fb9b86a68ff052b45bec7a831b4b38fc,
         type: 3}

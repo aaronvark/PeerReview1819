@@ -11,7 +11,7 @@ public delegate void OnDataUpdate(PlayerData stats);
 /// </summary>
 public abstract class AbstractAvatarClass : MonoBehaviour, IDamagable<int>
 {
-    public int damage { get; protected set; }
+    public int damage = 1;
     public float speed { get; protected set; }
     public int health { get; protected set; }
 

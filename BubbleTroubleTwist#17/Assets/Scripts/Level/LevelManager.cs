@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
+using System.IO;
 
 public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
 {
@@ -9,38 +10,20 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
 
     public List<GameObject> players;
 
-    public OnLevelUpdate onLevelUpdate;
-
-    /*
-    #region Singleton
-    private static LevelManager instance;
-    public static ILevel Instance
-    {
-        get
-        {
-            if (instance == null)
-                instance = new LevelManager();
-            return instance;
-        }
-    }
-
-    private void Awake()
-    {
-        instance = this;
-    }
-    #endregion
-    */
+    private string levelJsongString;
 
     private void Start()
     {
-        //EventManager.AddHandler(EVENT.MyEvent2, UpdateLevel);
+        FromJson();
         EventManager.OnLevelUpdateHandler += UpdateLevel;
-        EventManagerGen<Level>.AddHandler(EVENT.reloadGame, ResetLevel);
+        EventManagerGen<float>.AddHandler(EVENT.reloadGame, ResetLevel);
+        EventManagerGen<float>.AddHandler(EVENT.reloadGame, SerializeToJson);
+        EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
     }
 
     public void UpdateLevel()
     {
-        Level level = levels?.Find(l => l.done.Equals(false));
+        Level level = LastPlayedLevel();
         if(level != null)
         {
             if(CheckEnemiesAlive(level))
@@ -54,19 +37,47 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
                 if (players == null) return;
                 foreach(GameObject player in players)
                 {
-                    player.transform.position = level.nextLevelPosition.position;
+                    player.transform.position = level.nextLevelPosition;
                 }
-                EventManager.Broadcast(EVENT.gameUpdateEvent);
+                EventManagerGen<float>.Broadcast(EVENT.gameUpdateEvent, LastPlayedLevel().currentCameraX);
             }
         }
     }
 
-    public void ResetLevel(Level _level)
+    public void FromJson()
     {
-        foreach(GameObject player in players)
+        if (File.Exists(Application.dataPath + "/LevelsData.json"))
+        {
+            levelJsongString = File.ReadAllText(Application.dataPath + "/LevelsData.json");
+        }
+        if (levelJsongString == null || levelJsongString == string.Empty)
+        {
+            return;
+        }
+        levels = JsonHelper.FromJsonList<Level>(levelJsongString);
+    }
+
+    public void SerializeToJson(float x)
+    {
+        if (levels == null || levels.Count < 1) return;
+        //Convert to Json
+        levelJsongString = JsonHelper.ToJsonList(levels);
+        Debug.Log(levelJsongString);
+        File.WriteAllText(Application.dataPath + "/LevelsData.json", levelJsongString);
+    }
+
+    public void ResetLevel(float x)
+    {
+        Level _level = LastPlayedLevel();
+        foreach (GameObject player in players)
         {
             player.transform.position = _level.currentLevelPostion;
         }
+    }
+
+    public Level LastPlayedLevel()
+    {
+        return levels?.Find(l => l.done.Equals(false));
     }
 
     public List<Level> GiveLevels()
@@ -74,14 +85,14 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         return levels;
     }
 
-    private void OnDestroy()
-    {
-        EventManager.OnLevelUpdateHandler -= UpdateLevel;
-    }
-
     public void AddPlayer(GameObject player)
     {
         players.Add(player);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.OnLevelUpdateHandler -= UpdateLevel;
     }
 
     private bool CheckEnemiesAlive(Level level)

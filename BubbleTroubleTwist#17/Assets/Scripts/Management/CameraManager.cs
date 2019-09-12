@@ -8,14 +8,15 @@ public class CameraManager : MonoBehaviour
     public float cameraTravelDistance = 50f;
 
     private Camera mainCamera;
+    private Vector3 currentCameraPosition;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         mainCamera = Camera.main;
 
         //using untiy system.Action()
-        EventManager.AddHandler(EVENT.gameUpdateEvent, UpdateCamera);
+        EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, ResetCamera);
         //using unity delegate
         //EventManager.OnSaveLevelHandler += ResetCamera;
 
@@ -29,6 +30,6 @@ public class CameraManager : MonoBehaviour
 
     public void ResetCamera(float xPosition)
     {
-        mainCamera.transform.position = new Vector3(xPosition, mainCamera.transform.position.y, mainCamera.transform.position.z);
+        mainCamera.transform.LerpTransform(new Vector3(xPosition, mainCamera.transform.position.y, mainCamera.transform.position.z), cameraSpeed);
     }
 }

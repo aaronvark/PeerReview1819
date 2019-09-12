@@ -10,7 +10,8 @@ public class Level
     public Vector3 spawnRangeMax;
     public Vector3 spawnRangeMin;
     public bool done;
-    public Transform nextLevelPosition;
+    public Vector3 nextLevelPosition;
     public Vector3 currentLevelPostion;
+    public float currentCameraX;
     public GameObject levelPrefab;
 }

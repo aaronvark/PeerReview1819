@@ -10,21 +10,14 @@ public class PlayerManager : MonoBehaviour, IPlayer
     public GameObject player;
     public int lives = 3;
     public List<Image> livesImages;
-    public bool testing = true;
+    public bool testing = false;
 
     private void Start()
     {
-        if (!testing)
-            InitPlayers();
+
+        InitPlayers();
 
         InitLives();
-    }
-
-    void Update()
-    {
-        //TESTING PURPOSE ONLY
-        if (Input.GetKeyDown(KeyCode.E))
-            InitPlayers();
     }
 
     public void InitPlayers()
@@ -57,8 +50,7 @@ public class PlayerManager : MonoBehaviour, IPlayer
          * waar de speler zich bevindt opslaat. 
          */
         lives -= _amount;
-        EventManager.OnSaveLevelHandler();
-        //EventManagerGen<T>.Broadcast(EVENT.reloadGame, );
+        //EventManager.OnSaveLevelHandler();
         if(lives < 1)
         {
             EventManager.OnGameOverHandler();
@@ -67,10 +59,12 @@ public class PlayerManager : MonoBehaviour, IPlayer
         {
             if (lives > 0)
             {
-                Image lastImage = livesImages.FindLast(i => i.gameObject.activeSelf);
+                Image lastImage = livesImages?.FindLast(i => i.gameObject.activeSelf);
                 if (lastImage) lastImage.gameObject.SetActive(false);
             }
         }
+
+        EventManagerGen<float>.Broadcast(EVENT.reloadGame, LevelManager.Instance.LastPlayedLevel().currentCameraX);
     }
 
     public GameObject UpdateImage(Image _image)

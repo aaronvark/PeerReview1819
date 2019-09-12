@@ -31,17 +31,17 @@ public class Weapon : MonoBehaviour
     {
         //if(projectilePool == null)
         //projectilePool = new GenericObjectPooler<Projectile>(thisWeaponData.projectileGameObject, 30);
-        EventManager.AddHandler(EVENT.reloadGame, StopOnHit);
+        EventManager.OnLevelUpdateHandler += StopOnHit;
     }
 
     public void FireWeapon(int _damage)
     {
-        //GameObject projectile = ObjectPooler.Instance.SpawnFromPool(thisWeaponData.projectileName, thisWeaponData.firePoint.position, Quaternion.identity);
+        GameObject projectile = ObjectPooler.Instance.SpawnFromPool(thisWeaponData.projectileName, thisWeaponData.firePoint.position, Quaternion.identity);
         //GameObject projectile = projectilePool.GetNext().gameObject;
         //var bulletPool = FindObjectOfType<BulletPool>();
         //GameObject prjctile = bulletPool.Get().gameObject;
         //projectile.transform.position = thisWeaponData.firePoint.position;
-        GameObject projectile = ProjectilePool.Instance.SpawnFromPool(thisWeaponData.firePoint.position, Quaternion.identity);
+        //GameObject projectile = ProjectilePool.Instance.SpawnFromPool(thisWeaponData.firePoint.position, Quaternion.identity);
         /*if (projectile != null)
         {
             projectile.gameObject.GetComponent<Projectile>().damage = thisWeaponData.damage;

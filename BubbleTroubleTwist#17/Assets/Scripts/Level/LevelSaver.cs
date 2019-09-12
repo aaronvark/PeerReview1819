@@ -14,33 +14,18 @@ public class LevelSaver : MonoBehaviour
         EventManager.OnSaveLevelHandler += SerializeToJson;
     }
 
-    public void FromJson()
-    {
-        if (File.Exists(Application.dataPath + "/EnemyJsonFile.json"))
-        {
-            LevelJsonString = File.ReadAllText(Application.dataPath + "/EnemyJsonFile.json");
-        }
-        if (LevelJsonString == null || LevelJsonString == string.Empty)
-        {
-            return;
-        }
-        //string enemiesFromJsonString = FixJson(EnemyJsonString);
-        LevelData = JsonHelper.FromJsonList<Level>(LevelJsonString);
-        Debug.Log(LevelData);
-    }
-
     public void SerializeToJson()
     {
         if (LevelData == null || LevelData.Count < 1) return;
         //Convert to Json
         LevelJsonString = JsonHelper.ToJsonList(LevelData);
         Debug.Log(LevelJsonString);
-        File.WriteAllText(Application.dataPath + "/EnemyJsonFile.json", LevelJsonString);
+        File.WriteAllText(Application.dataPath + "/LevelsData.json", LevelJsonString);
     }
 
     private string FixJson(string value)
     {
-        value = "{\"Enemies\":" + value + "}";
+        value = "{\"Levels\":" + value + "}";
         return value;
     }
 }

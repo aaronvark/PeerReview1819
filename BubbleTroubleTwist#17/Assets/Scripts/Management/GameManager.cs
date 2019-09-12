@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
 {
     private void Start()
     {
-        EventManager.AddHandler(EVENT.gameUpdateEvent, UpdateGame);
-        EventManager.AddHandler(EVENT.gameUpdateEvent, UpdateUI);
+        //EventManager.AddHandler(EVENT.gameUpdateEvent, UpdateGame);
+        //EventManager.AddHandler(EVENT.gameUpdateEvent, UpdateUI);
         EventManager.OnGameOverHandler += GameOver;
     }
 

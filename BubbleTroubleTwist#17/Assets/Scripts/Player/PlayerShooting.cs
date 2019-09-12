@@ -32,8 +32,6 @@ public class PlayerShooting : AbstractAvatarClass
     {
         if (Input.GetKeyDown(playerInput.fireKey) && currentWeapon.WeaponReady())
             Fire();
-
-        Debug.Log(Input.GetKeyDown(playerInput.fireKey));
     }
 
     private void Fire()

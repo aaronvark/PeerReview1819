@@ -88,7 +88,7 @@ public class LevelEditorWindow : EditorWindow
             placeHolderLevel.enemyAmounts = 0;
             placeHolderLevel.enemiesAlive = 0;
             placeHolderLevel.done = false;
-            placeHolderLevel.nextLevelPosition.position = Vector3.zero;
+            placeHolderLevel.nextLevelPosition = Vector3.zero;
         }
         var tmpEnemy = placeHolderLevel;
 
@@ -118,7 +118,7 @@ public class LevelEditorWindow : EditorWindow
         //Convert to Json
         LevelJsonString = JsonHelper.ToJsonList(levels);
         Debug.Log(LevelJsonString);
-        File.WriteAllText(Application.dataPath + "/EnemyJsonFile.json", LevelJsonString);
+        File.WriteAllText(Application.dataPath + "/LevelsData.json", LevelJsonString);
         OnGUI();
     }
 
