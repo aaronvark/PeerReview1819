@@ -36,8 +36,8 @@ namespace Breakin
 				// Generate a random index for the prefab
 				int _prefabIndex = Random.Range(0, blockPrefabs.Length);
 
-				Block _block = GameObject.Instantiate(blockPrefabs[_prefabIndex], spawner.transform);
-				
+				Block _block = spawner.BlockPool.GetBlock(blockPrefabs[_prefabIndex]);
+
 				if (_block.GetType() == typeof(BasicBlock))
 				{
 					((BasicBlock) _block).Value = 1;

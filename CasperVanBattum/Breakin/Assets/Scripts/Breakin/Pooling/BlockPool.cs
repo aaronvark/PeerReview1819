@@ -14,19 +14,20 @@ namespace Breakin.Pooling
         public BlockPool(int capacity, Transform root, params Block[] prefabs)
         {
             this.root = root;
-            
+
             blockLists = new Dictionary<Block, List<Block>>(prefabs.Length);
 
+            // Initialize a pool list for each prefab
             foreach (Block _t in prefabs)
             {
                 blockLists.Add(_t, new List<Block>(capacity));
             }
-            
+
             Populate();
         }
 
         /// <summary>
-        /// 
+        /// Gets a block of a specified prefab
         /// </summary>
         /// <param name="prefabKey"></param>
         /// <returns></returns>
@@ -44,6 +45,10 @@ namespace Breakin.Pooling
             return _b;
         }
 
+        /// <summary>
+        /// Fills the pools for each prefab with inactive instances of those prefabs up to the base capacity set at
+        /// construction time
+        /// </summary>
         private void Populate()
         {
             foreach (var _entry in blockLists)
@@ -54,7 +59,7 @@ namespace Breakin.Pooling
                 }
             }
         }
-        
+
         /// <summary>
         /// Finds a block that is currently not active and returns it. Returns null when there was no active block found
         /// or when the provided prefab does not exist in the dictionary.
@@ -62,7 +67,7 @@ namespace Breakin.Pooling
         /// <returns>An inactive block or null when none was found.</returns>
         private Block FindInactive(Block prefabKey)
         {
-            return blockLists[prefabKey]?.First(b => !b.IsActive);
+            return blockLists[prefabKey]?.FirstOrDefault(b => !b.IsActive);
         }
 
         /// <summary>
