@@ -6,7 +6,6 @@ public class Exit : MonoBehaviour, IInteractable
 {
     public void Interact(GameObject _interactor = null)
     {
-        LemmingManager.Instance.RemoveLemming(_interactor);
-        UIManager.Instance.UpdateLemmingItem(1);
+        LemmingManager.Instance.RemoveLemming(_interactor, true);
     }
 }

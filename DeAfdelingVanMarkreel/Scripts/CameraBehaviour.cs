@@ -31,6 +31,7 @@ public class CameraBehaviour : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) CurrentType = 1; //PUUR VOOR TESTEN
         if (Input.GetKeyDown(KeyCode.Alpha2)) CurrentType = 2; //PUUR VOOR TESTEN
+        if (Input.GetKeyDown(KeyCode.Alpha3)) CurrentType = 3; //PUUR VOOR TESTEN
 
         if (Input.GetKey(KeyCode.Q)) TurnCamera(true);
         if (Input.GetKey(KeyCode.E)) TurnCamera();

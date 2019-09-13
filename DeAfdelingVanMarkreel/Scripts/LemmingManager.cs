@@ -6,7 +6,8 @@ public delegate void RemovedLemmingEvent(GameObject _lemming);
 
 public interface ILemmingManager
 {
-    void RemoveLemming(GameObject _lemming);
+    void InstantiateAllLemmings(int _amount);
+    void RemoveLemming(GameObject _lemming, bool _reachedExit = false);
 }
 
 public class LemmingManager : MonoBehaviour, ILemmingManager
@@ -34,26 +35,16 @@ public class LemmingManager : MonoBehaviour, ILemmingManager
 
     private List<GameObject> currentLemmingsInScene = new List<GameObject>();
     private Coroutine instantiateAllLemmingsRoutine;
+    private int amountOfLemmingsThatHaveReachedTheExit;
 
     private void Awake()
     {
         instance = this;
     }
 
-    private void Start()
-    {
-        InstantiateAllLemmings();
-    }
-
-    private void InstantiateAllLemmings()
-    {
-        if (instantiateAllLemmingsRoutine != null) return;
-        instantiateAllLemmingsRoutine = StartCoroutine(IEInstantiateAllLemmings());
-    }
-
     private IEnumerator IEInstantiateAllLemmings()
     {
-        UIManager.Instance.UpdateLemmingItem(0, lemmingAmount);
+        UIManager.Instance.UpdateLemmingItem(amountOfLemmingsThatHaveReachedTheExit, lemmingAmount, currentLemmingsInScene.Count);
 
         for (int i = 0; i < lemmingAmount; i++)
         {
@@ -70,14 +61,26 @@ public class LemmingManager : MonoBehaviour, ILemmingManager
     {
         GameObject _lemming = Instantiate(lemmingPrefab, entrance.transform.position, entrance.transform.rotation, transform);
         currentLemmingsInScene.Add(_lemming);
+        UIManager.Instance.UpdateLemmingItem(amountOfLemmingsThatHaveReachedTheExit, lemmingAmount, currentLemmingsInScene.Count);
     }
 
-    public void RemoveLemming(GameObject _lemming)
+    public void InstantiateAllLemmings(int _amount)
+    {
+        if (instantiateAllLemmingsRoutine != null) return;
+
+        lemmingAmount = _amount;
+        instantiateAllLemmingsRoutine = StartCoroutine(IEInstantiateAllLemmings());
+    }
+
+    public void RemoveLemming(GameObject _lemming, bool _reachedExit = false)
     {
         if (currentLemmingsInScene.Contains(_lemming))
-        {
             currentLemmingsInScene.Remove(_lemming);
-            Destroy(_lemming);
-        }
+
+        if (_reachedExit)
+            amountOfLemmingsThatHaveReachedTheExit++;
+
+        Destroy(_lemming);
+        UIManager.Instance.UpdateLemmingItem(amountOfLemmingsThatHaveReachedTheExit, lemmingAmount, currentLemmingsInScene.Count);
     }
 }

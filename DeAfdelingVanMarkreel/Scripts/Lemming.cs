@@ -5,7 +5,7 @@ using UnityEngine;
 public class Lemming : MonoBehaviour
 {
     //TODO verander parachuter naar een boolean, aangezien een lemming zowel een type moet kunnen zijn als een parachute moet kunnen hebben.
-    public enum LemmingTypes { Basic, Stopper, Dimensional, Parachuter, Climber } 
+    public enum LemmingTypes { Basic, Stopper, Dimensional, Suicidal }
     [SerializeField] LemmingTypes lemmingType = LemmingTypes.Basic;
     [SerializeField] LayerMask terrainHitMask;
     [SerializeField] float movementSpeed;
@@ -16,16 +16,22 @@ public class Lemming : MonoBehaviour
     [SerializeField] Material stopperMat;
     [SerializeField] Material dimensionalMat;
 
-    [SerializeField] bool dirRight;
-    [SerializeField] bool onXAxis = true;
-    [SerializeField] bool changedDimension;
+    [SerializeField] GameObject particlesOnSuicide;
+
+    private bool dirRight;
+    private bool onXAxis = true;
+    private bool changedDimension;
 
     private Vector3 velocity;
     private MeshRenderer meshRend;
+    private Renderer rend;
+    private Animator anim;
 
     private void Awake()
     {
+        anim = GetComponentInChildren<Animator>();
         meshRend = GetComponent<MeshRenderer>();
+        rend = GetComponent<Renderer>();
     }
 
     private void Update()
@@ -37,6 +43,7 @@ public class Lemming : MonoBehaviour
     private void FixedUpdate()
     {
         transform.position += velocity * Time.deltaTime;
+        RotateTowardsDirection();
     }
 
     private void CalculateBehaviour()
@@ -56,15 +63,23 @@ public class Lemming : MonoBehaviour
                 case LemmingTypes.Dimensional:
                     velocity = Vector3.zero;
                     break;
-                case LemmingTypes.Climber:
+                case LemmingTypes.Suicidal:
+                    velocity = Vector3.zero;
                     break;
             }
         }
 
-        else if (lemmingType == LemmingTypes.Parachuter) velocity = new Vector3(0, -1, 0);
-
         else velocity = new Vector3(0, -5, 0);
-       
+
+        HandleAnimations();
+    }
+
+    private void HandleAnimations()
+    {
+        if (velocity.x != 0 || velocity.z != 0)
+            anim.SetBool("IsWalking", true);
+        else
+            anim.SetBool("IsWalking", false);
     }
 
     private void CheckForCollision()
@@ -97,14 +112,14 @@ public class Lemming : MonoBehaviour
 
     private void CheckForInteractables()
     {
-        Collider[] _cols = Physics.OverlapBox(transform.position, transform.localScale/2);
+        Collider[] _cols = Physics.OverlapBox(transform.position, transform.localScale / 2);
 
         foreach (var _col in _cols)
         {
             IInteractable _interactable = _col.transform.GetComponent<IInteractable>();
-            if(_interactable != null) _interactable.Interact(gameObject);      
+            if (_interactable != null) _interactable.Interact(gameObject);
         }
-        
+
     }
 
     private bool Grounded()
@@ -146,13 +161,20 @@ public class Lemming : MonoBehaviour
         return onXAxis ? (dirRight ? Vector3.right : Vector3.left) : (dirRight ? Vector3.forward : Vector3.back);
     }
 
+    private void RotateTowardsDirection()
+    {
+        Vector3 _rot = onXAxis ? (dirRight ? Vector3.up * 90 : Vector3.up * 270) : (dirRight ? Vector3.zero : Vector3.up * 180);
+
+        transform.eulerAngles = _rot;
+    }
+
     /// <summary>
     /// Returns the velocity that the lemming should have when in a default state.
     /// </summary>
     /// <returns></returns>
     private Vector3 DefaultVelocity()
     {
-        float _newMoveSpeed = dirRight ? movementSpeed : -movementSpeed; 
+        float _newMoveSpeed = dirRight ? movementSpeed : -movementSpeed;
         return new Vector3(onXAxis ? _newMoveSpeed : 0, 0, onXAxis ? 0 : _newMoveSpeed);
 
         //DISCUSS Ik heb zoals je zei de nested ternary operator in deze functie gezet en heb hem zo aangepast dat hij niet meer nested is. Ik ben het er volkomen mee eens dat het erg onleesbaar wordt
@@ -171,22 +193,32 @@ public class Lemming : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (Grounded() && lemmingType == LemmingTypes.Basic) 
+        if (Grounded())
         {
-            switch (CameraBehaviour.Instance.CurrentType)
+            if (CameraBehaviour.Instance.CurrentType == 3 && lemmingType != LemmingTypes.Suicidal)
             {
-                default:
-                case 1:
-                    lemmingType = LemmingTypes.Stopper;
-                    gameObject.layer = 9; //Make lemming part of the terrain
-                    GetComponent<Renderer>().material = stopperMat;
-                    break;
-                case 2:
-                    lemmingType = LemmingTypes.Dimensional;
-                    gameObject.layer = 9; //Make lemming part of the terrain
-                    GetComponent<Renderer>().material = dimensionalMat;
-                    GetComponent<Collider>().isTrigger = true;
-                    break;
+                lemmingType = LemmingTypes.Suicidal;
+                gameObject.layer = 0;
+                anim.SetTrigger("OnSuicide");
+            }
+
+            else if (lemmingType == LemmingTypes.Basic)
+            {
+                switch (CameraBehaviour.Instance.CurrentType)
+                {
+                    default:
+                    case 1:
+                        lemmingType = LemmingTypes.Stopper;
+                        gameObject.layer = 9; //Make lemming part of the terrain
+                        rend.materials[0] = stopperMat;
+                        break;
+                    case 2:
+                        lemmingType = LemmingTypes.Dimensional;
+                        gameObject.layer = 9; //Make lemming part of the terrain
+                        rend.materials[0] = dimensionalMat;
+                        GetComponent<Collider>().isTrigger = true;
+                        break;
+                }
             }
         }
     }
@@ -201,6 +233,12 @@ public class Lemming : MonoBehaviour
         Gizmos.DrawLine(transform.position + new Vector3(0, -transform.localScale.y / 2, 0), transform.position + new Vector3(0, -transform.localScale.y / 2 + velocity.y * 0.1f, 0));
 
         //Gizmos.DrawCube(transform.position, transform.localScale);
+    }
+
+    public void OnSuicide()
+    {
+        //Instantiate(particlesOnSuicide, transform.position, particlesOnSuicide.transform.rotation); //TODO maak een particle voor suicide
+        LemmingManager.Instance.RemoveLemming(gameObject);
     }
 
     public bool IsDimensionalLemming()
