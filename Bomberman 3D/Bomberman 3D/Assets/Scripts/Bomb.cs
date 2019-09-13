@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    public delegate void CanDeployBomb();
-    public delegate void TimerCallBack();
+    public delegate void CallBack();
 
-    public event CanDeployBomb _canDeploy;
-    public event TimerCallBack _timerCallBack;
+    public event CallBack _canDeploy;
+    public event CallBack _timerCallBack;
 
     public bool bombDeployCheck = true;
 
-    [SerializeField] private float explodeTime;
     [SerializeField] private float bombTimer;
     [SerializeField] private float particleTimer;
     [SerializeField] private float raycastLength;
@@ -23,6 +21,7 @@ public class Bomb : MonoBehaviour
 
     private RaycastHit[] hit;
     private Vector3[] directions;
+    private AudioSource audioSource;
 
     private void Awake()
     {
@@ -35,6 +34,7 @@ public class Bomb : MonoBehaviour
     {
         directions = new Vector3[] { Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
         hit = new RaycastHit[directions.Length];
+        audioSource = GetComponent<AudioSource>();
 
         maxBombTimer = bombTimer;
     }
@@ -56,12 +56,10 @@ public class Bomb : MonoBehaviour
 
     public void Deployed()
     {
-        Debug.Log("Almost Deployed");
         if(_canDeploy != null)
         {
             _canDeploy.Invoke();
         }
-        Debug.Log("Deployed");
     }
 
     private void Explode()
@@ -89,10 +87,7 @@ public class Bomb : MonoBehaviour
             }
         }
 
-
-        
         gameObject.SetActive(false);
-
     }
 
     private void ResetTime()

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour, IDamagable
 {
+    public int gameID;
     public int health = 3;
     public GameObject bombDummy;
     public Bomb bomb;
@@ -12,7 +13,6 @@ public class Actor : MonoBehaviour, IDamagable
 
     private void Start()
     {
-        //uiManager = GetComponent<UIManager>();
         uiManager = FindObjectOfType<UIManager>();
     }
 
@@ -29,6 +29,8 @@ public class Actor : MonoBehaviour, IDamagable
     public virtual void Damage()
     {
         health -= 1;
+        //Player zn gameID is altijd 1
+        uiManager.DecreaseHearts(gameID, this.health);
         if (health <= 0)
         {
             Die();
@@ -40,7 +42,7 @@ public class Actor : MonoBehaviour, IDamagable
         Debug.Log("Game Over");
     }
 
-    private void DeployBomb()
+    protected void DeployBomb()
     {
         bombDummy.SetActive(true);
         bombDummy.transform.position = transform.position;
