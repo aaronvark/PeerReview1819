@@ -54,12 +54,7 @@ namespace Breakin
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.CompareTag("Ball"))
-            {
-                SoundController.Instance.PlaySound(0);
-                
-                OnHit();
-            }
+            if (other.gameObject.CompareTag("Ball")) OnHit();
         }
     }
 }

@@ -6,44 +6,44 @@ using Object = UnityEngine.Object;
 
 namespace Breakin.Pooling
 {
-    public class BlockPool
+    public class MultiPrefabPool<T> where T : MonoBehaviour, IPoolable
     {
-        private Dictionary<Block, List<Block>> blockLists;
+        private Dictionary<T, List<T>> objectLists;
         private Transform root;
 
-        public BlockPool(int capacity, Transform root, params Block[] prefabs)
+        public MultiPrefabPool(int capacity, Transform root, params T[] prefabs)
         {
             this.root = root;
 
-            blockLists = new Dictionary<Block, List<Block>>(prefabs.Length);
+            objectLists = new Dictionary<T, List<T>>(prefabs.Length);
 
-            // Initialize a pool list for each prefab
-            foreach (Block _t in prefabs)
+            // Initialize a pool list (dictionary entry) for each prefab
+            foreach (T _t in prefabs)
             {
-                blockLists.Add(_t, new List<Block>(capacity));
+                objectLists.Add(_t, new List<T>(capacity));
             }
 
             Populate();
         }
 
         /// <summary>
-        /// Gets a block of a specified prefab
+        /// Gets an object of a specified prefab
         /// </summary>
         /// <param name="prefabKey"></param>
         /// <returns></returns>
-        public Block GetBlock(Block prefabKey)
+        public T GetBlock(T prefabKey)
         {
             // Try to find an inactive object in the pool. If no object was found, create an extra one.
-            Block _b = FindInactive(prefabKey);
-            if (!_b)
+            T _obj = FindInactive(prefabKey);
+            if (!_obj)
             {
-                _b = Spawn(prefabKey);
-                Debug.Log("Pool expansion for prefab " + prefabKey.name + " to size " + blockLists[prefabKey].Count);
+                _obj = Spawn(prefabKey);
+                Debug.Log("Pool expansion for prefab " + prefabKey.name + " to size " + objectLists[prefabKey].Count);
             }
 
-            _b.IsActive = true;
+            _obj.IsActive = true;
 
-            return _b;
+            return _obj;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Breakin.Pooling
         /// </summary>
         private void Populate()
         {
-            foreach (var _entry in blockLists)
+            foreach (var _entry in objectLists)
             {
                 for (int i = 0; i < _entry.Value.Capacity; i++)
                 {
@@ -62,13 +62,13 @@ namespace Breakin.Pooling
         }
 
         /// <summary>
-        /// Finds a block that is currently not active and returns it. Returns null when there was no active block found
-        /// or when the provided prefab does not exist in the dictionary.
+        /// Finds an object that is currently not active and returns it. Returns null when there was no active object
+        /// found or when the provided prefab does not exist in the dictionary.
         /// </summary>
-        /// <returns>An inactive block or null when none was found.</returns>
-        private Block FindInactive(Block prefabKey)
+        /// <returns>An inactive object or null when none was found.</returns>
+        private T FindInactive(T prefabKey)
         {
-            return blockLists[prefabKey]?.FirstOrDefault(b => !b.IsActive);
+            return objectLists[prefabKey]?.FirstOrDefault(obj => !obj.IsActive);
         }
 
         /// <summary>
@@ -77,18 +77,18 @@ namespace Breakin.Pooling
         /// <param name="prefab">The specific prefab that needs to be spawned</param>
         /// <returns>The block that was just spawned</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        private Block Spawn(Block prefab)
+        private T Spawn(T prefab)
         {
-            Block _b = Object.Instantiate(prefab, root);
-            _b.IsActive = false;
+            T _obj = Object.Instantiate(prefab, root);
+            _obj.IsActive = false;
 
-            if (!blockLists.ContainsKey(prefab))
+            if (!objectLists.ContainsKey(prefab))
             {
                 throw new InvalidOperationException("Can't spawn object when there is no pool for its prefab");
             }
 
-            blockLists[prefab].Add(_b);
-            return _b;
+            objectLists[prefab].Add(_obj);
+            return _obj;
         }
     }
 }

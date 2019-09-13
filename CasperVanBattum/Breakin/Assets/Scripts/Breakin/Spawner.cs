@@ -14,7 +14,7 @@ namespace Breakin
         public event Action SpawnerExhausted;
 
         public float Radius => spawnRadius;
-        public BlockPool BlockPool { get; private set; }
+        public MultiPrefabPool<Block> BlockPool { get; private set; }
 
         [SerializeField] private Block standardBlock; // Block prefab TODO make this a list; define a list for each individual ring
         [SerializeField] private float spawnRadius = 3; // Radius of the most recent ring
@@ -29,7 +29,7 @@ namespace Breakin
         {
             rings = new List<Ring>();
 
-            BlockPool = new BlockPool(blockCountRing, transform, standardBlock);
+            BlockPool = new MultiPrefabPool<Block>(blockCountRing, transform, standardBlock);
 
             StartCoroutine(TimedRingSpawning());
         }
