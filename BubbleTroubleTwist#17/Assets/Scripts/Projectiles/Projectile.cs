@@ -8,7 +8,7 @@ public class Projectile : PoolableBehaviour
     public float speed;
     public int damage;
 
-    private float timeRemaining = 4;
+    private float timeRemaining = 2;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -18,8 +18,9 @@ public class Projectile : PoolableBehaviour
             _enemy.SplitEnemy();
             _enemy.TakeDamage(damage);
             EventManager.OnLevelUpdateHandler();
+            EventManager.OnScoreChangedHandler(_enemy.enemyInput.points);
             //Recycle();
-            //gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
         if (collision.gameObject.tag != "Projectile")
         {
@@ -36,7 +37,7 @@ public class Projectile : PoolableBehaviour
         }
         else
         {
-            timeRemaining = 4;
+            timeRemaining = 2;
             //Recycle();
             gameObject.SetActive(false);
 

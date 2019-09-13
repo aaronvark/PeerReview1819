@@ -52,7 +52,11 @@ public class LevelEditorWindow : EditorWindow
         GUILayout.Label("Level Done: ", EditorStyles.boldLabel);
         placeHolderLevel.done = EditorGUILayout.Toggle(placeHolderLevel.done);
         GUILayout.Label("Next Level Player Position: ", EditorStyles.boldLabel);
-        placeHolderLevel.spawnRangeMax = EditorGUILayout.Vector3Field("NextLevelPosition:",placeHolderLevel.spawnRangeMax);
+        placeHolderLevel.nextLevelPosition = EditorGUILayout.Vector3Field("NextLevelPosition:",placeHolderLevel.nextLevelPosition);
+        GUILayout.Label("Current Level Player Position: ", EditorStyles.boldLabel);
+        placeHolderLevel.currentLevelPostion = EditorGUILayout.Vector3Field("CurrentLevelPosition:", placeHolderLevel.currentLevelPostion);
+        GUILayout.Label("Level Prefab: ", EditorStyles.boldLabel);
+        placeHolderLevel.levelPrefab = EditorGUILayout.ObjectField(placeHolderLevel.levelPrefab, typeof(GameObject), true) as GameObject;
         if (GUILayout.Button("Add Level"))
         {
             AddLevel();
@@ -70,10 +74,16 @@ public class LevelEditorWindow : EditorWindow
                 GUILayout.Label("Level Done: ", EditorStyles.boldLabel);
                 placeHolderLevel.done = EditorGUILayout.Toggle(placeHolderLevel.done);
                 GUILayout.Label("Next Level Player Position: ", EditorStyles.boldLabel);
-                placeHolderLevel.spawnRangeMax = EditorGUILayout.Vector3Field("NextLevelPosition:", placeHolderLevel.spawnRangeMax);
+                placeHolderLevel.nextLevelPosition = EditorGUILayout.Vector3Field("NextLevelPosition:", placeHolderLevel.nextLevelPosition);
+                GUILayout.Label("Current Level Player Position: ", EditorStyles.boldLabel);
+                placeHolderLevel.currentLevelPostion = EditorGUILayout.Vector3Field("CurrentLevelPosition:", placeHolderLevel.currentLevelPostion);
+                GUILayout.Label("Level Prefab: ", EditorStyles.boldLabel);
+                placeHolderLevel.levelPrefab = EditorGUILayout.ObjectField(placeHolderLevel.levelPrefab, typeof(GameObject), true) as GameObject;
+                if(GUILayout.Button("Remove Level"))
+                {
+                    RemoveLevel(level);
+                }
             }
-
-
         }
         EditorGUILayout.EndScrollView();
 
@@ -90,9 +100,15 @@ public class LevelEditorWindow : EditorWindow
             placeHolderLevel.done = false;
             placeHolderLevel.nextLevelPosition = Vector3.zero;
         }
-        var tmpEnemy = placeHolderLevel;
+        var tmpLevel = placeHolderLevel;
+        LevelManager.Instance.CreateLevel(tmpLevel.levelPrefab, tmpLevel.currentLevelPostion);
+        levels.Add(tmpLevel);
+    }
 
-        levels.Add(tmpEnemy);
+    public void RemoveLevel(Level level)
+    {
+        levels.Remove(level);
+        OnGUI();
     }
 
     public void FromJson()
@@ -124,7 +140,7 @@ public class LevelEditorWindow : EditorWindow
 
     private string FixJson(string value)
     {
-        value = "{\"Enemies\":" + value + "}";
+        value = "{\"Levels\":" + value + "}";
         return value;
     }
 }

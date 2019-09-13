@@ -26,6 +26,6 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        SceneManager.LoadSceneAsync(0);
+        SceneManager.LoadScene(0);
     }
 }

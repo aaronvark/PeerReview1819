@@ -82,6 +82,7 @@
     <Compile Include="Assets\Scripts\Interfaces\IStats.cs" />
     <Compile Include="Assets\Scripts\Level\JsonHelper.cs" />
     <Compile Include="Assets\Scripts\Level\Level.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelHelper.cs" />
     <Compile Include="Assets\Scripts\Level\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Level\LevelSaver.cs" />
     <Compile Include="Assets\Scripts\Management\CameraManager.cs" />

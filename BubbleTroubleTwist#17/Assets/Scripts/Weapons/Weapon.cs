@@ -20,12 +20,15 @@ public class WeaponData
 /// </summary>
 public class Weapon : MonoBehaviour
 {
-    public WeaponData thisWeaponData;
+    public WeaponData thisWeaponData { get; set; }
 
     private bool ready = true;
     private float amount = 10;
 
-    //GenericObjectPooler<Projectile> projectilePool;
+    public Weapon(WeaponData _thisWeaponData)
+    {
+        thisWeaponData = _thisWeaponData;
+    }
     
     private void Start()
     {
@@ -36,16 +39,16 @@ public class Weapon : MonoBehaviour
 
     public void FireWeapon(int _damage)
     {
-        GameObject projectile = ObjectPooler.Instance.SpawnFromPool(thisWeaponData.projectileName, thisWeaponData.firePoint.position, Quaternion.identity);
+        //GameObject projectile = ObjectPooler.Instance.SpawnFromPool(thisWeaponData.projectileName, thisWeaponData.firePoint.position, Quaternion.identity);
         //GameObject projectile = projectilePool.GetNext().gameObject;
         //var bulletPool = FindObjectOfType<BulletPool>();
         //GameObject prjctile = bulletPool.Get().gameObject;
         //projectile.transform.position = thisWeaponData.firePoint.position;
-        //GameObject projectile = ProjectilePool.Instance.SpawnFromPool(thisWeaponData.firePoint.position, Quaternion.identity);
-        /*if (projectile != null)
+        GameObject projectile = ProjectilePool.Instance.SpawnFromPool(thisWeaponData.firePoint.position, Quaternion.identity);
+        if (projectile != null)
         {
             projectile.gameObject.GetComponent<Projectile>().damage = thisWeaponData.damage;
-        }*/
+        }
     }
 
     public IEnumerator WaitForCooldown(float _time, float _timeBetween)

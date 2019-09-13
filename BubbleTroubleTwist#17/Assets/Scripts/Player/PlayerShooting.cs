@@ -17,15 +17,10 @@ public class PlayerShooting : AbstractAvatarClass
 
     private Weapon currentWeapon;
 
-    private void OnEnable()
-    {
-    }
-
     void Awake()
     {
         //Create a weapon and give its weapon data
-        currentWeapon = new Weapon();
-        currentWeapon.thisWeaponData = usingWeaponData;
+        currentWeapon = new Weapon(usingWeaponData);
     }
 
     private void Update()

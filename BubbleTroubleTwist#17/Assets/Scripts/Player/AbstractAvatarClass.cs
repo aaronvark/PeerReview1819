@@ -19,17 +19,23 @@ public abstract class AbstractAvatarClass : MonoBehaviour, IDamagable<int>
     public Rigidbody rBody;
     public OnDataUpdate OnDataUpdateHandler;
     public PlayerData playerInput;
-    //public StatsBase entityStats;
+    public StatsBase<PlayerData> entityStats;
 
     public virtual void Start()
-    {   
-        if(GetComponent<PlayerInput>())
+    {
+        if (GetComponent<PlayerInput>())
+        {
             playerInput = GetComponent<PlayerInput>().playerInput;
+        }
+        else
+        {
+            //Its not a player :D           
+        }
+
         speed = 5f;
         OnDeathHandler += OnDeath;
         //Search players for the current selected player ( Lamba )
         //currentPlayerData = PlayerManager.Instance.players?.Find(p => p.id.Equals((int)currentPlayer));
-
         if (rBody == null)
             rBody = GetComponent<Rigidbody>();
     }

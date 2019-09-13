@@ -10,5 +10,5 @@ public class PlayerData : StatsBase<PlayerData>
     public string verticalAxis;
     public KeyCode fireKey;
     public int level;
-    public Vector3 spawnVector;
+    public Vector3 spawnVector;   
 }

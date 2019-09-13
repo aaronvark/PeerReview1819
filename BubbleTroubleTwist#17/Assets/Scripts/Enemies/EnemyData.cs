@@ -1,7 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// EnemyData class to store foreach unique enemy its own data
+/// </summary>
 [System.Serializable]
 public class EnemyData
 {
@@ -10,4 +12,5 @@ public class EnemyData
     public int level;
     public List<Transform> splitPoints;
     public Transform spawnPoint;
+    public int points;
 }

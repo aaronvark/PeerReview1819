@@ -55,7 +55,7 @@ public static class EventManagerGen<T>
 
     // Stores the delegates that get called when an event is fired
     static Dictionary<EVENT, GenericDelegate<T>> genericEventTable = new Dictionary<EVENT, GenericDelegate<T>>();
-
+    
     // Adds a delegate to get called for a specific event
     public static void AddHandler(EVENT evnt, GenericDelegate<T> action)
     {

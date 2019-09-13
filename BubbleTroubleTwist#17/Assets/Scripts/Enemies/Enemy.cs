@@ -24,11 +24,24 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
     {
         ///First we call the base
         base.Start();
+        try
+        {
+            enemyInput.Equals(enemyInput);
+        }
+        catch
+        {
+            enemyInput = new EnemyData();
+        }
         /// We add all children to the splitPoints list stored in the enemyInput data
         for (int childIndex = 0; childIndex < transform.childCount; childIndex++)
         {
             enemyInput.splitPoints.Add(transform.GetChild(childIndex));
         }
+
+        rBody.AddForce(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5) * 10f), ForceMode.Impulse);
+
+        if (enemyInput.points == 0)
+            enemyInput.points = 10;
     }
 
     /// <summary>

@@ -1,8 +1,8 @@
 {
     "Items": [
         {
-            "enemyAmounts": 5,
-            "enemiesAlive": 1,
+            "enemyAmounts": 7,
+            "enemiesAlive": 5,
             "spawnRangeMax": {
                 "x": 12.0,
                 "y": 1.5,
@@ -13,7 +13,7 @@
                 "y": 1.5,
                 "z": -12.0
             },
-            "done": true,
+            "done": false,
             "nextLevelPosition": {
                 "x": 40.0,
                 "y": 0.0,
@@ -26,12 +26,12 @@
             },
             "currentCameraX": 0.0,
             "levelPrefab": {
-                "instanceID": 3492
+                "instanceID": 3526
             }
         },
         {
-            "enemyAmounts": 10,
-            "enemiesAlive": 1,
+            "enemyAmounts": 14,
+            "enemiesAlive": 14,
             "spawnRangeMax": {
                 "x": 12.0,
                 "y": 2.5,
@@ -42,7 +42,7 @@
                 "y": 1.5,
                 "z": -12.0
             },
-            "done": true,
+            "done": false,
             "nextLevelPosition": {
                 "x": 80.0,
                 "y": 0.0,
@@ -55,12 +55,12 @@
             },
             "currentCameraX": 40.0,
             "levelPrefab": {
-                "instanceID": 3448
+                "instanceID": 3474
             }
         },
         {
-            "enemyAmounts": 15,
-            "enemiesAlive": 9,
+            "enemyAmounts": 21,
+            "enemiesAlive": 21,
             "spawnRangeMax": {
                 "x": 12.0,
                 "y": 2.5,
@@ -84,7 +84,7 @@
             },
             "currentCameraX": 80.0,
             "levelPrefab": {
-                "instanceID": 3326
+                "instanceID": 3332
             }
         }
     ]

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// static extensions for methods I often use
+/// </summary>
 public static class ExtensionMethods
 {
     private static BasExtensionHelpers basCurrentHelper = (new GameObject("basCurrentHelper")).AddComponent<BasExtensionHelpers>();
@@ -24,8 +27,16 @@ public static class ExtensionMethods
     }
 }
 
+/// <summary>
+/// Helper class for some of my extensions
+/// </summary>
 public class BasExtensionHelpers : MonoBehaviour
 {
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
     public RectTransform ActivateCoroutineLerpRectTransformPositions(RectTransform rectTransform, Vector3 targetPosition, float speed)
     {
         if (rectTransform == null) return null;

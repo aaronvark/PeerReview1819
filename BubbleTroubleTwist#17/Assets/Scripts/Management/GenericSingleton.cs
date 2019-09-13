@@ -1,7 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Generic singleton class for easy inheritance 
+/// </summary>
+/// <typeparam name="T">Component of type T</typeparam>
+/// <typeparam name="A">Interface of type A</typeparam>
 public class GenericSingleton<T, A> : MonoBehaviour where T : Component, A
 {
     private static T instance;
@@ -25,7 +28,7 @@ public class GenericSingleton<T, A> : MonoBehaviour where T : Component, A
 
     public virtual void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
         if (instance == null)
         {
             instance = this as T;
