@@ -20,6 +20,8 @@ public class ObjectPoolManager : MonoBehaviour
     public List<Pool> pools;
     public Dictionary<Pool, Queue<GameObject>> poolDictionary;
 
+    public GameObject objectToSpawn;
+
     private void Start()
     {
         poolDictionary = new Dictionary<Pool, Queue<GameObject>>();
@@ -61,7 +63,7 @@ public class ObjectPoolManager : MonoBehaviour
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[pool].Dequeue();
+        objectToSpawn = poolDictionary[pool].Dequeue();
 
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;

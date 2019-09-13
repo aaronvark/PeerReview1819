@@ -15,6 +15,8 @@ public class Spawner : MonoBehaviour
     private float spawnHeight;
     private int randomSpawnNumber;
 
+    private int rowNumber;
+
     public static Vector3 randomPointInBounds(Bounds bounds)
     {
         return new Vector3(
@@ -38,8 +40,11 @@ public class Spawner : MonoBehaviour
             objectPool.AddPool(spawnables[j]);
         }
 
-        for (int j = 0; j < 3; j++)
+        for (int i = 0; i < 3; i++)
         {
+            rowNumber = i;
+            rowNumber++;
+
             SpawnRow();
         }   
     }
@@ -52,17 +57,15 @@ public class Spawner : MonoBehaviour
         {
             Vector3 _spawnPos = new Vector3(spawnCollider.bounds.min.x + _difference * i, spawnHeight, spawnCollider.bounds.center.z);
 
-            SpawnEnemy(_spawnPos);
+            Pool _poolToSpawn = spawnables[Random.Range(0, spawnables.Count)];
+
+            objectPool.SpawnFromPool(_poolToSpawn, _spawnPos, _poolToSpawn.prefab.transform.rotation);
+
+            objectPool.objectToSpawn.GetComponent<Enemy>().prefferedHeight = 100f * rowNumber;
+             
         }
 
         spawnHeight += 100f;
-
     }
 
-    private void SpawnEnemy(Vector3 _spawnPosition)
-    {
-        Pool _poolToSpawn = spawnables[Random.Range(0, spawnables.Count)];
-
-        objectPool.SpawnFromPool(_poolToSpawn, _spawnPosition, _poolToSpawn.prefab.transform.rotation);
-    }
 }

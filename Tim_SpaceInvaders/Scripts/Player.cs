@@ -17,7 +17,7 @@ public class Player : MonoBehaviour, IDamagable
     }
     #endregion
 
-    private GameObject cameraObject;
+    [HideInInspector] public GameObject cameraObject;
 
     [Header("Mouse Settings")]
     [SerializeField] float xSensitivity = 0.5f;
@@ -49,15 +49,20 @@ public class Player : MonoBehaviour, IDamagable
     [SerializeField] int maxHealth;
     int health;
     [SerializeField] Image healthBar;
+    [SerializeField] int maxLives;
+    int currentLives;
 
     //ObjectPool
     private ObjectPoolManager objectPool;
+    [SerializeField] Pool particlePool;
 
     private void Start()
     {
 
         objectPool = ObjectPoolManager.Instance;
+
         objectPool.AddPool(bulletPool);
+       // objectPool.AddPool(particlePool);
 
         cameraObject = GetComponentInChildren<Camera>().gameObject;
 
@@ -68,6 +73,7 @@ public class Player : MonoBehaviour, IDamagable
 
         healthBar.fillAmount = (float)health / (float)maxHealth;
 
+        currentLives = maxLives;
     }
 
     private void Update()
@@ -124,8 +130,6 @@ public class Player : MonoBehaviour, IDamagable
 
     public void Damage(int damage)
     {
-
-
         if (health <= 0)
         {
             Die();
@@ -140,6 +144,16 @@ public class Player : MonoBehaviour, IDamagable
 
     public void Die()
     {
+        if(currentLives > 1)
+        {
+            currentLives--;
+            health = maxHealth;
 
+            objectPool.SpawnFromPool(particlePool, transform.position, particlePool.prefab.transform.rotation);
+        }
+        else
+        {
+            GameManager.Instance.GameOver();
+        }
     }
 }

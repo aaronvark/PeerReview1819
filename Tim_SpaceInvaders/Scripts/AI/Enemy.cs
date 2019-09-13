@@ -9,12 +9,14 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
     [Tooltip("The distance from the player for which it stops.")]
     [SerializeField] float stopDistance = 200f;
     [SerializeField] float moveSpeed = 10f;
+    [SerializeField] float sideSpeed = 10f;
 
     [Header("Health Settings")]
     [SerializeField] int health = 40;
+    [SerializeField] int score;
 
     [Header("Gun Settings")]
-    [SerializeField] float maxWaitTimeForShot;
+    [SerializeField] Vector2 waitTimeForShot;
 
     [SerializeField] Pool bulletPool;
     [SerializeField] float bulletForce;
@@ -29,12 +31,14 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
 
     [Space]
     [Header("Death Settings")]
-
-    //TODO pool death particles?
     [SerializeField] Pool particlePool;
 
     [SerializeField]
-    private float timer = 2;
+    private float attackTimer;
+
+    public float prefferedHeight;
+
+    float sideStartPosition;
 
     private void Start()
     {   
@@ -46,15 +50,16 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
             objectPool.AddPool(particlePool);
         }
         
-
         target = Player.Instance.gameObject;
 
-        moveSpeed = moveSpeed * Random.Range(1f, 1.2f);
+        attackTimer = Random.Range(waitTimeForShot.x, waitTimeForShot.y);
+
+        sideStartPosition = transform.position.x;
     }
 
     public void OnObjectSpawn()
     {
-        timer = Random.Range(maxWaitTimeForShot/4, maxWaitTimeForShot);
+        attackTimer = Random.Range(waitTimeForShot.x, waitTimeForShot.y);
     }
 
     public void OnObjectDespawn()
@@ -65,15 +70,15 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
     private void Update()
     {
         MoveToTarget();
+
         if (Timer() < 0)
         {
-            //Attack();
+            Attack();
         }
     }
         
     private void MoveToTarget()
     {
-        float _prefferedHeight = 100f;
         float _targetDistance = Vector3.Distance(transform.position, target.transform.position);
         float _height = transform.position.y;
 
@@ -82,17 +87,17 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
         if (_targetDistance >= stopDistance){
             // Debug.DrawRay(transform.position, -transform.forward * 10, Color.red);
 
-            if(_height > _prefferedHeight)
+            if(_height > prefferedHeight)
             {
                 _forwardPostion = transform.position + new Vector3(0, -3, -2);
             }
             else
             {
+                MoveSideways();
                 _forwardPostion = transform.position + -transform.forward;
             }
 
 
-            //TODO meer verspreiding van enemies over eindlocatie.
             transform.position = Vector3.Lerp(transform.position, _forwardPostion, Time.deltaTime * moveSpeed);
         }
     }
@@ -129,13 +134,21 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
 
         }
 
-       timer = Random.Range(2, maxWaitTimeForShot);
+       attackTimer = Random.Range(waitTimeForShot.x, waitTimeForShot.y);
 
+    }
+
+    private void MoveSideways()
+    {
+        
+        float _sidewaysPostion = Mathf.Lerp(sideStartPosition, sideStartPosition + 300f, Mathf.PingPong(Time.time * sideSpeed, 1));
+
+        transform.position = new Vector3(_sidewaysPostion, transform.position.y, transform.position.z);
     }
 
     private float Timer()
     {
-        return timer -= Time.deltaTime;
+        return attackTimer -= Time.deltaTime;
     }
 
 
