@@ -5,20 +5,40 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
+	[SerializeField] private Text scoreText;
+	[SerializeField] private Text highscoreText;
+
 	private int scoreAmount;
 	private int scoreTotal;
-	[SerializeField] private Text scoreText;
 
-	// Start is called before the first frame update
+	private const string KEY = "localHighscore";
+
 	private void Start()
     {
+		UpdateLocalHighscore();
 		scoreAmount = 0;
+	}
+
+	private void UpdateLocalHighscore()
+	{
+		highscoreText.text = PlayerPrefs.GetInt(KEY).ToString();
 	}
 
 	private void UpdateScore(int _score)
 	{
 		scoreAmount += _score;
+		scoreTotal = scoreAmount;
 		scoreText.text = scoreAmount.ToString();
+	}
+
+	private void Update()
+	{
+		if(PlayerPrefs.GetInt(KEY) <= scoreAmount)
+		{
+			PlayerPrefs.SetInt(KEY, scoreTotal);
+			UpdateLocalHighscore();
+			Debug.Log(PlayerPrefs.GetInt(KEY).ToString());
+		}
 	}
 
 	private void OnEnable()

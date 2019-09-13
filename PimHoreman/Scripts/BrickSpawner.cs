@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class BrickSpawner : MonoBehaviour
 {
-	public int[] level = new int[]
-	{
-			0,1,1,1,1,0,
-			0,1,0,0,1,0,
-	};
+	[SerializeField] private Brick brick;
+	[SerializeField] private Vector2 cellSize = new Vector2(1,1); 
 
-	public class Block
+	private int[] level = new int[]
 	{
-		public Block(int x, int y, DifferentBricks type) { }
-	}
+			4,4,4,4,4,4,
+			4,3,3,3,3,4,
+			4,3,2,2,3,4,
+			1,1,1,1,1,1,
+	};
 
 	private void Awake()
 	{
@@ -26,9 +26,12 @@ public class BrickSpawner : MonoBehaviour
 
 			if (level[index] != 0)
 			{
-				Block b = new Block(x, y, (DifferentBricks)level[index]);
-				//Instantiate(b, transform.position, Quaternion.identity);
-				Debug.Log(b);
+				Vector3 _spawnPosition = new Vector3(x * cellSize.x, y * -cellSize.y, 0) + transform.position;
+
+				Brick b = Instantiate(brick, _spawnPosition, Quaternion.identity);
+				b.transform.parent = transform;
+
+				b.diffBrick = (DifferentBricks)(level[index] -1);
 			}	
 		}	
 
@@ -36,7 +39,7 @@ public class BrickSpawner : MonoBehaviour
 		// terugschrijven naar array
 		for (int x = 0; x < 6; ++x)
 		{
-			for (int y = 0; y < 2; ++y)
+			for (int y = 0; y < 4; ++y)
 			{
 				int index = x * 6 + y;
 				level[index] = 1;

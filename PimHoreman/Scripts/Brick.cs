@@ -6,11 +6,11 @@ using UnityEngine;
 public class Brick : MonoBehaviour
 {
 	public static Action<int> ScoreUpdateEvent;
+	public static Action SpawnItemEvent;
+	public DifferentBricks diffBrick;
 
-	[SerializeField] private DifferentBricks diffBrick;
+	//private Dictionary<DifferentBricks, Color> brickColor = new Dictionary<DifferentBricks, Color>();
 
-	private Dictionary<DifferentBricks, Color> differentColoredBricks;
-	private Dictionary<DifferentBricks, DifferentBricks> changeBricks;
 	private Renderer ren;
 
 
@@ -83,6 +83,11 @@ public class Brick : MonoBehaviour
 
 	private void DestroyBrick()
 	{
+		if(SpawnItemEvent != null)
+		{
+			SpawnItemEvent();
+		}
+
 		Destroy(gameObject);
 	}
 }

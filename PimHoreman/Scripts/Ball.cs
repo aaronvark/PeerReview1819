@@ -4,17 +4,30 @@ public class Ball : MonoBehaviour, IReset
 {
 	public Vector3 ResetPosition { get { return startPosition; } set { startPosition = value; } }
 
+	[SerializeField] private TrailRenderer trailRen;
+
 	private float ballSpeed;
+	private int health;
+	private int maxHealth = 3;
 	private Vector3 startPosition;
 	private Rigidbody rb;
-	[SerializeField] private TrailRenderer trailRen;
+	private bool isGameOver;
 
 	public void ResetObject()
 	{
-		rb.angularVelocity = Vector3.zero;
-		rb.velocity = Vector3.zero;
-		transform.position = startPosition;
-		trailRen.Clear();
+		if(isGameOver)
+		{
+			Debug.Log("Game Over");
+			return;
+		}
+		else
+		{
+			rb.angularVelocity = Vector3.zero;
+			rb.velocity = Vector3.zero;
+			transform.position = startPosition;
+			health--;
+			trailRen.Clear();
+		}
 	}
 
 	public void VelocityBall(float _deltaPosition, int _force)
@@ -23,9 +36,28 @@ public class Ball : MonoBehaviour, IReset
 		ballSpeed = _deltaPosition * _force;
 	}
 
+	public void ExplosiveForceBall(int _force, Vector3 _position, int _radius)
+	{
+		rb.AddExplosionForce(_force, _position, _radius);
+	}
+
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody>();
+	}
+
+	private void Start()
+	{
+		health = maxHealth;
+	}
+
+	private void Update()
+	{
+		if (health <= 0)
+		{
+			isGameOver = true;
+		}
+		Debug.Log(health);
 	}
 
 	private void OnCollisionEnter(Collision collision)
