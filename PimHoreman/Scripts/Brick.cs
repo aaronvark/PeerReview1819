@@ -1,14 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Brick : MonoBehaviour
 {
+	public static Action<int> ScoreUpdateEvent;
+
 	[SerializeField] private DifferentBricks diffBrick;
+
+	private Dictionary<DifferentBricks, Color> differentColoredBricks;
+	private Dictionary<DifferentBricks, DifferentBricks> changeBricks;
+	private Renderer ren;
+
+
+	private void Awake()
+	{
+		ren = GetComponent<Renderer>();
+	}
 
 	private void Update()
 	{
 		BrickStates();
+	}
+
+	private void CallEvent(int _amount)
+	{
+		if(ScoreUpdateEvent != null)
+		{
+			ScoreUpdateEvent(_amount);
+		}
 	}
 
 	private void BrickStates()
@@ -16,16 +37,16 @@ public class Brick : MonoBehaviour
 		switch (diffBrick)
 		{
 			case DifferentBricks.Red:
-				gameObject.GetComponent<Renderer>().material.color = Color.red;
+				ren.material.color = Color.red;
 				break;
 			case DifferentBricks.Orange:
-				gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+				ren.material.color = Color.yellow;
 				break;
 			case DifferentBricks.Green:
-				gameObject.GetComponent<Renderer>().material.color = Color.green;
+				ren.material.color = Color.green;
 				break;
 			case DifferentBricks.Silver:
-				gameObject.GetComponent<Renderer>().material.color = Color.gray;
+				ren.material.color = Color.gray;
 				break;
 		}
 	}
@@ -35,23 +56,33 @@ public class Brick : MonoBehaviour
 		if(other.gameObject.tag == Tags.Ball){
 			if (diffBrick == DifferentBricks.Silver)
 			{
+				CallEvent(100);
 				diffBrick = DifferentBricks.Green;
 				return;
 			}
 			if (diffBrick == DifferentBricks.Green)
 			{
+				CallEvent(100);
 				diffBrick = DifferentBricks.Orange;
 				return;
 			}
 			if(diffBrick == DifferentBricks.Orange)
 			{
+				CallEvent(100);
 				diffBrick = DifferentBricks.Red;
 				return;
 			}
 			if (diffBrick == DifferentBricks.Red)
 			{
-				Destroy(gameObject);
+				CallEvent(500);
+				DestroyBrick();
 			}
+			
 		}
+	}
+
+	private void DestroyBrick()
+	{
+		Destroy(gameObject);
 	}
 }

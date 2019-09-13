@@ -5,12 +5,17 @@ public class PaddleInput : MonoBehaviour
 	[SerializeField] private float speed = 8;
 	private Rigidbody rb;
 
-	private void Start()
+	private void Awake()
 	{
 		rb = GetComponent<Rigidbody>();
 	}
 
-	public void PaddleMovement()
+	private void Update()
+	{
+		PaddleMovement();
+	}
+
+	private void PaddleMovement()
 	{
 		float moveHorizontal = Input.GetAxis("Horizontal");
 
