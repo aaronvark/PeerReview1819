@@ -24,6 +24,7 @@ namespace Breakin
         [SerializeField] private float timeBetweenRings = 30; // In secconds
 
         private List<Ring> rings;
+        private int ringsSpawned;
 
         private void Start()
         {
@@ -39,11 +40,10 @@ namespace Breakin
         /// </summary>
         private IEnumerator TimedRingSpawning()
         {
-            int _ringsSpawned = 0;
-            while (_ringsSpawned < ringCount)
+            while (ringsSpawned < ringCount)
             {
                 SpawnRing();
-                _ringsSpawned++;
+                ringsSpawned++;
                 yield return new WaitForSeconds(timeBetweenRings);
             }
         }
@@ -57,7 +57,7 @@ namespace Breakin
             _ring.RingBroken += RemoveRing;
             
             // Move the current rings outward before adding the new ring to the list
-            rings.ForEach(ring => ring.UpdateBlockPositions(ringSpacing, Radius, rings.Count));
+            rings.ForEach(ring => ring.UpdateBlockPositions(ringSpacing, Radius, ringsSpawned));
             
             rings.Add(_ring);
         }

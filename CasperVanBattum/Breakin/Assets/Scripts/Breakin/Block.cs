@@ -47,8 +47,8 @@ namespace Breakin
         /// </summary>
         protected void OnBreak()
         {
-            BlockBroken?.Invoke();
             gameObject.SetActive(false);
+            BlockBroken?.Invoke();
         }
 
         private void OnCollisionEnter2D(Collision2D other)

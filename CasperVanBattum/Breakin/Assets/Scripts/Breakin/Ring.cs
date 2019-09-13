@@ -60,8 +60,7 @@ namespace Breakin
                 int _prefabIndex = Random.Range(0, blockPrefabs.Length);
 
                 Block _block = spawner.BlockPool.GetBlock(blockPrefabs[_prefabIndex]);
-
-
+                
                 _block.BlockBroken += CheckRingEmpty;
 
                 // Set block properties
