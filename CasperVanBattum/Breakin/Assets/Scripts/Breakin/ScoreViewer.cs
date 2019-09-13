@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 namespace Breakin
 {
+    [RequireComponent(typeof(Text))]
     public class ScoreViewer : MonoBehaviour
     {
         private Text text;

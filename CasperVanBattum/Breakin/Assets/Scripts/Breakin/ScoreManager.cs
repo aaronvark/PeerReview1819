@@ -7,7 +7,7 @@ namespace Breakin
         int Score { get; set; }
 
         /// <summary>
-        /// Invaked each time the Score property is changed
+        /// Invoked each time the Score property is changed
         /// </summary>
         event Action ScoreChanged;
     }

@@ -1,4 +1,5 @@
 ﻿using Breakin.Pooling;
+using Breakin.Sound;
 using UnityEngine;
 
 namespace Breakin
@@ -54,7 +55,11 @@ namespace Breakin
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (other.gameObject.CompareTag("Ball"))
+            {
+                SoundController.Instance.PlaySound(0);
+                
                 OnHit();
+            }
         }
     }
 }
