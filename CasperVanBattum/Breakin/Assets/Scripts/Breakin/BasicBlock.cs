@@ -11,7 +11,7 @@ namespace Breakin
         protected override void OnHit()
         {
             SoundController.Instance.PlaySound(0);
-            
+
             strength--;
 
             // Destroy the gameobject when this block has no more hitpoints

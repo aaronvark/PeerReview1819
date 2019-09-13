@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Breakin.Sound
 {
@@ -16,7 +15,7 @@ namespace Breakin.Sound
 
         private AudioClip[] clips;
         
-        public SoundController()
+        private SoundController()
         {
             // TODO maybe add a tag and check against that tag to ensure there is only a single sound player in the game
             // Create new game object that will play sounds

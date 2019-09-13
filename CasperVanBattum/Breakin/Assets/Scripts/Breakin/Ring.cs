@@ -30,7 +30,7 @@ namespace Breakin
 
             CreateBlocks(spawner, blockCount, blockPrefabs);
         }
-        
+
         /// <summary>
         /// Updates the positions of the blocks in the ring, usually when a new ring is added in the game. Each ring is
         /// then moved outward in spawning order (first ring is moved furthest outward). 
@@ -58,16 +58,16 @@ namespace Breakin
             {
                 // Generate a random index for the prefab
                 int _prefabIndex = Random.Range(0, blockPrefabs.Length);
-                
+
                 Block _block = spawner.BlockPool.GetBlock(blockPrefabs[_prefabIndex]);
 
-                
+
                 _block.BlockBroken += CheckRingEmpty;
-                
+
                 // Set block properties
                 // TODO this is temporary, to be removed
                 _block.SetColor(new Color(index / 5f, .5f, .5f));
-                
+
                 if (_block.GetType() == typeof(BasicBlock))
                 {
                     ((BasicBlock) _block).Value = 1;
