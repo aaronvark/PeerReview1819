@@ -43,11 +43,15 @@ public class ScoreManager : MonoBehaviour
 
 	private void OnEnable()
 	{
+		TargetPoints.TargetScoreEvent += UpdateScore;
+		Bouncer.BouncerScoreEvent += UpdateScore;
 		Brick.ScoreUpdateEvent += UpdateScore;
 	}
 
 	private void OnDisable()
 	{
+		TargetPoints.TargetScoreEvent -= UpdateScore;
+		Bouncer.BouncerScoreEvent -= UpdateScore;
 		Brick.ScoreUpdateEvent -= UpdateScore;
 	}
 }

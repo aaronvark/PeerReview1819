@@ -30,9 +30,9 @@ public class Ball : MonoBehaviour, IReset
 		}
 	}
 
-	public void VelocityBall(float _deltaPosition, int _force)
+	public void VelocityBall(float _deltaPosition, int _force, ForceMode _forceMode)
 	{
-		rb.AddForce(Vector3.up * (_deltaPosition * _force), ForceMode.Force);
+		rb.AddForce(Vector3.up * (_deltaPosition * _force), _forceMode);
 		ballSpeed = _deltaPosition * _force;
 	}
 

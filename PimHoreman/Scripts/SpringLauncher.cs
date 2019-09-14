@@ -40,7 +40,7 @@ public class SpringLauncher : MonoBehaviour
 		if (Input.GetKeyUp(KeyCode.Space))
 		{
 			deltaPos = startPos.y - gameObject.transform.position.y;
-			ball.VelocityBall(deltaPos, plungerForce);
+			ball.VelocityBall(deltaPos, plungerForce, ForceMode.Force);
 			isResetting = true;
 			isActive = false;
 		}
