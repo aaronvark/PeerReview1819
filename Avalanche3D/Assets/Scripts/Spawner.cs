@@ -13,7 +13,7 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        objectPooler = ObjectPooler.Instance;
+        objectPooler = InstanceManager<ObjectPooler>.GetInstance("ObjectPooler");
         InvokeRepeating("SpawnCube", 3f, SpawnTime);
     }
 

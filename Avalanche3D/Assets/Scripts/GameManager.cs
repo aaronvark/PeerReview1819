@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         onScoreChanged += ChangeScore;
+        InstanceManager<GameManager>.CreateInstance("GameManager", this);
+
     }
 
     public void ChangeScore()

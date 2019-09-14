@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GroundedChecker.cs" />
     <Compile Include="Assets\Scripts\IDamagable.cs" />
+    <Compile Include="Assets\Scripts\InstanceManager.cs" />
     <Compile Include="Assets\Scripts\IStopper.cs" />
     <Compile Include="Assets\Scripts\Lava.cs" />
     <Compile Include="Assets\Scripts\ObjectPooler.cs" />

@@ -14,11 +14,9 @@ public class ObjectPooler : MonoBehaviour
 
     #region Singleton
 
-    public static ObjectPooler Instance;
-
     private void Awake()
     {
-        Instance = this;
+        InstanceManager<ObjectPooler>.CreateInstance("ObjectPooler", this);
     }
 
     #endregion
