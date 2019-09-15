@@ -6,12 +6,13 @@ public class BlockPool
 {
     //Efficient?
 
-    List<GameObject> pool;
-    GameObject block;
-    Transform root;
+    private List<GameObject> pool;
+    private GameObject block;
+    private Transform root;
 
-    public BlockPool(GameObject block, int startSize)
+    public BlockPool(GameObject _block, int startSize)
     {
+        block = _block;
         root = new GameObject().transform;
         root.name = "BlockPool";
         pool = new List<GameObject>();
@@ -33,7 +34,7 @@ public class BlockPool
         }
         else
         {
-            return GameObject.Instantiate(block,root);
+            return GameObject.Instantiate(block, root);
         }
     }
 

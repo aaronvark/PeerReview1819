@@ -4,24 +4,29 @@ using UnityEngine;
 
 public class PlayerInput
 {
-    public void GetInput()
+    public float[] GetInput(int player)
     {
+        float[] input = new float[4];
         //buttons set in Project settings
+        if (player == 0)
+        {
+            input[0] = (int)Input.GetAxisRaw("Player1Hor");
+            input[1] = (int)Input.GetAxisRaw("Player1Ver");
+            input[2] = (int)Input.GetAxisRaw("Player1Rot");
+            input[3] = Input.GetButtonDown("Player1Sav") ? 1 : 0;
+        }
+        else if(player == 1)
+        {
+            input[0] = Input.GetAxisRaw("Player2Hor");
+            input[1] = Input.GetAxisRaw("Player2Ver");
+            input[2] = Input.GetAxisRaw("Player2Rot");
+            input[3] = Input.GetButtonDown("Player2Sav") ? 1 : 0;
+        }
+        else
+        {
+            Debug.LogWarning("Player number unknown");
+        }
 
-        float _inputHor = Input.GetAxis("Player1Hor");
-        float _inputVer = Input.GetAxis("Player1Ver");
-        float _inputRot = Input.GetAxis("Player1Rot");
-        bool _inputSav = Input.GetButtonDown("Player1Sav");
-        GameManager.Instance.players[0].GetBlock()?.Move(_inputHor, _inputVer);
-        GameManager.Instance.players[0].GetBlock()?.Rotate(_inputRot);
-        if (_inputSav) { GameManager.Instance.players[0].SaveBlock(); }
-
-        _inputHor = Input.GetAxis("Player2Hor");
-        _inputVer = Input.GetAxis("Player2Ver");
-        _inputRot = Input.GetAxis("Player2Rot");
-        _inputSav = Input.GetButtonDown("Player2Sav");
-        GameManager.Instance.players[1].GetBlock()?.Move(_inputHor, _inputVer);
-        GameManager.Instance.players[1].GetBlock()?.Rotate(_inputRot);
-        if (_inputSav) { GameManager.Instance.players[1].SaveBlock(); }
+        return input;
     }
 }

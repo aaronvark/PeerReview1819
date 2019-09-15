@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour {
 
     public float blockSpeed = 1;
     public float middleForce = 1;
-    public float middleRotateSpeed = 1;
+
+    //TODO: set rotate speed in animator
+    //public float middleRotateSpeed = 1;  
 
     private List<Block> blocks = new List<Block>();
     //is this usefull or unneccesary?
@@ -22,12 +24,15 @@ public class GameManager : MonoBehaviour {
     //TODO: other way without player references?
     public Player[] players = new Player[2];
 
-    public event System.Action GetInput;
-    public event System.Action UpdateMiddle;
+    public event System.Action UpdateUI;
 
     private PlayerInput playerInput;
-    private Middle middle;
     public BlockPool blockPool;
+    public UI UI;
+
+    public delegate void AttractDelegate(Vector3 target, float force);
+    public AttractDelegate Attract;
+    public Transform middlepoint;
 
     private void Awake()
     {
@@ -39,19 +44,26 @@ public class GameManager : MonoBehaviour {
     {
         playerInput = new PlayerInput();
         blockPool = new BlockPool(blockPrefab,20);
-        middle = FindObjectOfType<Middle>();
-
-        GetInput += playerInput.GetInput;
-        UpdateMiddle += middle.UpdateMiddle;
 
         players[0].NewBlock();
         players[1].NewBlock();
+
+        
+    }
+
+    private void OnDestroy()
+    {
+        Attract = null;
     }
 
     private void Update()
-    {
-        GetInput.Invoke();
-        UpdateMiddle.Invoke();
+    {        
+        players[0].ProcessInput(playerInput.GetInput(0));
+        players[1].ProcessInput(playerInput.GetInput(1));
+
+        if (Attract != null) { Attract(transform.position, middleForce); }
+
+        UI.UpdatePlayerUI(players[0].score, players[0].energy, players[1].score, players[1].energy);
     }
 
     

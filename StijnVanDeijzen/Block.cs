@@ -18,6 +18,8 @@ public class Block : MonoBehaviour
         Randomize();
     }
 
+
+
     public void Randomize()
     {
         transform.GetChild(type).gameObject.SetActive(false);
@@ -35,7 +37,12 @@ public class Block : MonoBehaviour
         transform.Rotate(new Vector3(0, 0, _direction * -1f));
     }
 
-    //TODO: when block hits trigger event?
+    public void Attract(Vector3 target, float force)
+    {
+        rigidB.AddForce(target - transform.position.normalized * force);
+    }
+
+    //TODO: Fix multiple collisions awarding points 
     private void OnTriggerEnter2D(Collider2D _other)
     {
         if (Time.time < _firstTouch)
@@ -43,6 +50,7 @@ public class Block : MonoBehaviour
             owner.Invoke("NewBlock", 1f); //TODO: change delay without invoke, because delay needs to be instant if it connects a pair
             _firstTouch = Time.time;
             GameManager.Instance.AddBlock(this);
+            GameManager.Instance.Attract += Attract;
         }
         Block _otherBlock = _other.transform.parent?.parent?.GetComponent<Block>();
         if (_otherBlock != null)
@@ -52,10 +60,8 @@ public class Block : MonoBehaviour
             if (_otherBlock.type == type)
             {
                 connected.Add(_otherBlock);
-                foreach (Block b in _otherBlock.connected)
-                {
-                    connected.Add(b);
-                }
+                connected.UnionWith(_otherBlock.connected);
+                _otherBlock.connected.UnionWith(connected);
             }
 
             //If 3 blocks are connected remove them and award points
