@@ -18,6 +18,7 @@ public class Projectile : PoolableBehaviour
             _enemy.SplitEnemy();
             _enemy.TakeDamage(damage);
             EventManager.OnLevelUpdateHandler();
+
             EventManager.OnScoreChangedHandler(_enemy.enemyInput.points);
             //Recycle();
             gameObject.SetActive(false);

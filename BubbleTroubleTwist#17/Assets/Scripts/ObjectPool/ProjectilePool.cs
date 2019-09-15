@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
+using UnityEngine.SceneManagement;
 
 public class ProjectilePool : GenericSingleton<ProjectilePool, IPooler>, IPooler
 {
@@ -27,5 +28,11 @@ public class ProjectilePool : GenericSingleton<ProjectilePool, IPooler>, IPooler
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
     {
         throw new System.NotImplementedException();
+    }
+
+    public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        base.OnLevelFinishedLoading(scene, mode);
+        objPool = new GenericObjectPooler<Projectile>(prefab, size);
     }
 }

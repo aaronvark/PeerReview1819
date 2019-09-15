@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 2381273675624277185}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.50471044, y: 5.02, z: -3.44}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children:
   - {fileID: 6505261965191340245}
   - {fileID: 3747175605356577686}
@@ -124,22 +124,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25572b90c00d8a4e8d1876d1af8a30e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rBody: {fileID: 0}
-  playerInput:
-    genericData: []
-    id: 
-    horizontalAxis: 
-    verticalAxis: 
-    fireKey: 0
-    level: 0
-    spawnVector: {x: 0, y: 0, z: 0}
+  damage: 1
   enemyInput:
     splitChildName: Ball
     speed: 0
     level: 0
     splitPoints: []
     spawnPoint: {fileID: 0}
+    points: 0
   MaxLevel: 2
+  toLow: 1
+  checking: 1
 --- !u!114 &4323861288785113626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,15 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19aaf8eed789b0c4a833d97fa597006f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rBody: {fileID: 0}
-  playerInput:
-    genericData: []
-    id: 
-    horizontalAxis: 
-    verticalAxis: 
-    fireKey: 0
-    level: 0
-    spawnVector: {x: 0, y: 0, z: 0}
+  damage: 1
+  collisionCooldownTime: 2
 --- !u!1 &2968971935115950239
 GameObject:
   m_ObjectHideFlags: 0

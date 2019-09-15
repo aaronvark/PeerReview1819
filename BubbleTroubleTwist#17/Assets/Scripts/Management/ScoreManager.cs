@@ -22,13 +22,17 @@ public class ScoreManager : MonoBehaviour
     /// </summary>
     public int Score { get; set; }
 
+    private void OnEnable()
+    {
+        //Subscribing the UpdateScore method so we can re-use it later on
+        EventManager.OnScoreChangedHandler += UpdateScore;
+
+    }
+
     private void Start()
     {
         //On the beginning of the game we set the score
         UpdateScoreText();
-
-        //Subscribing the UpdateScore method so we can re-use it later on
-        EventManager.OnScoreChangedHandler += UpdateScore;
     }
 
     /// <summary>

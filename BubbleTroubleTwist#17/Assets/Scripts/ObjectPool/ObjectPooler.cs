@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
+using UnityEngine.SceneManagement;
 
 public class GenericObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 {
@@ -64,7 +65,6 @@ public class GenericObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 
 public class ObjectPooler : GenericSingleton<ObjectPooler, IPooler>, IPooler
 {
-
     [System.Serializable]
     public class Pool
     {
@@ -76,8 +76,19 @@ public class ObjectPooler : GenericSingleton<ObjectPooler, IPooler>, IPooler
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
 
+    public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        base.OnLevelFinishedLoading(scene, mode);
+        InitPools();
+    }
+
     // Use this for initialization
-    public void Start()
+    public void Awake()
+    {
+        InitPools();
+    }
+
+    private void InitPools()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 

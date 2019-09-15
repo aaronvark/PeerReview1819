@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 7790578033780216300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.135, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 7790578034072351145}
   m_Father: {fileID: 0}
@@ -126,15 +126,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  rBody: {fileID: 0}
-  playerInput:
-    genericData: []
-    id: 
-    horizontalAxis: 
-    verticalAxis: 
-    fireKey: 0
-    level: 0
-    spawnVector: {x: 0, y: 0, z: 0}
 --- !u!114 &7790578033780216301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,18 +139,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  rBody: {fileID: 0}
-  playerInput:
-    genericData: []
-    id: 
-    horizontalAxis: 
-    verticalAxis: 
-    fireKey: 0
-    level: 0
-    spawnVector: {x: 0, y: 0, z: 0}
   firePoint: {fileID: 7790578034072351145}
   cooldown: 3
-  timeBetween: 0.3
+  timeBetween: 0.05
   currentProjectileName: CubeStreamProjectile
   usingWeaponData:
     projectileGameObject: {fileID: 5299671328839668858, guid: b46d08fd774f82245bc790c89d3e6e33,
@@ -167,7 +149,7 @@ MonoBehaviour:
     projectileName: CubeStreamProjectile
     firePoint: {fileID: 7790578034072351145}
     damage: 1
-    amount: 10
+    amount: 20
 --- !u!114 &9210355078829418823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,7 +163,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput:
-    genericData: []
     id: 
     horizontalAxis: 
     verticalAxis: 
@@ -212,7 +193,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7790578034072351144}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.565, z: 0}
+  m_LocalPosition: {x: 0, y: 1.044, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7790578033780216273}

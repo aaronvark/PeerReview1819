@@ -11,14 +11,14 @@ public class PlayerMovement : AbstractAvatarClass
 
     private void FixedUpdate()
     {
-        if (playerInput != null)
+        if (PlayerInput != null)
             Movement();
     }
 
     private void Movement()
     {
-        float _vertical = Input.GetAxis(playerInput.verticalAxis);
-        float _horizontal = Input.GetAxis(playerInput.horizontalAxis);
-        rBody.velocity = new Vector3(_horizontal * speed, rBody.velocity.y, _vertical * speed);
+        float _vertical = Input.GetAxis(PlayerInput.verticalAxis);
+        float _horizontal = Input.GetAxis(PlayerInput.horizontalAxis);
+        rBody.velocity = new Vector3(_horizontal * Speed, rBody.velocity.y, _vertical * Speed);
     }
 }

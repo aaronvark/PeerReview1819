@@ -7,6 +7,10 @@ public class FPSdisplay : MonoBehaviour
     public float averageFrameRate;
     public UnityEngine.UI.Text displayText;
 
+    private void Awake()
+    {
+        //  DontDestroyOnLoad(this.gameObject);
+    }
     // Update is called once per frame
     void Update()
     {

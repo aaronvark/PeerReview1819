@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum EVENT { gameUpdateEvent, reloadGame }; // ... Other events
+public enum EVENT { gameUpdateEvent, reloadGame, initializeGame, saveGame }; // ... Other events
 public static class EventManager
 {
     //Static delegates
@@ -49,6 +49,11 @@ public static class EventManager
     #endregion
 }
 
+
+/// <summary>
+/// Generic event management/ this class is re-usable in every project
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public static class EventManagerGen<T>
 {
     public delegate void GenericDelegate<T>(T c);
@@ -67,6 +72,22 @@ public static class EventManagerGen<T>
     public static void Broadcast(EVENT evnt, T c)
     {
         if (genericEventTable[evnt] != null) genericEventTable[evnt](c);
+    }
+
+    //Un-Subscribes the listeners to the event
+    public static void RemoveHandler(EVENT evnt)
+    {
+        if (!genericEventTable.ContainsKey(evnt))
+        {
+            return;
+        }
+        else
+        {
+            foreach (KeyValuePair<EVENT, GenericDelegate<T>> _delegate in genericEventTable)
+            {
+                genericEventTable[evnt] -= _delegate.Value;
+            }
+        }
     }
 }
 

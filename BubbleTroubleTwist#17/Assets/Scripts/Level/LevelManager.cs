@@ -2,6 +2,7 @@
 using UnityEngine;
 using Bas.Interfaces;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Level management class that handles all level related behaviour
@@ -24,20 +25,22 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// </summary>
     private string levelJsongString;
 
-    private void Awake()
+    private void OnEnable()
     {
-        //**WORK IN PROGRESS**//
-        DontDestroyOnLoad(this);
+        //subscribe UpdateLevel to OnLevelUpdateHandler stored in EventManager so we can easy call the update later on
+        EventManager.OnLevelUpdateHandler += UpdateLevel;
     }
 
     private void Start()
     {
         //When the game starts we want to load the json data
         FromJson();
+        EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
+        EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
+        EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
+        EventManager.Broadcast(EVENT.initializeGame);
 
-        //subscribe UpdateLevel to OnLevelUpdateHandler stored in EventManager so we can easy call the update later on
-        EventManager.OnLevelUpdateHandler += UpdateLevel;
-        
+
         //TO DO:
         /*
          * BUG analysis: als ik op de reset game knop druk dan wordt het event OnGameOver gecalled 
@@ -58,10 +61,17 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
          * zou moeten worden resetten. Dit zorgt ervoor dat er geen nieuwere versie van de instanties gemaakt 
          * kan worden. 
          */
-        EventManager.Broadcast(EVENT.reloadGame);
-        EventManagerGen<float>.AddHandler(EVENT.reloadGame, ResetLevel);
-        EventManagerGen<float>.AddHandler(EVENT.reloadGame, SerializeToJson);
+    }
+
+    public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        base.OnLevelFinishedLoading(scene, mode);
+        //EventManager.AddHandler(EVENT.initializeGame, FromJson);
+        FromJson();
+        EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
+        EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
         EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
+        EventManager.Broadcast(EVENT.initializeGame);
     }
 
     /*(OPTIONAL)
@@ -95,6 +105,8 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
                 EventManagerGen<float>.Broadcast(EVENT.gameUpdateEvent, LastPlayedLevel().currentCameraX);
             }
         }
+
+        EventManager.Broadcast(EVENT.initializeGame);
     }
 
     /// <summary>
@@ -107,11 +119,12 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
             level.enemiesAlive = level.enemyAmounts;
             level.done = false;           
         }
-        ResetLevel(0);
-        EventManagerGen<float>.Broadcast(EVENT.reloadGame, 0);
         EventManager.OnGameOverHandler();
     }
 
+    /// <summary>
+    /// Reads the Json file if found. And gives the levels list all the level data. 
+    /// </summary>
     public void FromJson()
     {
         if (File.Exists(Application.dataPath + "/LevelsData.json"))
@@ -125,6 +138,10 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         levels = JsonHelper.FromJsonList<Level>(levelJsongString);
     }
 
+    /// <summary>
+    /// Serializes the levels list to a json string 
+    /// </summary>
+    /// <param name="x"></param>
     public void SerializeToJson(float x)
     {
         if (levels == null || levels.Count < 1) return;
@@ -134,7 +151,11 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         File.WriteAllText(Application.dataPath + "/LevelsData.json", levelJsongString);
     }
 
-    public void ResetLevel(float x)
+    /// <summary>
+    /// Reset the player positions
+    /// </summary>
+    /// <param name="x"></param>
+    public void ResetPlayerPositions()
     {
         Level _level = LastPlayedLevel();
         foreach (GameObject player in players)
@@ -144,31 +165,60 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         }
     }
 
+
+    /// <summary>
+    /// Search the last played level in levels list
+    /// </summary>
+    /// <returns></returns>
     public Level LastPlayedLevel()
     {
         return levels?.Find(l => l.done.Equals(false));
     }
 
+    /// <summary>
+    /// Returns the current levels
+    /// </summary>
+    /// <returns></returns>
     public List<Level> GiveLevels()
     {
         return levels;
     }
 
-    public void AddPlayer(GameObject player)
+    /// <summary>
+    /// Add a player to the player list
+    /// </summary>
+    /// <param name="player"></param>
+    public void AddPlayer(GameObject player, List<PlayerData> playersData)
     {
+        //if (players.Count > playersData.Count) players.Clear();
+        //else players.Add(player);
         players.Add(player);
     }
 
+    /// <summary>
+    /// Create a new level
+    /// </summary>
+    /// <param name="_prefab"></param>
+    /// <param name="_position"></param>
     public void CreateLevel(GameObject _prefab, Vector3 _position)
     {
         GameObject newLevel = GameObject.Instantiate(_prefab, _position, _prefab.transform.rotation);
     }
 
-    private void OnDestroy()
+    /// <summary>
+    /// When this instance gets destroyed we unsubscribe 
+    /// </summary>
+    private void OnDisable()
     {
         EventManager.OnLevelUpdateHandler -= UpdateLevel;
+        //EventManagerGen<float>.RemoveHandler(EVENT.reloadGame);
     }
 
+    /// <summary>
+    /// Check if there are enemies alive in the current level
+    /// </summary>
+    /// <param name="level"></param>
+    /// <returns></returns>
     private bool CheckEnemiesAlive(Level level)
     {
         return level.enemiesAlive > 0 ? true : false;

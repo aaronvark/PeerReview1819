@@ -18,6 +18,12 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
     public int MaxLevel = 2;
 
     /// <summary>
+    /// Enemy his to low spot to check if the enemy is to low
+    /// </summary>
+    public float toLow = 1f;
+
+    public bool checking = true;
+    /// <summary>
     /// Overriden start method
     /// </summary>
     public override void Start()
@@ -32,18 +38,66 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
         {
             enemyInput = new EnemyData();
         }
+
         /// We add all children to the splitPoints list stored in the enemyInput data
         for (int childIndex = 0; childIndex < transform.childCount; childIndex++)
         {
             enemyInput.splitPoints.Add(transform.GetChild(childIndex));
         }
 
+        /// We give a random force so every enemy acts different
         rBody.AddForce(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5) * 10f), ForceMode.Impulse);
 
+        ///We always need points
         if (enemyInput.points == 0)
             enemyInput.points = 10;
     }
 
+    private void FixedUpdate()
+    {
+        
+        if(transform.position.y < toLow && checking)
+        {
+            StartCoroutine(ToLowChecking(toLow));
+        }
+    }
+
+    private IEnumerator ToLowChecking(float _low)
+    {
+        checking = false;
+        float time = 0;
+        while(transform.position.y < _low)
+        {
+            time++;
+            yield return new WaitForEndOfFrame();
+        }
+
+        if (time > _low)
+        {
+            rBody.AddForce(Vector3.up * (Speed), ForceMode.Impulse);
+            time = 0;
+            yield return new WaitForSeconds(_low + 5);
+            checking = true;
+        }
+        else
+        {
+            yield return new WaitForSeconds(_low + 5);
+            checking = true;
+        }
+    }
+    private bool ToLowCheck(float _low)
+    {
+        int time = 0;
+        while(transform.position.y < _low)
+        {
+            time++;
+            if (time > 5)
+                return true;
+            else
+                return false;
+        }
+        return false;
+    }
     /// <summary>
     /// Handles the activations and regulation of the children 
     /// </summary>
@@ -74,15 +128,6 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
     public void SetStats(EnemyData data)
     {
         enemyInput = data;
-    }
-
-
-    /// <summary>
-    /// When this enemy gets destoryed we need to unsubscribe 
-    /// </summary>
-    private void OnDestroy()
-    {
-        OnDeathHandler -= OnDeath;
     }
 
 }

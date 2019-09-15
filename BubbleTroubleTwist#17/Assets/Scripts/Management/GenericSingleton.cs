@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Generic singleton class for easy inheritance 
@@ -28,7 +29,8 @@ public class GenericSingleton<T, A> : MonoBehaviour where T : Component, A
 
     public virtual void Awake()
     {
-        //DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(this.gameObject);
+
         if (instance == null)
         {
             instance = this as T;
@@ -37,5 +39,22 @@ public class GenericSingleton<T, A> : MonoBehaviour where T : Component, A
         {
             Destroy(gameObject);
         }
+    }
+
+    public virtual void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Level Loaded");
+        Debug.Log(scene.name);
+        Debug.Log(mode);;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
     }
 }

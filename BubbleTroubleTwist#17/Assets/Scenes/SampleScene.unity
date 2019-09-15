@@ -1829,7 +1829,6 @@ GameObject:
   - component: {fileID: 1005098591}
   - component: {fileID: 1005098593}
   - component: {fileID: 1005098595}
-  - component: {fileID: 1005098594}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1876,12 +1875,12 @@ MonoBehaviour:
     fireKey: 44
     level: 2
     spawnVector: {x: 2, y: 1.135, z: 0}
-  player: {fileID: 7790578033780216300, guid: 5eff4129470b44245bec1b8ab5a935f1, type: 3}
   lives: 3
   livesImages:
   - {fileID: 1418222056}
   - {fileID: 1602802909}
   - {fileID: 1136897451}
+  player: {fileID: 7790578033780216300, guid: 5eff4129470b44245bec1b8ab5a935f1, type: 3}
   testing: 0
 --- !u!114 &1005098590
 MonoBehaviour:
@@ -1901,11 +1900,13 @@ MonoBehaviour:
     level: 0
     splitPoints: []
     spawnPoint: {fileID: 0}
+    points: 0
   - splitChildName: 
     speed: 0
     level: 0
     splitPoints: []
     spawnPoint: {fileID: 0}
+    points: 0
   enemy: {fileID: 0}
 --- !u!114 &1005098591
 MonoBehaviour:
@@ -1974,20 +1975,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraSpeed: 10
   cameraTravelDistance: 40
---- !u!114 &1005098594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1005098587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f0bc836360b7764b83887fa8f9ac691, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreText: {fileID: 973281644}
-  scoreTextString: 'score:'
 --- !u!114 &1005098595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2209,14 +2196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  rBody: {fileID: 0}
-  playerInput:
-    id: 
-    horizontalAxis: 
-    verticalAxis: 
-    fireKey: 0
-    level: 0
-    spawnVector: {x: 0, y: 0, z: 0}
+  collisionCooldownTime: 2
 --- !u!114 &1104133711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2230,21 +2210,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  rBody: {fileID: 0}
-  playerInput:
-    id: 
-    horizontalAxis: 
-    verticalAxis: 
-    fireKey: 0
-    level: 0
-    spawnVector: {x: 0, y: 0, z: 0}
   enemyInput:
     splitChildName: Ball
     speed: 0
     level: 0
     splitPoints: []
     spawnPoint: {fileID: 1104133709}
+    points: 0
   MaxLevel: 2
+  toLow: 3
+  checking: 1
 --- !u!54 &1104133712
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3531,6 +3506,7 @@ GameObject:
   - component: {fileID: 1572375534}
   - component: {fileID: 1572375533}
   - component: {fileID: 1572375537}
+  - component: {fileID: 1572375538}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -3634,6 +3610,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   averageFrameRate: 0
   displayText: {fileID: 1915827612}
+--- !u!114 &1572375538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572375532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f0bc836360b7764b83887fa8f9ac691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreText: {fileID: 973281644}
+  scoreTextString: 'score:'
 --- !u!1 &1602802906
 GameObject:
   m_ObjectHideFlags: 0
@@ -4436,6 +4426,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 230805096465516323, guid: c34fa17a9076487419c36c7738ec7027,
+        type: 3}
+      propertyPath: toLow
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c34fa17a9076487419c36c7738ec7027, type: 3}

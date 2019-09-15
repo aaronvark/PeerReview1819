@@ -4,49 +4,109 @@ using UnityEngine;
 using Bas.Interfaces;
 using System;
 
-
-public delegate void OnDataUpdate(PlayerData stats);
 /// <summary>
 /// Base class for all avatars in the game
 /// </summary>
+[RequireComponent(typeof(Rigidbody))]
 public abstract class AbstractAvatarClass : MonoBehaviour, IDamagable<int>
 {
+    /// <summary>
+    /// Damage the avatar deals
+    /// </summary>
     public int damage = 1;
-    public float speed { get; protected set; }
-    public int health { get; protected set; }
 
+    /// <summary>
+    /// Speed the avatar has
+    /// </summary>
+    public float Speed { get; protected set; }
+
+    /// <summary>
+    /// Health the avatar has
+    /// </summary>
+    public int Health { get; protected set; }
+
+    /// <summary>
+    /// OnDeath event so we can subscribe and call all death related methods
+    /// </summary>
     public event OnDeath OnDeathHandler;
-    public Rigidbody rBody;
-    public OnDataUpdate OnDataUpdateHandler;
-    public PlayerData playerInput;
-    public StatsBase<PlayerData> entityStats;
 
+    /// <summary>
+    /// Rigibody so we can use unity physics
+    /// </summary>
+    public Rigidbody rBody { get; protected set; }
+
+
+    /// <summary>
+    /// Property where we store the player his input
+    /// </summary>
+    public PlayerData PlayerInput { get; protected set; }
+    /* Comment: Ik wilde graag voor de input een generieke manier zoeken zodat
+     * de speler als zowel de enemy hier zijn input uit kan halen. Nu staat
+     * er een "PlayerData" field die er eigenlijk niet hoort. Het gaat in deze class
+     * namelijk over alle avatars in de game en PlayerData is specefiek voor de speler.
+     * Helaas kon ik in de tijd die ik voor dit probleem wilde besteden niet een betere oplossing
+     * vinden. 
+    */
+
+    /// <summary>
+    /// Virtual Start method / this method can be overriden
+    /// </summary>
     public virtual void Start()
     {
+        //Check whenever this avatar instance is a player 
         if (GetComponent<PlayerInput>())
         {
-            playerInput = GetComponent<PlayerInput>().playerInput;
+            //Set the player his input data
+            PlayerInput = GetComponent<PlayerInput>().playerInput;
         }
         else
         {
-            //Its not a player :D           
+            //Its not a player :D 
         }
 
-        speed = 5f;
+        //We always need speed 
+        if (Speed == 0)
+        {
+            Speed = 5f;
+        }
+
+        //Subscribe the OnDeath method
         OnDeathHandler += OnDeath;
+
         //Search players for the current selected player ( Lamba )
         //currentPlayerData = PlayerManager.Instance.players?.Find(p => p.id.Equals((int)currentPlayer));
+
+        //We always need an Rigidbody
         if (rBody == null)
             rBody = GetComponent<Rigidbody>();
     }
 
+
+    /// <summary>
+    /// OnDeath method where we deactivate the avatar
+    /// </summary>
     public void OnDeath()
     {
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Decreases health with damage, if we can handle the amount of damage comming, if not we call OnDeathHandler
+    /// </summary>
+    /// <param name="_damage"></param>
+    /// <returns></returns>
     public virtual bool TakeDamage(int _damage)
     {
-        if (health > _damage) { health -= _damage; return true; } else { OnDeathHandler(); return false; }
+        if (Health > _damage) { Health -= _damage; return true; } else { OnDeathHandler(); return false; }
+    }
+
+
+
+    /// <summary>
+    /// When this enemy gets destoryed we need to unsubscribe 
+    /// </summary>
+    private void OnDestroy()
+    {
+        OnDeathHandler -= OnDeath;
     }
 }

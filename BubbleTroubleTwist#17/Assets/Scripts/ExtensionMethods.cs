@@ -32,11 +32,6 @@ public static class ExtensionMethods
 /// </summary>
 public class BasExtensionHelpers : MonoBehaviour
 {
-
-    private void Awake()
-    {
-        DontDestroyOnLoad(this);
-    }
     public RectTransform ActivateCoroutineLerpRectTransformPositions(RectTransform rectTransform, Vector3 targetPosition, float speed)
     {
         if (rectTransform == null) return null;

@@ -25,7 +25,7 @@ public class PlayerShooting : AbstractAvatarClass
 
     private void Update()
     {
-        if (Input.GetKeyDown(playerInput.fireKey) && currentWeapon.WeaponReady())
+        if (Input.GetKeyDown(PlayerInput.fireKey) && currentWeapon.WeaponReady())
             Fire();
     }
 
