@@ -60,10 +60,20 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
     public void OnObjectSpawn()
     {
         attackTimer = Random.Range(waitTimeForShot.x, waitTimeForShot.y);
+
+        if (!GameManager.Instance.activeEnemies.Contains(this))
+        {
+            GameManager.Instance.activeEnemies.Add(this);
+        }
     }
 
     public void OnObjectDespawn()
     {
+        if (GameManager.Instance.activeEnemies.Contains(this))
+        {
+            GameManager.Instance.activeEnemies.Remove(this);
+        }
+
         this.gameObject.SetActive(false);
     }
 
@@ -114,6 +124,10 @@ public class Enemy : MonoBehaviour, IDamagable, IPoolObject
 
     public void Die()
     {
+        //Highscore naar manager
+        GameManager.Instance.score += score;
+
+        //Death particle spawn
         objectPool.SpawnFromPool(particlePool, transform.position, particlePool.prefab.transform.rotation);
 
         OnObjectDespawn();

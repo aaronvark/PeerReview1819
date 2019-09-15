@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     private Player playerObject;
 
+    public List<Enemy> activeEnemies;
+
     private void Start()
     {
         playerObject = Player.Instance;

@@ -43,7 +43,8 @@ public class Bullet : MonoBehaviour, IPoolObject
     {
         try
         {
-            collision.gameObject.GetComponent<IDamagable>().Damage(bulletDamage);
+            //ISSUE krijgt geen damage
+          collision.gameObject.GetComponentInChildren<IDamagable>().Damage(bulletDamage);
         }
         catch { }
     }

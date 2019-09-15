@@ -123,6 +123,7 @@ public class Player : MonoBehaviour, IDamagable
             GameObject _bulletClone = objectPool.SpawnFromPool(bulletPool, spawnPositions[i].transform.position, spawnPositions[i].transform.rotation);
             _bulletClone.GetComponent<Bullet>().bulletDamage = bulletDamage;
 
+            //TODO Bullet accurate maken
             _bulletClone.GetComponent<Rigidbody>().AddForce(cameraObject.transform.forward * bulletForce);
 
         }
