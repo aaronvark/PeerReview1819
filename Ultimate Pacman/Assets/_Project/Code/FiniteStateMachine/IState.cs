@@ -2,7 +2,7 @@
 {
     IStateDelegate OnStateSwitch { get; set; }
 
-    void Start();
-    void Run();
-    void Complete();
+    void OnStateEnter();
+    void OnStateUpdate();
+    void OnStateExit();
 }

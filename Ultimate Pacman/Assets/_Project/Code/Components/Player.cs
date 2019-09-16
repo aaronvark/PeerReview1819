@@ -59,13 +59,15 @@ public class Player : Singleton<Player>
         shape.settings.endAngle = 360f - mouthAngle.Current;
     }
 
-    public void HandleGhostCollision(Collision2D collision)
+    public void HandleGhostCollision(Collision2D _collision)
     {
-        Ghost ghost = collision.transform.GetComponent<Ghost>();
+        Ghost ghost = _collision.transform.GetComponent<Ghost>();
         if (!ghost)
             return;
 
-        if (ghost.state == Ghost.State.Vulnerable)
+        AnimatorStateInfo currentState = ghost.animator.GetCurrentAnimatorStateInfo(0);
+
+        if (currentState.IsTag("Consumable"))
         {
             ghost.Consume();
         }
