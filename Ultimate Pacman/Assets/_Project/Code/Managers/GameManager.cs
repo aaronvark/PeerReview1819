@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 public sealed class GameManager : Singleton<GameManager>
@@ -8,16 +9,22 @@ public sealed class GameManager : Singleton<GameManager>
     private string nextScene = "";
 
     public Collider2D collider { get; private set; }
-    private List<Ghost> ghosts = new List<Ghost>();
+    public List<Ghost> ghosts = new List<Ghost>();
+
+    public ReadOnlyCollection<Ghost> GetGhosts => new ReadOnlyCollection<Ghost>(ghosts);
 
     private float duration = 0f;
     private Coroutine ghostsVulnerable = null;
 
     public float CurrentVulnerabilityDuration => duration;
 
+    private void Awake()
+    {
+        collider = GetComponent<Collider2D>();
+    }
+
     private void Start()
     {
-        collider = GetComponentInChildren<Collider2D>();
         CheckPellets();
     }
 
@@ -40,39 +47,37 @@ public sealed class GameManager : Singleton<GameManager>
 
     IEnumerator RunSetGhostsVulnerable(float _duration)
     {
-        duration = _duration;
-
         foreach (var ghost in ghosts)
         {
-            ghost.body.Blink(false);
-            ghost.SetVulnerable(true);
+            ghost.animator.SetTrigger("SetVulnerable");
+
+            if (ghost.stateMachine != null)
+                ghost.stateMachine.SwitchState(new FleeState(ghost.transform));
         }
 
+        duration = _duration;
         while (duration > 0f)
         {
-            if (duration < 2f)
+            duration -= Time.deltaTime;
+            foreach (var ghost in ghosts)
             {
-                foreach (var ghost in ghosts)
-                {
-                    if (ghost.state == Ghost.State.Vulnerable)
-                        ghost.body.Blink(Mathf.Ceil(duration / .25f) % 2 == 0);
-                }
+                ghost.animator.SetFloat("VulnerableTime", duration);
             }
-
-            duration = Mathf.Max(0f, duration - Time.deltaTime);
 
             yield return null;
         }
 
         foreach (var ghost in ghosts)
         {
-            ghost.SetVulnerable(false);
+            ghost.animator.SetFloat("VulnerableTime", 0f);
+            if (ghost.stateMachine != null && ghost.stateMachine.currentState is FleeState)
+            {
+                ghost.stateMachine.SwitchState(ghost.defaultState);
+            }
         }
-        ghostsVulnerable = null;
 
         yield return null;
     }
-
     public void CheckPellets()
     {
         if (Pellet.PelletCount == 0)
