@@ -1,4 +1,5 @@
 using Breakin.GameManagement;
+using Breakin.UI;
 using UnityEngine;
 
 namespace Breakin.FSM.States
@@ -6,7 +7,8 @@ namespace Breakin.FSM.States
     public class StartLevelState : AbstractState
     {
         public override event StateChange RequestTransition;
-        
+
+        private const string _START_MESSAGE = "Click anywhere to start!";
         private readonly LevelData data;
         
         public StartLevelState(LevelData data)
@@ -16,7 +18,7 @@ namespace Breakin.FSM.States
 
         public override void Start()
         {
-            Debug.Log("Im starting now and im gonna create " + data.RingCount + " rings");
+            MessageManager.Instance.ShowMessage(_START_MESSAGE);
         }
 
         public override void Run()
@@ -25,6 +27,11 @@ namespace Breakin.FSM.States
             {
                 RequestTransition?.Invoke(new GamePlayingState(data));
             }
+        }
+
+        public override void Complete()
+        {
+            MessageManager.Instance.HideMessage();
         }
     }
 }
