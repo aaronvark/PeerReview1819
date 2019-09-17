@@ -6,18 +6,16 @@ namespace Breakin.FSM.States
 {
     public class StartLevelState : AbstractState
     {
+        private const string _START_MESSAGE = "Click anywhere to start!";
+        
         public override event StateChange RequestTransition;
 
-        private const string _START_MESSAGE = "Click anywhere to start!";
-        private readonly LevelData data;
-        
-        public StartLevelState(LevelData data)
-        {
-            this.data = data;
-        }
+        public StartLevelState(GameManager owner) : base(owner) { }
 
         public override void Start()
         {
+            owner.LoadNextLevel();
+            
             MessageManager.Instance.ShowMessage(_START_MESSAGE);
         }
 
@@ -25,7 +23,7 @@ namespace Breakin.FSM.States
         {
             if (Input.GetMouseButtonDown(0))
             {
-                RequestTransition?.Invoke(new GamePlayingState(data));
+                RequestTransition?.Invoke(new GamePlayingState(owner));
             }
         }
 

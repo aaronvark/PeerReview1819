@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Breakin.GameManagement;
 using Breakin.Pooling;
 using UnityEngine;
 
@@ -11,28 +11,43 @@ namespace Breakin
         /// <summary>
         /// Invoked when all rings have been spawned
         /// </summary>
-        public event Action SpawnerExhausted;
+        public event System.Action SpawnerExhausted;
 
-        public float Radius => spawnRadius;
+        /// <summary>
+        /// Invoked when the spawner wanted to spawn a ring but couldn't because the screen was full (game over condition)
+        /// </summary>
+        public event System.Action MaxRingsReached;
+
+        [SerializeField] private LevelData data;
+
+        public float Radius => data.SpawnRadius;
         public MultiPrefabPool<Block> BlockPool { get; private set; }
-
-        [SerializeField] private Block standardBlock; // Block prefab TODO make this a list; define a list for each individual ring
-        [SerializeField] private float spawnRadius = 3; // Radius of the most recent ring
-        [SerializeField] private int blockCountRing = 10; // Block count in each ring TODO specify block count for each individual ring
-        [SerializeField] private int ringCount = 5; // Number of rings to spawn
-        [SerializeField] private float ringSpacing = .3f; // Distance between each ring (center to center)
-        [SerializeField] private float timeBetweenRings = 30; // In secconds
 
         private List<Ring> rings;
         private int ringsSpawned;
+        private Coroutine ringSpawning;
 
-        private void Start()
+        public void SetLevelData(LevelData data)
         {
+            Deactivate();
+
+            this.data = data;
+        }
+
+        public void Activate()
+        {
+            ringsSpawned = 0;
             rings = new List<Ring>();
 
-            BlockPool = new MultiPrefabPool<Block>(blockCountRing, transform, standardBlock);
+            if (BlockPool == null) BlockPool = new MultiPrefabPool<Block>(data.BlockCountRing, transform, data.StandardBlock);
 
-            StartCoroutine(TimedRingSpawning());
+            ringSpawning = StartCoroutine(TimedRingSpawning());
+        }
+
+        public void Deactivate()
+        {
+            StopCoroutine(ringSpawning);
+            BlockPool.ReclaimAll();
         }
 
         /// <summary>
@@ -40,25 +55,25 @@ namespace Breakin
         /// </summary>
         private IEnumerator TimedRingSpawning()
         {
-            while (ringsSpawned < ringCount)
+            while (ringsSpawned < data.RingCount)
             {
                 SpawnRing();
                 ringsSpawned++;
-                yield return new WaitForSeconds(timeBetweenRings);
+                yield return new WaitForSeconds(data.TimeBetweenRings);
             }
         }
 
         private void SpawnRing()
         {
             // Create a new ring and add it to the list for future reference
-            Ring _ring = new Ring(rings.Count, this, blockCountRing, standardBlock);
-            
+            Ring _ring = new Ring(rings.Count, this, data.BlockCountRing, data.StandardBlock);
+
             // Register to remove the ring from the list when it is broken.
             _ring.RingBroken += RemoveRing;
-            
+
             // Move the current rings outward before adding the new ring to the list
-            rings.ForEach(ring => ring.UpdateBlockPositions(ringSpacing, Radius, ringsSpawned));
-            
+            rings.ForEach(ring => ring.UpdateBlockPositions(data.RingSpacing, Radius, ringsSpawned));
+
             rings.Add(_ring);
         }
 

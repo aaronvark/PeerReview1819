@@ -32,17 +32,38 @@ namespace Breakin.GameManagement
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private LevelManager levelManager;
+        [SerializeField] private Spawner spawner;
         
         private StateMachine gameStateMachine;
 
         private void Start()
         {
-            gameStateMachine = new StateMachine(new StartLevelState(levelManager.GetNextLevel()));
+            gameStateMachine = new StateMachine(new StartLevelState(this));
         }
 
         private void Update()
         {
             gameStateMachine.Update();
+        }
+
+        public void LoadNextLevel()
+        {
+            spawner.SetLevelData(levelManager.GetNextLevel());
+        }
+        
+        public void ActivateGame()
+        {
+            spawner.Activate();
+        }
+
+        public void LockGame()
+        {
+            
+        }
+
+        public void UnlockGame()
+        {
+            
         }
     }
 }
