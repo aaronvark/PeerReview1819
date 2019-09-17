@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     //Scripts
-    GameManager gameManager;
+    public GameManager GameManagerInstance {get; private set;}
 
     //References
     [SerializeField]
@@ -15,12 +15,12 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        gameManager = GameManager.Instance;
-        gameManager.onScoreChanged += UpdateUI;
+        GameManagerInstance = InstanceManager<GameManager>.GetInstance("GameManager");
+        GameManagerInstance.onScoreChanged += UpdateUI;
     }
 
-    void UpdateUI()
+    private void UpdateUI()
     {
-        scoreText.text = "Max Height:" + gameManager.MaxHeight.ToString("F2");
+        scoreText.text = "Max Height:" + GameManagerInstance.MaxHeight.ToString("F2");
     }
 }

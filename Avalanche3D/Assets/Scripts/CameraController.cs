@@ -5,10 +5,10 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     //Scripts
-    GameManager gameManager;
+    public GameManager GameManagerInstance { get; private set;}
 
     //References
-    Transform target;
+    private Transform target;
     public Transform Pivot;
 
     //Public Variables
@@ -17,10 +17,11 @@ public class CameraController : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        gameManager = GameManager.Instance;
-        target = gameManager.Player.transform;
+        GameManagerInstance = InstanceManager<GameManager>.GetInstance("GameManager");
+
+        target = GameManagerInstance.Player.transform;
         Offset = target.position - transform.position;
         Pivot.transform.position = target.position;
         Pivot.transform.parent = target;
@@ -30,13 +31,13 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    private void LateUpdate()
     {
         MoveAndRotate();
     }
 
 
-    void MoveAndRotate()
+    private void MoveAndRotate()
     {
         //Get X position of mouse and rotate
         float horizontal = Input.GetAxis("Mouse X") * RotationSpeed;
@@ -56,7 +57,7 @@ public class CameraController : MonoBehaviour
         transform.LookAt(target);
     }
 
-    void CheckMaxPosition()
+    private void CheckMaxPosition()
     {
         if (transform.position.y < target.position.y)
         {

@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\DamagableEntity.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GroundedChecker.cs" />
+    <Compile Include="Assets\Scripts\HighscoreManager.cs" />
     <Compile Include="Assets\Scripts\IDamagable.cs" />
     <Compile Include="Assets\Scripts\InstanceManager.cs" />
     <Compile Include="Assets\Scripts\IStopper.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Assets\Scripts\ObjectPooler.cs" />
     <Compile Include="Assets\Scripts\PlayerDamagable.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\ScriptablePool.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\SpawnerHeightChanger.cs" />
     <Compile Include="Assets\Scripts\UIManager.cs" />

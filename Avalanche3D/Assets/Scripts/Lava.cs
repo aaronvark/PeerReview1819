@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Lava : MonoBehaviour
 {
+    //Public variables
     public float DamageGiven;
     public float DamageInterval;
     public float RiseSpeed;
 
-    bool CanDamage;
+    //Private variables
+    private bool CanDamage;
 
     private void Awake()
     {
@@ -20,7 +22,7 @@ public class Lava : MonoBehaviour
         Rise();
     }
 
-    void Rise()
+    private void Rise()
     {
         //TODO-Optional: Add logic for speeding up over time.
         transform.Translate(new Vector3(0, RiseSpeed / 100, 0));
@@ -45,7 +47,7 @@ public class Lava : MonoBehaviour
         }
     }
 
-    IEnumerator Damage(IDamagable damageTaker)
+    private IEnumerator Damage(IDamagable damageTaker)
     {
         if(CanDamage)
         {

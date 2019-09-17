@@ -4,44 +4,48 @@ using UnityEngine;
 
 public class ObjectPooler : MonoBehaviour
 {
-    [System.Serializable]
-    public class Pool
-    {
-        public string Tag;
-        public GameObject Prefab;
-        public int Size;
-    }
+    //CREATE POOL IN RESOURCES FOLDER TO FUNCTION.
 
-    #region Singleton
+    private List<ScriptablePool> Pools = new List<ScriptablePool>();
+    public Dictionary<string, Queue<GameObject>> PoolDictionary;
 
     private void Awake()
     {
         InstanceManager<ObjectPooler>.CreateInstance("ObjectPooler", this);
+
+        Object[] ScriptablePools = Resources.LoadAll("Pools", typeof(ScriptablePool));
+        foreach (ScriptablePool pool in ScriptablePools)
+        {
+            Pools.Add(pool);
+        }
     }
 
-    #endregion
-
-    public List<Pool> Pools;
-    public Dictionary<string, Queue<GameObject>> PoolDictionary;
-
     // Create pools and put them in empty gameObjects to make sure the hierarchy window is clean.
-    void Start()
+    private void Start()
     {
         PoolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        foreach (Pool pool in Pools)
+        print(Pools.Count);
+        if(Pools.Count < 1)
         {
-            pool.Tag = pool.Prefab.name;
-            GameObject containerObject = new GameObject(pool.Tag);
-            Queue<GameObject> objectPool = new Queue<GameObject>();
 
-            for (int i = 0; i < pool.Size; i++)
+            return;
+        }
+        foreach (ScriptablePool pool in Pools)
+        {
+            if(!PoolDictionary.ContainsKey(pool.Tag))
             {
-                GameObject obj = Instantiate(pool.Prefab, containerObject.transform);
-                obj.SetActive(false);
-                objectPool.Enqueue(obj);
+                GameObject containerObject = new GameObject(pool.Tag + "Pool");
+                Queue<GameObject> objectPool = new Queue<GameObject>();
+
+                for (int i = 0; i < pool.Amount; i++)
+                {
+                    GameObject obj = Instantiate(pool.Prefab, containerObject.transform);
+                    obj.SetActive(false);
+                    objectPool.Enqueue(obj);
+                }
+                PoolDictionary.Add(pool.Tag, objectPool);
             }
-            PoolDictionary.Add(pool.Tag, objectPool);
         }
     }
 

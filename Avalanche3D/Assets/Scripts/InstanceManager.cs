@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InstanceManager<T> : MonoBehaviour
 {
-    public static Dictionary<string, T> Instances = new Dictionary<string, T>();
+    public static Dictionary<string, T> Instances {get; private set; } = new Dictionary<string, T>();
 
     public static void CreateInstance(string name, T script)
     {

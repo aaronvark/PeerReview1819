@@ -5,15 +5,15 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     //Scripts
-    GameManager gameManager;
+    public GameManager GameManagerInstance { get; private set; }
 
     //References
-    GameObject Player;
+    private GameObject Player;
     public GroundedChecker groundedChecker;
-    Animator animator;
+    private Animator animator;
 
     //Components
-    CharacterController characterController;
+    private CharacterController characterController;
 
     //Public variables
     public float Speed;
@@ -24,21 +24,21 @@ public class PlayerMovement : MonoBehaviour
     public float WallJumpMoveCooldown;
 
     //Private variables
-    Vector3 moveDirection;
-    bool walled;
-    bool canMove;
+    private Vector3 moveDirection;
+    private bool walled;
+    private bool canMove;
 
     private void Start()
     {
-        gameManager = GameManager.Instance;
-        Player = gameManager.Player;
+        GameManagerInstance = InstanceManager<GameManager>.GetInstance("GameManager");
+        Player = GameManagerInstance.Player;
         characterController = Player.GetComponent<CharacterController>();
         animator = Player.GetComponent<Animator>();
         walled = false;
         canMove = true;
     }
 
-    void Update()
+    private void Update()
     {
         if(canMove)
         {
@@ -62,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
         moveDirection.y = yStore;
     }
 
-    void Jump()
+    private void Jump()
     {
         if (characterController.isGrounded)
         {
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void ApplyGravity()
+    private void ApplyGravity()
     {
         if(walled)
         {

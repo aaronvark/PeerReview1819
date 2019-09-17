@@ -8,9 +8,6 @@ public class GameManager : MonoBehaviour
     public delegate void OnScoreChanged();
     public OnScoreChanged onScoreChanged;
 
-    //Singleton
-    public static GameManager Instance;
-
     //References
     public GameObject Player;
 
@@ -19,7 +16,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
         onScoreChanged += ChangeScore;
         InstanceManager<GameManager>.CreateInstance("GameManager", this);
 
