@@ -31,7 +31,7 @@
         },
         {
             "enemyAmounts": 14,
-            "enemiesAlive": 14,
+            "enemiesAlive": 0,
             "spawnRangeMax": {
                 "x": 12.0,
                 "y": 2.5,
@@ -42,7 +42,7 @@
                 "y": 1.5,
                 "z": -12.0
             },
-            "done": false,
+            "done": true,
             "nextLevelPosition": {
                 "x": 80.0,
                 "y": 0.0,

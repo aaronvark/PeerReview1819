@@ -82,12 +82,6 @@ public class ObjectPooler : GenericSingleton<ObjectPooler, IPooler>, IPooler
         InitPools();
     }
 
-    // Use this for initialization
-    public void Awake()
-    {
-        InitPools();
-    }
-
     private void InitPools()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();

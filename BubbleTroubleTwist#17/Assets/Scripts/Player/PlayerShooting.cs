@@ -16,8 +16,8 @@ public class PlayerShooting : AbstractAvatarClass
     public WeaponData usingWeaponData;
 
     private Weapon currentWeapon;
-
-    void Awake()
+    
+    private void Awake()
     {
         //Create a weapon and give its weapon data
         currentWeapon = new Weapon(usingWeaponData);
@@ -31,7 +31,7 @@ public class PlayerShooting : AbstractAvatarClass
 
     private void Fire()
     {
-        StartCoroutine(currentWeapon.WaitForCooldown(cooldown, timeBetween));
+        Coroutine cooldownRoutine = StartCoroutine(currentWeapon.WaitForCooldown(cooldown, timeBetween));
     }
 
     private void OnDestroy()

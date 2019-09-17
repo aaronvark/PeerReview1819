@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
-public class Projectile : PoolableBehaviour
+public class Projectile : PoolableBehaviour, IPoolable
 {
     public float speed;
     public int damage;

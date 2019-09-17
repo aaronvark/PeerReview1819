@@ -48,7 +48,6 @@ public class GenericObjectPooler<T> : IObjectPooler where T : PoolableBehaviour
         }
         T component = objectStack.Pop();
 
-
         //component.gameObject.SetActive(true);
         return component;
     }

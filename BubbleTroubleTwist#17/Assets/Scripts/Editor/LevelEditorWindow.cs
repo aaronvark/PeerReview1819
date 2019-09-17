@@ -20,7 +20,7 @@ public class LevelEditorWindow : EditorWindow
     private Vector3 scrollPos = new Vector3(500, 0, 0);
     private Level placeHolderLevel = new Level();
 
-    private bool show = false;
+    //private bool show = false;
 
     // Add menu named "My Window" to the Window menu
     [MenuItem("Window/LevelEditorWindow")]

@@ -105,7 +105,6 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
                 EventManagerGen<float>.Broadcast(EVENT.gameUpdateEvent, LastPlayedLevel().currentCameraX);
             }
         }
-
         EventManager.Broadcast(EVENT.initializeGame);
     }
 

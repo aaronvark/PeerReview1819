@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\Interfaces\IDamagable.cs" />
     <Compile Include="Assets\Scripts\Interfaces\ILevel.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IPlayer.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IPoolable.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IPooler.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IStats.cs" />
     <Compile Include="Assets\Scripts\Level\JsonHelper.cs" />
@@ -97,6 +98,8 @@
     <Compile Include="Assets\Scripts\ObjectPool\BulletPool.cs" />
     <Compile Include="Assets\Scripts\ObjectPool\GenericObjectPooler.cs" />
     <Compile Include="Assets\Scripts\ObjectPool\ObjectPooler.cs" />
+    <Compile Include="Assets\Scripts\ObjectPool\ObjectPoolerLearning.cs" />
+    <Compile Include="Assets\Scripts\ObjectPool\ObjectPoolerTypes.cs" />
     <Compile Include="Assets\Scripts\ObjectPool\ProjectilePool.cs" />
     <Compile Include="Assets\Scripts\Parabola\MathParabola.cs" />
     <Compile Include="Assets\Scripts\Parabola\ParabolaController.cs" />
@@ -107,6 +110,8 @@
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerShooting.cs" />
     <Compile Include="Assets\Scripts\Projectiles\Projectile.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObjects\MakeScriptableObject.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObjects\MyScriptableObjectClass.cs" />
     <Compile Include="Assets\Scripts\Weapons\Weapon.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />

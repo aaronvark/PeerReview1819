@@ -18,13 +18,13 @@ public class WeaponData
 /// <summary>
 /// Weapon class with all weapon functionality
 /// </summary>
-public class Weapon : MonoBehaviour
+public class Weapon 
 {
     public WeaponData thisWeaponData { get; set; }
 
     private bool ready = true;
     private float amount = 10;
-
+    private float speed = 5f;
     public Weapon(WeaponData _thisWeaponData)
     {
         thisWeaponData = _thisWeaponData;
@@ -39,15 +39,13 @@ public class Weapon : MonoBehaviour
 
     public void FireWeapon(int _damage)
     {
-        //GameObject projectile = ObjectPooler.Instance.SpawnFromPool(thisWeaponData.projectileName, thisWeaponData.firePoint.position, Quaternion.identity);
-        //GameObject projectile = projectilePool.GetNext().gameObject;
-        //var bulletPool = FindObjectOfType<BulletPool>();
-        //GameObject prjctile = bulletPool.Get().gameObject;
-        //projectile.transform.position = thisWeaponData.firePoint.position;
-        GameObject projectile = ProjectilePool.Instance.SpawnFromPool(thisWeaponData.firePoint.position, Quaternion.identity);
+
+        //GameObject projectile = ObjectPoolerLearning.Instance.SpawnFromPool<Projectile>(thisWeaponData.firePoint.position, Quaternion.identity);
+        GameObject projectile = ObjectPoolerTypes.Instance.SpawnFromPool(thisWeaponData.projectileGameObject, thisWeaponData.firePoint.position, Quaternion.identity);
         if (projectile != null)
         {
             projectile.gameObject.GetComponent<Projectile>().damage = thisWeaponData.damage;
+            projectile.transform.LerpTransform(new Vector3(projectile.transform.position.x, projectile.transform.position.y + 10f, projectile.transform.position.z), speed);
         }
     }
 
@@ -74,7 +72,7 @@ public class Weapon : MonoBehaviour
     private void StopOnHit()
     {
         //StopCoroutine(WaitForCooldown());
-        StopAllCoroutines();
+        //StopAllCoroutines();
     }
 
     private void OnDestroy()

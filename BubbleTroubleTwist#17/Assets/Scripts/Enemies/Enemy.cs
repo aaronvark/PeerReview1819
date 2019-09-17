@@ -39,6 +39,8 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
             enemyInput = new EnemyData();
         }
 
+        GetComponent<Renderer>().material.color = Random.ColorHSV();
+
         /// We add all children to the splitPoints list stored in the enemyInput data
         for (int childIndex = 0; childIndex < transform.childCount; childIndex++)
         {
@@ -54,8 +56,7 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
     }
 
     private void FixedUpdate()
-    {
-        
+    {        
         if(transform.position.y < toLow && checking)
         {
             StartCoroutine(ToLowChecking(toLow));
@@ -74,14 +75,14 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
 
         if (time > _low)
         {
-            rBody.AddForce(Vector3.up * (Speed), ForceMode.Impulse);
+            rBody.AddForce(Vector3.right * (Speed), ForceMode.Impulse);
             time = 0;
-            yield return new WaitForSeconds(_low + 5);
+            yield return new WaitForSeconds(_low);
             checking = true;
         }
         else
         {
-            yield return new WaitForSeconds(_low + 5);
+            yield return new WaitForSeconds(_low);
             checking = true;
         }
     }

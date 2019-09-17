@@ -56,8 +56,8 @@ public static class EventManager
 /// <typeparam name="T"></typeparam>
 public static class EventManagerGen<T>
 {
-    public delegate void GenericDelegate<T>(T c);
-
+    public delegate void GenericDelegate<A>(T c);
+    
     // Stores the delegates that get called when an event is fired
     static Dictionary<EVENT, GenericDelegate<T>> genericEventTable = new Dictionary<EVENT, GenericDelegate<T>>();
     

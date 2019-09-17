@@ -15,6 +15,11 @@ public class PlayerManager : MonoBehaviour, IPlayer
     public List<PlayerData> playersStats;
 
     /// <summary>
+    /// The maximum amount of lives the players can have
+    /// </summary>
+    public int maxLives = 3;
+
+    /// <summary>
     /// the amount of lives the players have ( lives are shared )
     /// </summary>
     public int lives = 3;
@@ -65,7 +70,8 @@ public class PlayerManager : MonoBehaviour, IPlayer
         foreach (PlayerData playerStats in playersStats)
         {
             //Spawn a player foreach player in the PlayerData list
-            GameObject playerGameObject = ObjectPooler.Instance.SpawnFromPool(player.name, playerStats.spawnVector, Quaternion.identity);
+            //GameObject playerGameObject = ObjectPooler.Instance.SpawnFromPool(player.name, playerStats.spawnVector, Quaternion.identity);
+            GameObject playerGameObject = ObjectPooler.Instance.SpawnFromPool("Player", playerStats.spawnVector, Quaternion.identity);
             //Get the interface of each player and give it its stats
             playerGameObject.GetComponent<IStats<PlayerData>>().SetStats(playerStats);
             //Add the player in the levelManger                       
@@ -82,6 +88,7 @@ public class PlayerManager : MonoBehaviour, IPlayer
         lives -= _amount;
         if (lives < 1)
         {
+            lives = maxLives;
             EventManager.OnGameOverHandler();
         }
         for (int attackTimes = 0; attackTimes <= _amount - 1; attackTimes++)
