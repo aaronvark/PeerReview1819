@@ -45,6 +45,7 @@ public sealed class GameManager : Singleton<GameManager>
         ghostsVulnerable = StartCoroutine(RunSetGhostsVulnerable(_duration));
     }
 
+    // Set the ghosts in their vulnerable state for the running duration
     IEnumerator RunSetGhostsVulnerable(float _duration)
     {
         foreach (var ghost in ghosts)

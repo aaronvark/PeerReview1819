@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Inky : Ghost
+﻿public class Inky : Ghost
 {
     private void Start()
     {

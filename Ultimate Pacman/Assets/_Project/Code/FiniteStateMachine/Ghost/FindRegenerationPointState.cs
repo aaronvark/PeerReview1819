@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// Check FindRegenerationPoint script for comments
+
+using System.Collections;
 using UnityEngine;
 
 public class FindRegenerationPointState : AbstractState
@@ -47,9 +49,7 @@ public class FindRegenerationPointState : AbstractState
             return;
         }
 
-        Vector2 direction = distance.normalized;
-
-        movement.Move(direction);
+        movement.Move(distance);
     }
 
     public override void OnStateExit()

@@ -8,6 +8,8 @@ public class Player : Singleton<Player>
     private float animationSpeedMultiplier = 2f;
     [SerializeField]
     private float maxMouthAngle = 60f;
+    [SerializeField]
+    private string gameOverScene = null;
 
     private Movement2D movement;
     private Shape shape;
@@ -26,19 +28,12 @@ public class Player : Singleton<Player>
 
     private float ChangeMouthAnimationDirection(LerpValue _lerpValue)
     {
-        if (Mathf.Approximately(_lerpValue.Current, maxMouthAngle))
-        {
-            return MOUTH_CLOSED_ANGLE;
-        }
-        else
-        {
-            return maxMouthAngle;
-        }
+        return (Mathf.Approximately(_lerpValue.Current, maxMouthAngle)) ? MOUTH_CLOSED_ANGLE : maxMouthAngle;
     }
 
     private void Update()
     {
-        // Stores the input for use in the fixed update for correct physics handling
+        // Stores the input value for use in the fixed update for correct physics handling.
         horizontalInput = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
 
         AnimateMouth();
@@ -52,13 +47,16 @@ public class Player : Singleton<Player>
 
     private void AnimateMouth()
     {
+        // Update mouth angle
         mouthAngle.Speed = movement.moveSpeed * animationSpeedMultiplier;
         mouthAngle.Update();
 
+        // Set new mouth angle
         shape.settings.startAngle = mouthAngle.Current;
         shape.settings.endAngle = 360f - mouthAngle.Current;
     }
 
+    // Decide what to do when hit and when the collision came from a ghost
     public void HandleGhostCollision(Collision2D _collision)
     {
         Ghost ghost = _collision.transform.GetComponent<Ghost>();
@@ -80,11 +78,6 @@ public class Player : Singleton<Player>
     private void Die()
     {
         Destroy(gameObject);
-        SceneHandler.Instance.LoadScene("Game Over"); // FIX: This is a magic number!
-    }
-
-    public void TestMethod(Collider2D collider)
-    {
-        Debug.Log(collider.name);
+        SceneHandler.Instance.LoadScene(gameOverScene);
     }
 }

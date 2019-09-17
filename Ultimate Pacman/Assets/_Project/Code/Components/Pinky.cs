@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Pinky : Ghost
 {
@@ -20,8 +18,7 @@ public class Pinky : Ghost
     {
         Vector2 ambushPosition = (Vector2)player.position + (Vector2)player.right * ambushDistance;
         Vector2 distance = ambushPosition - (Vector2)transform.position;
-        Vector2 direction = distance.normalized;
 
-        movement.Move(direction);
+        movement.Move(distance);
     }
 }

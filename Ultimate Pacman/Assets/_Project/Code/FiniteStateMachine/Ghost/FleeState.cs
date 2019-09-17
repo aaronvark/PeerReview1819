@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Check Flee script for comments
+
 using UnityEngine;
 
 public class FleeState : AbstractState
@@ -22,9 +23,8 @@ public class FleeState : AbstractState
     public override void OnStateUpdate()
     {
         Vector2 distance = transform.position - player.position;
-        Vector2 direction = distance.normalized;
 
-        movement.Move(direction);
+        movement.Move(distance);
     }
 
     public override void OnStateExit()

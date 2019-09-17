@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SuperPellet : Pellet
 {
@@ -11,7 +9,7 @@ public class SuperPellet : Pellet
     [SerializeField]
     private float animationSpeed = 4f;
 
-    private LerpValue sizeLerp;
+    private LerpValue sizeLerp; // Grows and Shrinks the value for the pellet size.
 
     private void Start()
     {
@@ -23,14 +21,7 @@ public class SuperPellet : Pellet
 
     private float ChangeSizeDirection(LerpValue _lerpValue)
     {
-        if (_lerpValue.Current == sizeRange.y)
-        {
-            return sizeRange.x;
-        }
-        else
-        {
-            return sizeRange.y;
-        }
+        return (_lerpValue.Current == sizeRange.y) ? sizeRange.x : sizeRange.y;
     }
 
     public override void Consume()

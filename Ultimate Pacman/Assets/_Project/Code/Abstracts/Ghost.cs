@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 public abstract class Ghost : MonoBehaviour, IScore
 {
+    // These variables are for making the Ghost compatible with the native FiniteStateMachine.
     public StateMachine stateMachine { get; protected set; } = null;
     public IState defaultState { get; protected set; } = null;
 
@@ -15,6 +14,7 @@ public abstract class Ghost : MonoBehaviour, IScore
 
     public float ScoreValue => scoreValue;
 
+    // Methods for the animator state machine to access in the Standard Behaviour
     public virtual void StateEnter() { }
     public virtual void StateUpdate() { }
     public virtual void StateExit() { }
@@ -45,6 +45,7 @@ public abstract class Ghost : MonoBehaviour, IScore
         ScoreManager.Instance.AddScore(this);
         animator.SetTrigger("Consumed");
 
+        // For updating ghosts that use the native FiniteStateMachine
         if (stateMachine != null)
             stateMachine.SwitchState(new FindRegenerationPointState(transform));
     }

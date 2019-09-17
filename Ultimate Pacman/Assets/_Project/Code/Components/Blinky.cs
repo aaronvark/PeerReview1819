@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Blinky : Ghost
 {
@@ -16,7 +14,7 @@ public class Blinky : Ghost
     public override void StateUpdate()
     {
         Vector2 distance = (Vector2)player.position - (Vector2)transform.position;
-        Vector2 direction = distance.normalized;
-        movement.Move(direction);
+
+        movement.Move(distance);
     }
 }
