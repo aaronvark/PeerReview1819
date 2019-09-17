@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using Breakin.GameManagement;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace Breakin
+namespace Breakin.UI
 {
     [RequireComponent(typeof(Text))]
     public class ScoreViewer : MonoBehaviour

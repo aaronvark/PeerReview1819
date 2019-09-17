@@ -1,4 +1,5 @@
-﻿using Breakin.Sound;
+﻿using Breakin.GameManagement;
+using Breakin.Sound;
 
 namespace Breakin
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Breakin
+namespace Breakin.GameManagement
 {
     public interface IScoreManager
     {
