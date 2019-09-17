@@ -2,28 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockPool
+public static class BlockPool
 {
-    //Efficient?
+    private static List<GameObject> pool;
+    private static GameObject block;
+    private static Transform root;      
 
-    private List<GameObject> pool;
-    private GameObject block;
-    private Transform root;
-
-    public BlockPool(GameObject _block, int startSize)
+    static BlockPool()
     {
-        block = _block;
+
+        block = Resources.Load<GameObject>("Block");
+        if(block == null)
+        {
+            Debug.LogError("Block Prefab not found in Resources");
+        }
+
         root = new GameObject().transform;
         root.name = "BlockPool";
         pool = new List<GameObject>();
-        for (int i = 0; i < startSize; i++)
+
+        for (int i = 0; i < 20; i++)
         {
             pool.Add(GameObject.Instantiate(block,root));
             pool[i].SetActive(false);
         }
     }
 
-    public GameObject GetNext()
+    public static GameObject GetNext()
     {
         if (pool.Count > 0)
         {
@@ -38,7 +43,7 @@ public class BlockPool
         }
     }
 
-    public void Return(GameObject obj)
+    public static void Return(GameObject obj)
     {
         obj.SetActive(false);
         pool.Add(obj);
