@@ -9,7 +9,10 @@ public class Brick : MonoBehaviour
 	public static Action SpawnItemEvent;
 	public DifferentBricks diffBrick;
 
-	//private Dictionary<DifferentBricks, Color> brickColor = new Dictionary<DifferentBricks, Color>();
+	[SerializeField] private int lowPoints;
+	[SerializeField] private int highPoints;
+
+	private Dictionary<DifferentBricks, Color> brickColor = new Dictionary<DifferentBricks, Color>();
 
 	private Renderer ren;
 
@@ -17,6 +20,14 @@ public class Brick : MonoBehaviour
 	private void Awake()
 	{
 		ren = GetComponent<Renderer>();
+	}
+
+	private void Start()
+	{
+		brickColor.Add(DifferentBricks.Green, Color.green);
+		brickColor.Add(DifferentBricks.Orange, Color.yellow);
+		brickColor.Add(DifferentBricks.Red, Color.red);
+		brickColor.Add(DifferentBricks.Silver, Color.grey);
 	}
 
 	private void Update()
@@ -37,16 +48,16 @@ public class Brick : MonoBehaviour
 		switch (diffBrick)
 		{
 			case DifferentBricks.Red:
-				ren.material.color = Color.red;
+				ren.material.color = brickColor[DifferentBricks.Red];
 				break;
 			case DifferentBricks.Orange:
-				ren.material.color = Color.yellow;
+				ren.material.color = brickColor[DifferentBricks.Orange];
 				break;
 			case DifferentBricks.Green:
-				ren.material.color = Color.green;
+				ren.material.color = brickColor[DifferentBricks.Green];
 				break;
 			case DifferentBricks.Silver:
-				ren.material.color = Color.gray;
+				ren.material.color = brickColor[DifferentBricks.Silver];
 				break;
 		}
 	}
@@ -54,30 +65,29 @@ public class Brick : MonoBehaviour
 	private void OnCollisionEnter(Collision other)
 	{
 		if(other.gameObject.tag == Tags.Ball){
-			if (diffBrick == DifferentBricks.Silver)
+			if ((int)diffBrick == 3)
 			{
-				CallEvent(100);
+				CallEvent(lowPoints);
 				diffBrick = DifferentBricks.Green;
 				return;
 			}
-			if (diffBrick == DifferentBricks.Green)
+			if ((int)diffBrick == 2)
 			{
-				CallEvent(100);
+				CallEvent(lowPoints);
 				diffBrick = DifferentBricks.Orange;
 				return;
 			}
-			if(diffBrick == DifferentBricks.Orange)
+			if((int)diffBrick == 1)
 			{
-				CallEvent(100);
+				CallEvent(lowPoints);
 				diffBrick = DifferentBricks.Red;
 				return;
 			}
-			if (diffBrick == DifferentBricks.Red)
+			if ((int)diffBrick == 0)
 			{
-				CallEvent(500);
+				CallEvent(highPoints);
 				DestroyBrick();
-			}
-			
+			}		
 		}
 	}
 

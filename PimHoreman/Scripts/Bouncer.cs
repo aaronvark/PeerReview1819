@@ -14,14 +14,18 @@ public class Bouncer : MonoBehaviour
 	public static Action BouncerHitEvent;
 	public static Action<int> BouncerScoreEvent;
 
+	[Tooltip("Type of Ball:")]
 	[SerializeField] private Ball ball;
-	[SerializeField] private int bumperForce = 100;
+
+	[Tooltip("Amount of Force:")]
+	[SerializeField] private int bumperForce = 10;
+
+	[Tooltip("Points Type:")]
 	[SerializeField] private BouncerTypes bouncerTypes;
 
 	private void BouncerHit()
     {
-		ball.ExplosiveForceBall(bumperForce, transform.position, 1);
-
+		ball.ApplyForce(transform.position, bumperForce, ForceMode.VelocityChange);
 		if (BouncerHitEvent != null)
 		{
 			BouncerHitEvent();

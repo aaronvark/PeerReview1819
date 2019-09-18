@@ -1,30 +1,32 @@
 ﻿using UnityEngine;
+using System;
 
 public class Ball : MonoBehaviour, IReset
 {
-	public Vector3 ResetPosition { get { return startPosition; } set { startPosition = value; } }
+	public Vector3 ResetPosition { get; set; }
+	public int Health { get { return health; } }
 
 	[SerializeField] private TrailRenderer trailRen;
 
+	private Rigidbody rb;
 	private float ballSpeed;
+	private bool isGameOver;
 	private int health;
 	private int maxHealth = 3;
-	private Vector3 startPosition;
-	private Rigidbody rb;
-	private bool isGameOver;
 
 	public void ResetObject()
 	{
 		if(isGameOver)
 		{
 			Debug.Log("Game Over");
+			Destroy(gameObject);
 			return;
 		}
 		else
 		{
 			rb.angularVelocity = Vector3.zero;
 			rb.velocity = Vector3.zero;
-			transform.position = startPosition;
+			transform.position = ResetPosition;
 			health--;
 			trailRen.Clear();
 		}
@@ -36,9 +38,10 @@ public class Ball : MonoBehaviour, IReset
 		ballSpeed = _deltaPosition * _force;
 	}
 
-	public void ExplosiveForceBall(int _force, Vector3 _position, int _radius)
+	public void ApplyForce(Vector3 _forcePosition, int _power, ForceMode _forceMode)
 	{
-		rb.AddExplosionForce(_force, _position, _radius);
+		Vector3 _direction = _forcePosition + transform.position;
+		rb.AddForceAtPosition(_direction * _power, transform.position, _forceMode);
 	}
 
 	private void Awake()
@@ -57,7 +60,6 @@ public class Ball : MonoBehaviour, IReset
 		{
 			isGameOver = true;
 		}
-		Debug.Log(health);
 	}
 
 	private void OnCollisionEnter(Collision collision)

@@ -7,6 +7,7 @@ public class ScoreManager : MonoBehaviour
 {
 	[SerializeField] private Text scoreText;
 	[SerializeField] private Text highscoreText;
+	[SerializeField] private string scoreString, highScoreString;
 
 	private int scoreAmount;
 	private int scoreTotal;
@@ -21,14 +22,14 @@ public class ScoreManager : MonoBehaviour
 
 	private void UpdateLocalHighscore()
 	{
-		highscoreText.text = PlayerPrefs.GetInt(KEY).ToString();
+		highscoreText.text = highScoreString + PlayerPrefs.GetInt(KEY).ToString();
 	}
 
 	private void UpdateScore(int _score)
 	{
 		scoreAmount += _score;
 		scoreTotal = scoreAmount;
-		scoreText.text = scoreAmount.ToString();
+		scoreText.text = scoreString + scoreAmount.ToString();
 	}
 
 	private void Update()
@@ -37,7 +38,6 @@ public class ScoreManager : MonoBehaviour
 		{
 			PlayerPrefs.SetInt(KEY, scoreTotal);
 			UpdateLocalHighscore();
-			Debug.Log(PlayerPrefs.GetInt(KEY).ToString());
 		}
 	}
 

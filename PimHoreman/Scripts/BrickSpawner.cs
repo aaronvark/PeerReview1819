@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class BrickSpawner : MonoBehaviour
 {
+	[Tooltip("Type of Brick")]
 	[SerializeField] private Brick brick;
-	[SerializeField] private Vector2 cellSize = new Vector2(1,1); 
+
+	[Tooltip("How far apart the bricks are in X and Y Position:")]
+	[SerializeField] private Vector2 cellSize = new Vector2(1,1);
 
 	private int[] level = new int[]
 	{
-			4,4,4,4,4,4,
-			4,3,3,3,3,4,
-			4,3,2,2,3,4,
-			1,1,1,1,1,1,
+			4,4,4,4,4,
+			3,3,3,3,3,
+			0,3,2,3,0,
+			1,1,1,1,1,
 	};
 
 	private void Awake()
@@ -21,8 +24,8 @@ public class BrickSpawner : MonoBehaviour
 		for (int index = 0; index < level.Length; ++index)
 		{
 			//convert to x & y...
-			int x = index % 6;
-			int y = index / 6;
+			int x = index % 5;
+			int y = index / 5;
 
 			if (level[index] != 0)
 			{

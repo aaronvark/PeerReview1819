@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class SpringLauncher : MonoBehaviour
 {
-	//[SerializeField] private GameObject ball;
-	[SerializeField] private int plungerForce;
+	[Header("Amount of Velocity/Power:")]
+	[SerializeField] private int plungerVelocity;
+
+	[Header("Type of Ball:")]
+	[SerializeField] private Ball ball;
 
 	private float pullSpeed = 0.5f;
 	private float resetSpeed = 10f;
-	private bool isResetting;
-	private bool isActive;
-	private Vector3 startPos;
-	private Vector3 pullBackAmount;
 	private float deltaPos;
 
-	[SerializeField] private Ball ball;
+	private bool isActive;
+	private bool isResetting;
+
+	private Vector3 pullBackAmount;
+	private Vector3 startPos;
 
 	private void Start()
 	{
@@ -40,7 +43,7 @@ public class SpringLauncher : MonoBehaviour
 		if (Input.GetKeyUp(KeyCode.Space))
 		{
 			deltaPos = startPos.y - gameObject.transform.position.y;
-			ball.VelocityBall(deltaPos, plungerForce, ForceMode.Force);
+			ball.VelocityBall(deltaPos, plungerVelocity, ForceMode.VelocityChange);
 			isResetting = true;
 			isActive = false;
 		}
@@ -61,6 +64,9 @@ public class SpringLauncher : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		isActive = true;
+		if(collision.gameObject.tag == Tags.Ball)
+		{
+			isActive = true;	
+		}
 	}
 }

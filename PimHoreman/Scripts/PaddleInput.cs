@@ -2,8 +2,9 @@
 
 public class PaddleInput : MonoBehaviour
 {
-	[SerializeField] private float speed = 8;
+	[SerializeField] private float paddleSpeed = 8;
 	private Rigidbody rb;
+	private string horizontal = "Horizontal";
 
 	private void Awake()
 	{
@@ -17,9 +18,9 @@ public class PaddleInput : MonoBehaviour
 
 	private void PaddleMovement()
 	{
-		float moveHorizontal = Input.GetAxis("Horizontal");
+		float moveHorizontal = Input.GetAxis(horizontal);
 
 		Vector3 movement = new Vector3(moveHorizontal, 0, 0);
-		rb.velocity = movement * speed;
+		rb.velocity = movement * paddleSpeed;
 	}
 }
