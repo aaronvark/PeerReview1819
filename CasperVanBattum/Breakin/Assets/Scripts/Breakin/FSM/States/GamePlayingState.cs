@@ -7,11 +7,16 @@ namespace Breakin.FSM.States
     {
         public override event StateChange RequestTransition;
 
-        public GamePlayingState(GameManager owner) : base(owner) { }
-
-        public override void Start()
+        public override void Run()
         {
-            owner.ActivateGame();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                RequestTransition?.Invoke(new PauseState(this));
+                return;
+            }
+            
+            // Update the game playing
+            EventManager.gameUpdate?.Invoke();
         }
     }
 }

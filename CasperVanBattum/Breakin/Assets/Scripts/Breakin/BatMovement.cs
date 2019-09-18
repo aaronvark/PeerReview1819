@@ -1,3 +1,4 @@
+using Breakin.GameManagement;
 using UnityEngine;
 
 namespace Breakin
@@ -15,9 +16,11 @@ namespace Breakin
 		{
 			// Load camera
 			cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+
+			EventManager.gameUpdate += OnUpdate;
 		}
 
-		private void Update()
+		private void OnUpdate()
 		{
 			UpdateAngleFromMousePos();
 

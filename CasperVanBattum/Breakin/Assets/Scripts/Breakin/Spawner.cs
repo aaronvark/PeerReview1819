@@ -39,15 +39,18 @@ namespace Breakin
             ringsSpawned = 0;
             rings = new List<Ring>();
 
-            if (BlockPool == null) BlockPool = new MultiPrefabPool<Block>(data.BlockCountRing, transform, data.StandardBlock);
+            if (BlockPool == null)
+            {
+                BlockPool = new MultiPrefabPool<Block>(data.BlockCountRing, transform, data.StandardBlock);
+            }
 
             ringSpawning = StartCoroutine(TimedRingSpawning());
         }
 
         public void Deactivate()
         {
-            StopCoroutine(ringSpawning);
-            BlockPool.ReclaimAll();
+            if (ringSpawning != null) StopCoroutine(ringSpawning);
+            BlockPool?.ReclaimAll();
         }
 
         /// <summary>

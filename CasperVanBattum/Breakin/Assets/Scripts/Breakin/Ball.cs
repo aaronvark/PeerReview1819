@@ -1,3 +1,4 @@
+using Breakin.GameManagement;
 using UnityEngine;
 
 namespace Breakin
@@ -40,9 +41,11 @@ namespace Breakin
 
             // The ball should start locked at to the bat at the beginning of the game
             Lock();
+
+            EventManager.gameUpdate += OnUpdate;
         }
 
-        private void Update()
+        private void OnUpdate()
         {
             if (locked)
             {

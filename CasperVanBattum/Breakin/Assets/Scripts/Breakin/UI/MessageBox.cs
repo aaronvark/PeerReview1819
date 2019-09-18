@@ -1,3 +1,4 @@
+using Breakin.GameManagement;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -10,8 +11,8 @@ namespace Breakin.UI
 
         private void Start()
         {
-            MessageManager.Instance.MessageSent += Show;
-            MessageManager.Instance.MessageHidden += Hide;
+            EventManager.displayMessage += Show;
+            EventManager.hideMessage += Hide;
 
             // Try to find a text component 
             if (!text) LoadTextComponent();
@@ -27,8 +28,8 @@ namespace Breakin.UI
 
         private void OnDestroy()
         {
-            MessageManager.Instance.MessageHidden -= Hide;
-            MessageManager.Instance.MessageSent -= Show;
+            EventManager.hideMessage -= Hide;
+            EventManager.displayMessage -= Show;
         }
 
         private void LoadTextComponent()
