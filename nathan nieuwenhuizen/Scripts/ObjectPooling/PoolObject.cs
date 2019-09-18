@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// This poolobject is a class that is used by the poolmanager
 /// </summary>
-public class PoolObject : MonoBehaviour
+public abstract class PoolObject : MonoBehaviour, IPoolable
 {
     /// <summary>
     /// When the object is reused again after being 'destroyed'.
@@ -21,4 +21,9 @@ public class PoolObject : MonoBehaviour
     {
 		gameObject.SetActive(false);
 	}
+}
+public interface IPoolable
+{
+    void Destroy();
+    void OnObjectReuse();
 }
