@@ -10,8 +10,8 @@ public delegate void onKeyPressedRight(Vector2 movement);
 
 public interface InputManager
 {
-    event onKeyPressedUp _onKeyPressedUpEvent;
-    event onKeyPressedDown _onKeyPressedDownEvent;
-    event onKeyPressedLeft _onKeyPressedLeftEvent;
-    event onKeyPressedRight _onKeyPressedRightEvent;
+    event onKeyPressedUp onKeyPressedUpEvent;
+    event onKeyPressedDown onKeyPressedDownEvent;
+    event onKeyPressedLeft onKeyPressedLeftEvent;
+    event onKeyPressedRight onKeyPressedRightEvent;
 }

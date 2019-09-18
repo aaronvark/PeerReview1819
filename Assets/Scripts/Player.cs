@@ -5,21 +5,9 @@ using UnityEngine.Events;
 
 public class Player : Actor
 {
-    private Transform _myTransform;
-
-    private void Start()
-    {
-        _myTransform = transform;
-    }
-
-
+    //Provides movement for the player
     public void PlayerMovement(Vector2 movement)
     {
-        _myTransform.position = movement;
-    }
-
-    public override void Death()
-    {
-        // Setup for later development.
+        GetComponent<Rigidbody2D>().AddForce(movement);
     }
 }

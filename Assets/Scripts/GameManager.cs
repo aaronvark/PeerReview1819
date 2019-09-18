@@ -1,55 +1,57 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, InputManager
 {
-    public event onKeyPressedUp _onKeyPressedUpEvent;
-    public event onKeyPressedDown _onKeyPressedDownEvent;
-    public event onKeyPressedLeft _onKeyPressedLeftEvent;
-    public event onKeyPressedRight _onKeyPressedRightEvent;
+    public event onKeyPressedUp onKeyPressedUpEvent;
+    public event onKeyPressedDown onKeyPressedDownEvent;
+    public event onKeyPressedLeft onKeyPressedLeftEvent;
+    public event onKeyPressedRight onKeyPressedRightEvent;
 
-    private GameManager _instance;
-    private Transform _playerTransform;
+    private GameManager instance;
+    private Transform playerTransform;
 
     [SerializeField]
-    private Player _player;
+    private Player player;
 
-
+    //Sets up the instance and events for the void Update
     private void Awake()
     {
-        _instance = this;
+        instance = this;
 
-        _playerTransform = _player.transform;
+        playerTransform = player.transform;
 
-        _onKeyPressedUpEvent = _player.PlayerMovement;
-        _onKeyPressedDownEvent = _player.PlayerMovement;
-        _onKeyPressedLeftEvent = _player.PlayerMovement;
-        _onKeyPressedRightEvent = _player.PlayerMovement;
+        onKeyPressedUpEvent = player.PlayerMovement;
+        onKeyPressedDownEvent = player.PlayerMovement;
+        onKeyPressedLeftEvent = player.PlayerMovement;
+        onKeyPressedRightEvent = player.PlayerMovement;
     }
 
-    void Update()
+    //Checks for pressed keys and invokes events.
+    private void Update()
     {
-        if (Input.GetKey("w") && _onKeyPressedUpEvent != null)
+        if (Input.GetKey("w") && onKeyPressedUpEvent != null)
         {
-            _onKeyPressedUpEvent.Invoke(new Vector2(_playerTransform.localPosition.x, _playerTransform.localPosition.y + 0.25f));
+            onKeyPressedUpEvent.Invoke(new Vector2(0, 0.1f)*Time.deltaTime);
         }
-        if (Input.GetKey("s") && _onKeyPressedDownEvent != null)
+        if (Input.GetKey("s") && onKeyPressedDownEvent != null)
         {
-            _onKeyPressedDownEvent.Invoke(new Vector2(_playerTransform.localPosition.x, _playerTransform.localPosition.y - 0.25f));
+            onKeyPressedDownEvent.Invoke(new Vector2(0, - 0.1f)*Time.deltaTime);
         }
-        if (Input.GetKey("a") && _onKeyPressedLeftEvent != null)
+        if (Input.GetKey("a") && onKeyPressedLeftEvent != null)
         {
-            _onKeyPressedLeftEvent.Invoke(new Vector2(_playerTransform.localPosition.x - 0.25f, _playerTransform.localPosition.y));
+            onKeyPressedLeftEvent.Invoke(new Vector2(-0.1f, 0)*Time.deltaTime);
         }
-        if (Input.GetKey("d") && _onKeyPressedRightEvent != null)
+        if (Input.GetKey("d") && onKeyPressedRightEvent != null)
         {
-            _onKeyPressedRightEvent.Invoke(new Vector2(_playerTransform.localPosition.x + 0.25f, _playerTransform.localPosition.y));
+            onKeyPressedRightEvent.Invoke(new Vector2(0.1f, 0)*Time.deltaTime);
+        }
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Cursor.visible = true;
+            SceneManager.LoadScene("MenuScene");
         }
     }
 }
-
-// Up +25 Y
-// Down -25 Y
-// Left -25 X
-// Right +25 Y
