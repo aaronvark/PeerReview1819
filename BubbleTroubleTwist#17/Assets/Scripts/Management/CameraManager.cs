@@ -37,6 +37,9 @@ public class CameraManager : MonoBehaviour
 
         //add add the ResetCamera method ( subscription)  to the reloadGame EVENT
         EventManagerGen<float>.AddHandler(EVENT.reloadGame, ResetCamera);
+
+        //add the ResetCamera method ( subscription ) to the initializeGame EVENT
+        EventManagerGen<float>.AddHandler(EVENT.initializeGame, ResetCamera);
     }
 
     //we might need this function later on

@@ -11,6 +11,7 @@ namespace Bas.Interfaces
         void UpdateLevel();
         void AddPlayer(GameObject player, List<PlayerData> playersData);
         void CreateLevel(GameObject prefab, Vector3 position);
+        void ClearPlayers();
         List<Level> GiveLevels();
         Level LastPlayedLevel();
     }

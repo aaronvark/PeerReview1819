@@ -12,24 +12,37 @@ public class PlayerManager : MonoBehaviour, IPlayer
     /// <summary>
     /// list of player data, here we make and give the players its using stats
     /// </summary>
-    public List<PlayerData> playersStats;
+    [SerializeField] private List<PlayerData> playersStats;
+    public List<PlayerData> PlayersStats
+    {
+        get { return playersStats; }
+        set
+        {
+            playersStats = value;
+        }
+    }
 
     /// <summary>
     /// Placeholder player gameobject 
     /// </summary>
-    public GameObject player;
-
-    /// <summary>
-    /// bool for testing purpose only
-    /// </summary>
-    public bool testing = false;
-
-
-    private void Start()
+    [SerializeField] private GameObject player;
+    public GameObject Player
     {
-        //Initialize the players
-        
-        //InitPlayers();
+        get { return player; }
+        set
+        {
+            player = value;
+        }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
     }
 
     /// <summary>
@@ -37,15 +50,16 @@ public class PlayerManager : MonoBehaviour, IPlayer
     /// </summary>
     private void InstantiatePlayers()
     {
-        foreach (PlayerData playerStats in playersStats)
+        //We clear the list of players stored in the level manager
+        LevelManager.Instance.ClearPlayers();
+        foreach (PlayerData playerStats in PlayersStats)
         {
             //Spawn a player foreach player in the PlayerData list
-            //GameObject playerGameObject = ObjectPooler.Instance.SpawnFromPool(player.name, playerStats.spawnVector, Quaternion.identity);
             GameObject playerGameObject = ObjectPoolerLearning.Instance.SpawnFromPool<PlayerMovement>(playerStats.spawnVector, Quaternion.identity).gameObject;
             //Get the interface of each player and give it its stats
             playerGameObject.GetComponent<IStats<PlayerData>>().SetStats(playerStats);
             //Add the player in the levelManger                       
-            LevelManager.Instance.AddPlayer(playerGameObject, playersStats);
+            LevelManager.Instance.AddPlayer(playerGameObject, PlayersStats);
         }
     }
 
@@ -62,15 +76,5 @@ public class PlayerManager : MonoBehaviour, IPlayer
         //Initialize the players
         if(scene.buildIndex == 1)
             InitPlayers();
-    }
-
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnLevelFinishedLoading;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
     }
 }

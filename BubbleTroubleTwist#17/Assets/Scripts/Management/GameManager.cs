@@ -26,6 +26,17 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        SceneManager.LoadSceneAsync(0);
+        StartCoroutine(LoadSceneAsyncInBackground());
+    }
+
+    public System.Collections.IEnumerator LoadSceneAsyncInBackground()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(0);
+
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
     }
 }

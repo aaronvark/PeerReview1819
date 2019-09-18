@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,7 +28,14 @@ public static class ExtensionMethods
     public static RectTransform ActivateCoroutineLerpRectTransformPositions(RectTransform rectTransform, MonoBehaviour owner, Vector3 targetPosition, float speed)
     {
         if (rectTransform == null) return null;
-        owner.StartCoroutine(ExtensionHelpers.LerpRectTransformPositions(rectTransform, targetPosition, speed));
+        try
+        {
+            owner.StartCoroutine(ExtensionHelpers.LerpRectTransformPositions(rectTransform, targetPosition, speed));
+        }
+        catch (Exception e)
+        {
+
+        }
         return rectTransform;
     }
 
@@ -35,7 +43,15 @@ public static class ExtensionMethods
         float speed)
     {
         if (currentTransform == null) return null;
-        owner.StartCoroutine(ExtensionHelpers.LerpTransformPositions(currentTransform, targetPosition, speed));
+
+        try
+        {
+            owner.StartCoroutine(ExtensionHelpers.LerpTransformPositions(currentTransform, targetPosition, speed));
+        }
+        catch(Exception e)
+        {
+
+        }
         return currentTransform;
     }
 }

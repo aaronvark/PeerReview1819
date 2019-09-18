@@ -121,7 +121,7 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
         {
             gameObject.SetActive(false);
         }
-        EventManager.OnLevelUpdateHandler();
+        //EventManager.OnLevelUpdateHandler();
     }
 
     /// <summary>

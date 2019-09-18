@@ -26,7 +26,7 @@
             },
             "currentCameraX": 0.0,
             "levelPrefab": {
-                "instanceID": 10912
+                "instanceID": 0
             }
         },
         {
@@ -55,7 +55,7 @@
             },
             "currentCameraX": 40.0,
             "levelPrefab": {
-                "instanceID": 10856
+                "instanceID": 0
             }
         },
         {
@@ -84,7 +84,94 @@
             },
             "currentCameraX": 80.0,
             "levelPrefab": {
-                "instanceID": 10688
+                "instanceID": 0
+            }
+        },
+        {
+            "enemyAmounts": 28,
+            "enemiesAlive": 28,
+            "spawnRangeMax": {
+                "x": 12.0,
+                "y": 2.5,
+                "z": 12.0
+            },
+            "spawnRangeMin": {
+                "x": -12.0,
+                "y": 1.5,
+                "z": -12.0
+            },
+            "done": false,
+            "nextLevelPosition": {
+                "x": 160.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "currentLevelPostion": {
+                "x": 120.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "currentCameraX": 80.0,
+            "levelPrefab": {
+                "instanceID": 0
+            }
+        },
+        {
+            "enemyAmounts": 21,
+            "enemiesAlive": 21,
+            "spawnRangeMax": {
+                "x": 12.0,
+                "y": 2.5,
+                "z": 12.0
+            },
+            "spawnRangeMin": {
+                "x": -12.0,
+                "y": 1.5,
+                "z": -12.0
+            },
+            "done": false,
+            "nextLevelPosition": {
+                "x": 200.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "currentLevelPostion": {
+                "x": 160.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "currentCameraX": 80.0,
+            "levelPrefab": {
+                "instanceID": 0
+            }
+        },
+        {
+            "enemyAmounts": 21,
+            "enemiesAlive": 21,
+            "spawnRangeMax": {
+                "x": 12.0,
+                "y": 2.5,
+                "z": 12.0
+            },
+            "spawnRangeMin": {
+                "x": -12.0,
+                "y": 1.5,
+                "z": -12.0
+            },
+            "done": false,
+            "nextLevelPosition": {
+                "x": 240.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "currentLevelPostion": {
+                "x": 200.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "currentCameraX": 80.0,
+            "levelPrefab": {
+                "instanceID": 0
             }
         }
     ]

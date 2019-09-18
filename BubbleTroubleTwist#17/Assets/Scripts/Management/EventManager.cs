@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum EVENT { gameUpdateEvent, reloadGame, initializeGame, saveGame }; // ... Other events
+public enum EVENT { gameUpdateEvent, reloadGame, initializeGame, saveGame, selectGame }; // ... Other events
 public static class EventManager
 {
     //Static delegates

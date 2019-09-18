@@ -13,12 +13,12 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// <summary>
     /// list of all the levels we have
     /// </summary>
-    public List<Level> levels;
+    public List<Level> levels = new List<Level>();
 
     /// <summary>
     /// list of all players in the game
     /// </summary>
-    public List<GameObject> players;
+    public List<GameObject> players = new List<GameObject>();
 
     /// <summary>
     /// string to store the levelJson data in
@@ -27,8 +27,15 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
 
     private void OnEnable()
     {
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+
         //subscribe UpdateLevel to OnLevelUpdateHandler stored in EventManager so we can easy call the update later on
         EventManager.OnLevelUpdateHandler += UpdateLevel;
+        EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
+        EventManager.AddHandler(EVENT.initializeGame, ResetLevels);
+        EventManager.AddHandler(EVENT.initializeGame, FromJson);
+        EventManagerGen<int>.AddHandler(EVENT.selectGame, SelectLevel);
+        EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
     }
 
     public override void Awake()
@@ -74,9 +81,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         base.OnLevelFinishedLoading(scene, mode);
         //EventManager.AddHandler(EVENT.initializeGame, FromJson);
         FromJson();
-        EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
-        EventManager.AddHandler(EVENT.initializeGame, ResetLevels);
-        EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
+        
         EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
         EventManager.Broadcast(EVENT.initializeGame);
     }
@@ -112,13 +117,37 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         }
     }
 
+    public void SelectLevel(int levelIndex)
+    {
+        if (levels.Count < 1) return;
+        levels[levelIndex].done = false;
+        for (int i = levelIndex; i < levels.Count; i++)
+        {
+            levels[i].done = false;
+        }
+        SerializeToJson(0);
+        StartCoroutine(LoadSceneAsyncInBackground());
+    }
+
+    public System.Collections.IEnumerator LoadSceneAsyncInBackground()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
+
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+    
     private void NextLevel(Level level)
     {
         level.done = true;
         if (players == null) return;
         foreach (GameObject player in players)
         {
-            player.transform.position = level.nextLevelPosition;
+            if (player == null) continue;
+            if (player != null) player.transform.position = level.nextLevelPosition;
         }
         EventManagerGen<float>.Broadcast(EVENT.gameUpdateEvent, LastPlayedLevel().currentCameraX);
         EventManager.Broadcast(EVENT.initializeGame);
@@ -210,11 +239,26 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     }
 
     /// <summary>
+    /// Clears the players list 
+    /// </summary>
+    public void ClearPlayers()
+    {
+        players.Clear();
+    }
+
+    /// <summary>
     /// Add a player to the player list
     /// </summary>
     /// <param name="player"></param>
     public void AddPlayer(GameObject player, List<PlayerData> playersData)
     {
+        foreach(GameObject _player in players)
+        {
+            if (_player == null)
+            {
+                players.Remove(_player);
+            }
+        }
         //if (players.Count > playersData.Count) players.Clear();
         //else players.Add(player);
         players.Add(player);
@@ -236,6 +280,8 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     private void OnDisable()
     {
         EventManager.OnLevelUpdateHandler -= UpdateLevel;
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+
         //EventManagerGen<float>.RemoveHandler(EVENT.reloadGame);
     }
 
