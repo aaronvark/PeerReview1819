@@ -10,6 +10,9 @@ public class Gun : MonoBehaviour
 
     private Character myOwner;
 
+    [SerializeField]
+    private Camera camera;
+
     private Bullet cBullet;
 
     private bool retrieve = false;
@@ -23,13 +26,14 @@ public class Gun : MonoBehaviour
     private void Shoot() {
         cBullet = PoolManager.instance.ReuseObject(bulletPrefab, transform.position, ForwardRotationToMouse()).GetComponent<Bullet>();
         cBullet.myOwner = myOwner;
-        cBullet.transform.Translate(transform.right * 0.5f);
+        cBullet.transform.Translate(transform.right * 0.8f);
         cBullet.OnObjectReuse();
+        CameraShake.OnShake?.Invoke(0.05f, 5);
     }
 
     //to get the angle of the bullet right.
     public Quaternion ForwardRotationToMouse() {
-        Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
+        Vector3 dir = Input.mousePosition - camera.WorldToScreenPoint(camera.transform.position);
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         return Quaternion.AngleAxis(angle, Vector3.forward);
     }

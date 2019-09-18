@@ -13,6 +13,9 @@ public class Character : MonoBehaviour, IDestroyable
     [SerializeField]
     private float gravityScale = 1f;
 
+    [SerializeField]
+    private GameObject deathParticle;
+
     //components
     [SerializeField]
     public Gun gun;
@@ -27,6 +30,7 @@ public class Character : MonoBehaviour, IDestroyable
 
     void Start()
     {
+        PoolManager.instance.CreatePool(deathParticle, 1);
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -108,6 +112,10 @@ public class Character : MonoBehaviour, IDestroyable
     {
         rb.gravityScale = gravityScale;
         dead = true;
+        CameraShake.OnShake?.Invoke(0.2f);
+        PoolManager.instance.ReuseObject(deathParticle, transform.position, Quaternion.identity);
+
+        GameManager.Instance.EndScreen();
         gameObject.SetActive(false);
     }
 }

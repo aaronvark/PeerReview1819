@@ -14,6 +14,7 @@ public class FloatingEntity : PoolObject
         rb = GetComponent<Rigidbody2D>();
         //transform.Rotate(new Vector3(0, 0, Random.Range(0, 360)));
         rb.velocity = transform.right * speed;
+        base.OnObjectReuse();
     }
 
     public override void Destroy()
