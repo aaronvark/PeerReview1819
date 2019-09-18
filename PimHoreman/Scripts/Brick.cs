@@ -12,10 +12,9 @@ public class Brick : MonoBehaviour
 	[SerializeField] private int lowPoints;
 	[SerializeField] private int highPoints;
 
-	private Dictionary<DifferentBricks, Color> brickColor = new Dictionary<DifferentBricks, Color>();
+	private Dictionary<DifferentBricks, Color> bricktionary = new Dictionary<DifferentBricks, Color>();
 
 	private Renderer ren;
-
 
 	private void Awake()
 	{
@@ -24,10 +23,10 @@ public class Brick : MonoBehaviour
 
 	private void Start()
 	{
-		brickColor.Add(DifferentBricks.Green, Color.green);
-		brickColor.Add(DifferentBricks.Orange, Color.yellow);
-		brickColor.Add(DifferentBricks.Red, Color.red);
-		brickColor.Add(DifferentBricks.Silver, Color.grey);
+		bricktionary.Add(DifferentBricks.Green, Color.green);
+		bricktionary.Add(DifferentBricks.Orange, Color.yellow);
+		bricktionary.Add(DifferentBricks.Red, Color.red);
+		bricktionary.Add(DifferentBricks.Silver, Color.grey);
 	}
 
 	private void Update()
@@ -48,16 +47,16 @@ public class Brick : MonoBehaviour
 		switch (diffBrick)
 		{
 			case DifferentBricks.Red:
-				ren.material.color = brickColor[DifferentBricks.Red];
+				ren.material.color = bricktionary[DifferentBricks.Red];
 				break;
 			case DifferentBricks.Orange:
-				ren.material.color = brickColor[DifferentBricks.Orange];
+				ren.material.color = bricktionary[DifferentBricks.Orange];
 				break;
 			case DifferentBricks.Green:
-				ren.material.color = brickColor[DifferentBricks.Green];
+				ren.material.color = bricktionary[DifferentBricks.Green];
 				break;
 			case DifferentBricks.Silver:
-				ren.material.color = brickColor[DifferentBricks.Silver];
+				ren.material.color = bricktionary[DifferentBricks.Silver];
 				break;
 		}
 	}

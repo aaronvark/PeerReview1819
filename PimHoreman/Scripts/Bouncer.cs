@@ -11,6 +11,7 @@ public enum BouncerTypes
 
 public class Bouncer : MonoBehaviour
 {
+	public static Action<int, Transform> ParticlePlayEvent;
 	public static Action BouncerHitEvent;
 	public static Action<int> BouncerScoreEvent;
 
@@ -22,6 +23,9 @@ public class Bouncer : MonoBehaviour
 
 	[Tooltip("Points Type:")]
 	[SerializeField] private BouncerTypes bouncerTypes;
+
+	[SerializeField] private ParticleEnum particleEnum;
+
 
 	private void BouncerHit()
     {
@@ -37,6 +41,10 @@ public class Bouncer : MonoBehaviour
 		if(collision.gameObject.tag == Tags.Ball)
 		{
 			BouncerHit();
+			if(ParticlePlayEvent != null)
+			{
+				ParticlePlayEvent((int)particleEnum, transform);
+			}
 			if(BouncerScoreEvent != null)
 			{
 				BouncerScoreEvent((int)bouncerTypes);
