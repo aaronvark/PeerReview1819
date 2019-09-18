@@ -9,23 +9,29 @@ public class AttackState : State
         this.id = id;
     }
 
-    public override void Start(IState _iState)
+    public override void OnEnter(IUser _iUser, ITarget _iTarget)
     {
-        base.Start(_iState);
-    }
-
-    public override void OnEnter()
-    {
-        Debug.Log("attackTime");
+        base.OnEnter(_iUser, _iTarget);
     }
 
     public override void OnExit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Exit Time");
     }
 
     public override void OnUpdate()
     {
-        Debug.Log("Atting");
+        PlaceBomb();
+    }
+
+    private void PlaceBomb()
+    {
+        if (_iUser.bomb.bombDeployCheck)
+        {
+            _iUser.bomb.Deployed();
+            _iUser.DeployBomb();
+            fsm.SwitchState(StateEnum.Hide);
+        }
+        fsm.SwitchState(StateEnum.Hide);
     }
 }

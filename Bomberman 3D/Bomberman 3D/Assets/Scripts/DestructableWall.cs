@@ -4,23 +4,13 @@ using UnityEngine;
 
 public class DestructableWall : MonoBehaviour, IDamagable
 {
-    [HideInInspector] public float waitForDestroy;
-
     public void Damage()
     {
-        StartCoroutine(WaitToDestroy());
+        Die();
     }
 
     public void Die()
     {
-        Debug.Log("Wall Destroyed");
-        WallManager.Instance.RemoveFromList(this);
-        Destroy(this.gameObject);
-    }
-
-    private IEnumerator WaitToDestroy()
-    {
-        yield return new WaitForSeconds(waitForDestroy);
-        Die();
+        this.gameObject.SetActive(false);
     }
 }

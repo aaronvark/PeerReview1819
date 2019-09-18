@@ -7,9 +7,14 @@ public class FSM
     public Dictionary<StateEnum, State> states = new Dictionary<StateEnum, State>();
 
     private State currentState;
+    private IUser owner;
+    private ITarget target;
 
-    public FSM(StateEnum startState, params State[] statesList)
+    public FSM(IUser _owner, ITarget _target, StateEnum startState, params State[] statesList)
     {
+        owner = _owner;
+        target = _target;
+
         foreach(State state in statesList)
         {
             state.Init(this);
@@ -19,18 +24,18 @@ public class FSM
         SwitchState(startState);
     }
 
-    public void SwitchState(StateEnum newState)
+    public void SwitchState(StateEnum _newState)
     {
         if(currentState != null)
         {
             currentState.OnExit();
         }
 
-        currentState = states[newState];
+        currentState = states[_newState];
 
         if (currentState != null)
         {
-            currentState.OnEnter();
+            currentState.OnEnter(owner, target);
         }
     }
 
@@ -39,7 +44,6 @@ public class FSM
         if (currentState != null)
         {
             currentState.OnUpdate();
-            Debug.Log(currentState);
         }
     }
 }

@@ -6,7 +6,7 @@ public class ActorManager : MonoBehaviour
 {
     public int amountPlayersAlive;
 
-    [SerializeField] private List<Actor> _actors;
+    [SerializeField] private List<Actor> actors;
 
     private static ActorManager _instance;
 
@@ -22,13 +22,20 @@ public class ActorManager : MonoBehaviour
         }
     }
 
-    public void Start()
+    private void Start()
     {
         _instance = this;
+
+        amountPlayersAlive = actors.Count;
     }
 
-    public void RemoveFromList(Actor actor)
+    public void RemoveFromList(Actor _actor)
     {
-        _actors.Remove(actor);
+        actors.Remove(_actor);
+        amountPlayersAlive--;
+        if(amountPlayersAlive == 1)
+        {
+            GameManager.Instance.WinGame();
+        }
     }
 }

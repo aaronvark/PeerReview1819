@@ -3,38 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum StateEnum { Idle, Walk, Attack, Hide }
+public enum StateEnum { Walk, Attack, Hide }
 
-public class Enemy : Actor, IState
+public class Enemy : Actor, IUser, ITarget
 {
     public FSM fsm;
     public State startState;
 
     [SerializeField] private float raycastLength;
-    private Transform transformEnemy;
-    private Vector3[] directions;
-    private RaycastHit[] hit;
+    private Vector3 forward;
     private NavMeshAgent navMeshAgent;
 
+    //This is from the ITarget interface
+    Transform ITarget.player => Player.Instance.transform;
+    
     //This is from the IState interface
-    NavMeshAgent IState.navMeshAgent => navMeshAgent;
-    Vector3[] IState.directions => directions;
-    RaycastHit[] IState.hit => hit;
-    float IState.raycastLength => raycastLength;
+    NavMeshAgent IUser.navMeshAgent => navMeshAgent;
+    
+    float IUser.rayCastLength => raycastLength;
+    Vector3 IUser.forward => forward;
 
-    private void Start()
+    Bomb IUser.bomb => bomb;
+
+    private void Awake()
     {
-        transformEnemy = transform;
-        directions = new Vector3[] { Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
-        hit = new RaycastHit[directions.Length];
+        forward = Vector3.forward;
         navMeshAgent = GetComponent<NavMeshAgent>();
 
-        fsm = new FSM(StateEnum.Idle, new IdleState(StateEnum.Idle), new WalkState(StateEnum.Walk), 
+        fsm = new FSM(this, this, StateEnum.Walk, new WalkState(StateEnum.Walk), 
                     new AttackState(StateEnum.Attack), new HideState(StateEnum.Hide));
     }
 
     private void Update()
     {
-        fsm.OnUpdate();
+        if (fsm != null)
+        {
+            fsm.OnUpdate();
+        }
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        ActorManager.Instance.RemoveFromList(this);
+        Destroy(this.gameObject);
     }
 }

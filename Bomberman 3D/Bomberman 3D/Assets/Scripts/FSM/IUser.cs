@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public interface IState
+public interface IUser
 {
     Transform transform { get; }
-    RaycastHit[] hit { get; }
     NavMeshAgent navMeshAgent { get; }
-    float raycastLength { get; }
-    Vector3[] directions { get; }
+
+    float rayCastLength { get; }
+    Vector3 forward { get; }
+
+    Bomb bomb { get; }
+
+    void DeployBomb();
 }

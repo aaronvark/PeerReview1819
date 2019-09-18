@@ -8,19 +8,20 @@ public abstract class State
     public FSM fsm;
     public StateEnum id;
 
-    protected IState activeState;
+    protected IUser _iUser;
+    protected ITarget _iTarget;
 
-    public void Init(FSM owner)
+    public void Init(FSM _owner)
     {
-        fsm = owner;
+        fsm = _owner;
     }
 
-    public virtual void Start(IState _iState)
+    public virtual void OnEnter(IUser _iUser, ITarget _iTarget)
     {
-        activeState = _iState;
+        this._iUser = _iUser;
+        this._iTarget = _iTarget;
     }
 
-    public abstract void OnEnter();
     public abstract void OnUpdate();
     public abstract void OnExit();
 }

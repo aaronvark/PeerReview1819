@@ -9,12 +9,7 @@ public class Actor : MonoBehaviour, IDamagable
     public GameObject bombDummy;
     public Bomb bomb;
 
-    protected UIManager uiManager;
-
-    private void Start()
-    {
-        uiManager = FindObjectOfType<UIManager>();
-    }
+    public UIManager uiManager;
 
     // Update is called once per frame
     private void Update()
@@ -26,11 +21,13 @@ public class Actor : MonoBehaviour, IDamagable
         }
     }
 
-    public virtual void Damage()
+    public void Damage()
     {
         health -= 1;
+
         //Player zn gameID is altijd 1
-        uiManager.DecreaseHearts(gameID, this.health);
+        Debug.Log("ID : " + gameID + " &  health : " + health);
+        uiManager.DecreaseHearts(gameID, health);
         if (health <= 0)
         {
             Die();
@@ -42,10 +39,14 @@ public class Actor : MonoBehaviour, IDamagable
         Debug.Log("Game Over");
     }
 
-    protected void DeployBomb()
+    public void DeployBomb()
     {
         bombDummy.SetActive(true);
         bombDummy.transform.position = transform.position;
-        //Instantiate(bomb, transform.position, Quaternion.identity);
+    }
+
+    private float Timer(float _timer)
+    {
+        return _timer -= Time.deltaTime;
     }
 }
