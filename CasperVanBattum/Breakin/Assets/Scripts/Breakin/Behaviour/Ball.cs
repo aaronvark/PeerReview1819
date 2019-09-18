@@ -1,14 +1,14 @@
+using System;
 using Breakin.GameManagement;
 using UnityEngine;
 
-namespace Breakin
+namespace Breakin.Behaviour
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Ball : MonoBehaviour
     {
         [SerializeField] private float speed = 0.5f;
         [SerializeField] private Bat bat;
-        [SerializeField] private int lives;
 
         private bool locked = true;
         private Vector2 startPos;
@@ -16,6 +16,7 @@ namespace Breakin
 
         private Rigidbody2D rb;
 
+        private int lives;
         /// <summary>
         /// The number of lives of this game. When this is set to a value lower than 0, the GameOver function is called.
         /// </summary>
@@ -27,7 +28,7 @@ namespace Breakin
                 lives = value;
 
                 // Run game over sequence once the lives have reached a value lower than 0
-                if (lives < 0) GameOver();
+                if (lives < 0) EventManager.livesUp?.Invoke("You ran out of lives");
             }
         }
 
@@ -43,6 +44,20 @@ namespace Breakin
             Lock();
 
             EventManager.gameUpdate += OnUpdate;
+            EventManager.deactivate += OnDeactivate;
+            EventManager.broadcastLevel += LoadLevel;
+        }
+
+        private void OnDestroy()
+        {
+            EventManager.gameUpdate -= OnUpdate;
+            EventManager.deactivate -= OnDeactivate;
+            EventManager.broadcastLevel -= LoadLevel;
+        }
+
+        private void LoadLevel(LevelData data)
+        {
+            Lives = data.Lives;
         }
 
         private void OnUpdate()
@@ -55,6 +70,11 @@ namespace Breakin
 
             // Keep checking if the ball has gone out of the playing field
             if (!locked) CheckOutOfRange();
+        }
+
+        private void OnDeactivate()
+        {
+            Lock();
         }
 
         /// <summary>
@@ -110,16 +130,6 @@ namespace Breakin
             transform.localPosition = startPos;
             transform.localRotation = Quaternion.Euler(0, 0, 0);
             transform.localScale = startScale;
-        }
-
-        /// <summary>
-        /// Starts the game over sequence
-        /// TODO
-        /// </summary>
-        private void GameOver()
-        {
-            // TODO placeholder, replace with real game over screen
-            Debug.Log("Game over");
         }
     }
 }

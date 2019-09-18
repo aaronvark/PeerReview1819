@@ -1,23 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Breakin.GameManagement;
 using Breakin.Pooling;
 using UnityEngine;
 
-namespace Breakin
+namespace Breakin.Behaviour
 {
     public class Spawner : MonoBehaviour
     {
-        /// <summary>
-        /// Invoked when all rings have been spawned
-        /// </summary>
-        public event System.Action SpawnerExhausted;
-
-        /// <summary>
-        /// Invoked when the spawner wanted to spawn a ring but couldn't because the screen was full (game over condition)
-        /// </summary>
-        public event System.Action MaxRingsReached;
-
         [SerializeField] private LevelData data;
 
         public float Radius => data.SpawnRadius;
@@ -25,45 +16,63 @@ namespace Breakin
 
         private List<Ring> rings;
         private int ringsSpawned;
-        private Coroutine ringSpawning;
+        private float timeToNextRingSpawn;
+
+        private void Start()
+        {
+            EventManager.activate += Activate;
+            EventManager.gameUpdate += OnGameUpdate;
+            EventManager.reset += OnReset;
+            EventManager.broadcastLevel += SetLevelData;
+        }
+
+        private void OnDestroy()
+        {
+            EventManager.activate -= Activate;
+            EventManager.gameUpdate -= OnGameUpdate;
+            EventManager.reset -= OnReset;
+            EventManager.broadcastLevel -= SetLevelData;
+        }
+
+        private void OnGameUpdate()
+        {
+            timeToNextRingSpawn -= Time.deltaTime;
+            
+            if (timeToNextRingSpawn <= 0 && ringsSpawned < data.RingCount)
+            {
+                if (ringsSpawned >= data.MaxRings)
+                {
+                    EventManager.maxRingsReached?.Invoke("You didn't break the blocks in time...'");
+                }
+                
+                SpawnRing();
+                ringsSpawned++;
+
+                timeToNextRingSpawn = data.TimeBetweenRings;
+            }
+        }
 
         public void SetLevelData(LevelData data)
         {
-            Deactivate();
+            OnReset();
 
             this.data = data;
         }
 
-        public void Activate()
+        private void Activate()
         {
-            ringsSpawned = 0;
             rings = new List<Ring>();
 
             if (BlockPool == null)
             {
                 BlockPool = new MultiPrefabPool<Block>(data.BlockCountRing, transform, data.StandardBlock);
             }
-
-            ringSpawning = StartCoroutine(TimedRingSpawning());
         }
 
-        public void Deactivate()
+        private void OnReset()
         {
-            if (ringSpawning != null) StopCoroutine(ringSpawning);
             BlockPool?.ReclaimAll();
-        }
-
-        /// <summary>
-        /// Spawns rings every x seconds, as defined by the spawner settings
-        /// </summary>
-        private IEnumerator TimedRingSpawning()
-        {
-            while (ringsSpawned < data.RingCount)
-            {
-                SpawnRing();
-                ringsSpawned++;
-                yield return new WaitForSeconds(data.TimeBetweenRings);
-            }
+            ringsSpawned = 0;
         }
 
         private void SpawnRing()
@@ -96,9 +105,9 @@ namespace Breakin
         /// </summary>
         private void CheckRingsLeft()
         {
-            if (rings.Count == 0)
+            if (ringsSpawned == data.RingCount && rings.Count == 0)
             {
-                SpawnerExhausted?.Invoke();
+                EventManager.spawnerExhausted?.Invoke();
             }
         }
     }

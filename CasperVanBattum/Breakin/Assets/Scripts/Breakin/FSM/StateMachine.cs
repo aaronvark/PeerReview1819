@@ -11,7 +11,7 @@ namespace Breakin.FSM
         {
             SwitchState(initState);
         }
-        
+
         public void Update()
         {
             currentState?.Run();

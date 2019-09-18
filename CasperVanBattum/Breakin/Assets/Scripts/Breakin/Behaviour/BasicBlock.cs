@@ -1,7 +1,7 @@
 ﻿using Breakin.GameManagement;
 using Breakin.Sound;
 
-namespace Breakin
+namespace Breakin.Behaviour
 {
     public class BasicBlock : Block
     {

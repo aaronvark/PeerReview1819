@@ -1,7 +1,8 @@
+using System;
 using Breakin.GameManagement;
 using UnityEngine;
 
-namespace Breakin
+namespace Breakin.Behaviour
 {
 	public class BatMovement : MonoBehaviour
 	{
@@ -18,6 +19,13 @@ namespace Breakin
 			cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
 
 			EventManager.gameUpdate += OnUpdate;
+			EventManager.levelSetup += Reset;
+		}
+
+		private void OnDestroy()
+		{
+			EventManager.gameUpdate -= OnUpdate;
+			EventManager.levelSetup -= Reset;
 		}
 
 		private void OnUpdate()
@@ -28,6 +36,14 @@ namespace Breakin
 			ApplyPosition();
 		}
 
+		private void Reset()
+		{
+			Angle = 0;
+			
+			ApplyPosition();
+			ApplyRotation();
+		}
+		
 		private void OnDrawGizmos()
 		{
 			// Handy gizmo that visualizes the sphere where the bat can go

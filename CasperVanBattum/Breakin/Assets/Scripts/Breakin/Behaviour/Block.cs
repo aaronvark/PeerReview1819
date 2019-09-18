@@ -1,7 +1,7 @@
 ﻿using Breakin.Pooling;
 using UnityEngine;
 
-namespace Breakin
+namespace Breakin.Behaviour
 {
     public delegate void BlockBreak();
 

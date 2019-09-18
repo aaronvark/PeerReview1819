@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Breakin
+namespace Breakin.Behaviour
 {
     [RequireComponent(typeof(BatMovement))]
     public class Bat : MonoBehaviour

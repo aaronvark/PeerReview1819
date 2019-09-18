@@ -18,5 +18,10 @@ namespace Breakin.GameManagement
             // Return null if there is no next level, else return the next level
             return nextLevel >= levels.Length ? null : levels[nextLevel++];
         }
+
+        public void Reset()
+        {
+            nextLevel = 0;
+        }
     }
 }

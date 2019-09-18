@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Breakin
+namespace Breakin.Behaviour
 {
     public delegate void RingEmpty(Ring ring);
 

@@ -7,6 +7,22 @@ namespace Breakin.FSM.States
     {
         public override event StateChange RequestTransition;
 
+        private bool initialized;
+
+        public override void Start()
+        {
+            if (!initialized)
+            {
+                EventManager.activate?.Invoke();
+                initialized = true;
+            }
+
+            // Subscribe to game loop events
+            EventManager.spawnerExhausted += LoadNewLevel;
+            EventManager.maxRingsReached += GameOver;
+            EventManager.livesUp += GameOver;
+        }
+
         public override void Run()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -14,9 +30,27 @@ namespace Breakin.FSM.States
                 RequestTransition?.Invoke(new PauseState(this));
                 return;
             }
-            
-            // Update the game playing
+
+            // Update all gameplay behaviours
             EventManager.gameUpdate?.Invoke();
+        }
+
+        public override void Complete()
+        {
+            // Unsubscribe from game loop events
+            EventManager.spawnerExhausted -= LoadNewLevel;
+            EventManager.maxRingsReached -= GameOver;
+            EventManager.livesUp -= GameOver;
+        }
+
+        private void LoadNewLevel()
+        {
+            RequestTransition?.Invoke(new StartLevelState());
+        }
+
+        private void GameOver(string reason)
+        {
+            RequestTransition?.Invoke(new GameOverState(reason));
         }
     }
 }
