@@ -7,7 +7,7 @@ public class Movement2D : MonoBehaviour
     public float moveSpeed = 1f;
     public float rotationSpeed = 90f;
 
-    private Rigidbody2D rigidbody2D;
+    private new Rigidbody2D rigidbody2D;
 
     private Vector2 CurrentPosition => rigidbody2D.position;
     private float CurrentRotation => rigidbody2D.rotation;

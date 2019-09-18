@@ -8,7 +8,7 @@ public sealed class GameManager : Singleton<GameManager>
     [SerializeField]
     private string nextScene = "";
 
-    public Collider2D collider { get; private set; }
+    public new Collider2D collider { get; private set; }
     public List<Ghost> ghosts = new List<Ghost>();
 
     public ReadOnlyCollection<Ghost> GetGhosts => new ReadOnlyCollection<Ghost>(ghosts);
