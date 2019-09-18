@@ -42,9 +42,7 @@ public class GenericSingleton<T, A> : MonoBehaviour where T : Component, A
 
     public virtual void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Level Loaded");
-        Debug.Log(scene.name);
-        Debug.Log(mode);;
+
     }
 
     private void OnEnable()

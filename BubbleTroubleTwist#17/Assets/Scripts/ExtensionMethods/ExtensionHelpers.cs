@@ -37,20 +37,22 @@ public class ExtensionHelpers : MonoBehaviour
         //While loop
         while (currentTransform.position != targetPosition)
         {
-            if (currentTransform == null) yield break;
             try
             {
-                currentTransform.position = Vector3.MoveTowards(transformOldPosition, targetPosition, (Time.time - time) * speed);
+                if (currentTransform != null)
+                    currentTransform.position = Vector3.MoveTowards(transformOldPosition, targetPosition, (Time.time - time) * speed);
+                else
+                    break;
             }
-            catch(NullReferenceException e)
+            catch(MissingReferenceException)
             {
-                
+                break;
             }
 
             yield return null;
             
         }
 
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForEndOfFrame();
     }
 }

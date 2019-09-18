@@ -1604,7 +1604,6 @@ GameObject:
   - component: {fileID: 1005098592}
   - component: {fileID: 1005098591}
   - component: {fileID: 1005098593}
-  - component: {fileID: 1005098595}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1746,23 +1745,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraSpeed: 10
   cameraTravelDistance: 40
---- !u!114 &1005098595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1005098587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 398eaa86b10215c4a8ecf608db67f1cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  allTextColor: {r: 1, g: 0.59063005, b: 0, a: 1}
-  levelSelectButtonColors:
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  levelSelectButtons: []
 --- !u!1 &1230454557
 GameObject:
   m_ObjectHideFlags: 0

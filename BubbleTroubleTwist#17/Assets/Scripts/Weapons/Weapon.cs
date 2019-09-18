@@ -13,6 +13,10 @@ public class WeaponData
     public Transform firePoint;
     public int damage;
     public float amount;
+    [SerializeField] private float height = 50f;
+    public float Height { get => height; set => value = height; }
+    [SerializeField] private float shootSpeed = 5f;
+    public float ShootSpeed { get => shootSpeed; set => value = shootSpeed; }
 }
 
 /// <summary>
@@ -20,41 +24,41 @@ public class WeaponData
 /// </summary>
 public class Weapon 
 {
-    public WeaponData thisWeaponData { get; set; }
+    public WeaponData ThisWeaponData { get; set; }
 
     public bool ready = true;
 
     private float amount = 10;
+
     public Weapon(WeaponData _thisWeaponData)
     {
-        thisWeaponData = _thisWeaponData;
+        ThisWeaponData = _thisWeaponData;
     }
    
 
-    public void FireWeapon(int _damage)
+    public void FireWeapon()
     {
-
-        GameObject projectile = ObjectPoolerLearning.Instance.SpawnFromPool<Projectile>(thisWeaponData.firePoint.position, Quaternion.identity).gameObject;
-        //GameObject projectile = ObjectPoolerTypes.Instance.SpawnFromPool(thisWeaponData.projectileGameObject, thisWeaponData.firePoint.position, Quaternion.identity);
+        GameObject projectile = ObjectPoolerLearning.Instance.SpawnFromPool<Projectile>(ThisWeaponData.firePoint.position, Quaternion.identity).gameObject;
         if (projectile != null)
         {
-            projectile.gameObject.GetComponent<Projectile>().damage = thisWeaponData.damage;
+            projectile.transform.LerpTransform(projectile.GetComponent<MonoBehaviour>(), projectile.transform.position + Vector3.up * ThisWeaponData.Height, ThisWeaponData.ShootSpeed);
+            projectile.gameObject.GetComponent<Projectile>().SetDamage(ThisWeaponData.damage);
         }
     }
 
     public IEnumerator WaitForCooldown(float _time, float _timeBetween)
     {
-        amount = thisWeaponData.amount;
+        amount = ThisWeaponData.amount;
         ready = false;
         while (amount > 1)
         {
-            FireWeapon(thisWeaponData.damage);
+            FireWeapon();
             yield return new WaitForSeconds(_timeBetween);
             amount--;
         }
         yield return new WaitForSeconds(_time);
         ready = true;
-        amount = thisWeaponData.amount;
+        amount = ThisWeaponData.amount;
     }
 
     public bool WeaponReady()

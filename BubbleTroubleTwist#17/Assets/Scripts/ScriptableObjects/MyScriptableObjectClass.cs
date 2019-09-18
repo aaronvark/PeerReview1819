@@ -6,8 +6,28 @@ using Bas.Interfaces;
 public class MyScriptableObjectClass : ScriptableObject
 {
     [SerializeField] private MonoBehaviour prefab;
-    public MonoBehaviour Prefab { get { return prefab; } }
+    public MonoBehaviour Prefab
+    {
+        get
+        {
+            return prefab;
+        }
+        set
+        {
+            prefab = value;
+        }
+    }
 
     [SerializeField] private int size;
-    public int Size { get { return size; } }
+    public int Size
+    {
+        get
+        {
+            return size;
+        }
+        set
+        {
+            size = value;
+        }
+    }
 }

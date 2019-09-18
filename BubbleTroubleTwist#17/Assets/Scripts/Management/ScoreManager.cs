@@ -10,12 +10,14 @@ public class ScoreManager : MonoBehaviour
     /// <summary>
     /// scoreText to store the score on screen. We use TextMeshProUGUI for nice looking text
     /// </summary>
-    public TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    public TextMeshProUGUI ScoreText { get => scoreText; set => scoreText = value; }
 
     /// <summary>
     /// scoreText string to get rid of hard coded strings
     /// </summary>
-    public string scoreTextString;
+    [SerializeField] private string scoreTextString;
+    public string ScoreTextString { get => scoreTextString; set => scoreTextString = value; }
 
     /// <summary>
     /// property score to store the score
@@ -50,7 +52,7 @@ public class ScoreManager : MonoBehaviour
     /// </summary>
     private void UpdateScoreText()
     {
-        scoreText.text = scoreTextString + Score;
+        ScoreText.text = ScoreTextString + Score;
     }
 
     /// <summary>

@@ -10,13 +10,13 @@ public class EnemyData
     /// <summary>
     /// Gameobject for the splitting child objects we want to spawn
     /// </summary>
-    public GameObject splitChildPrefab;
+    [SerializeField] private GameObject splitChildPrefab;
+    public GameObject SplitChildPrefab { get => splitChildPrefab; set => splitChildPrefab = value; }
 
     /// <summary>
     /// sets the amount of speed where the enemy should be moving with
     /// </summary>
-    [SerializeField] private float speed;
-    public float Speed { get { return speed; } }
+    public float Speed { get; set; }
 
     /// <summary>
     /// the level of the current enemy
@@ -31,10 +31,11 @@ public class EnemyData
     /// <summary>
     /// current enemy spawnpoint 
     /// </summary>
-    public Transform spawnPoint;
+    public Transform SpawnPoint { get; set; }
 
     /// <summary>
     /// sets the amount of points the player is able to earn from this enemy
     /// </summary>
-    public int points;
+    [SerializeField] private int points;
+    public int Points { get => points; set => points = value; }
 }

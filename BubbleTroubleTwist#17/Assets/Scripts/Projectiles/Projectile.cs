@@ -5,16 +5,9 @@ using Bas.Interfaces;
 
 public class Projectile : PoolableBehaviour, IPoolable
 {
-    public float height = 100f;
-    public float speed;
-    public int damage;
+    private int damage;
 
     private float timeRemaining = 2;
-
-    private void Start()
-    {
-        transform.LerpTransform(this, transform.position + Vector3.up * height, speed);
-    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -24,7 +17,7 @@ public class Projectile : PoolableBehaviour, IPoolable
             _enemy.SplitEnemy();
             _enemy.TakeDamage(damage);
             EventManager.OnLevelUpdateHandler();
-            EventManager.OnScoreChangedHandler(_enemy.enemyInput.points);
+            EventManager.OnScoreChangedHandler(_enemy.enemyInput.Points);
             gameObject.SetActive(false);
         }
         if (collision.gameObject.tag != "Projectile")
@@ -42,9 +35,12 @@ public class Projectile : PoolableBehaviour, IPoolable
         else
         {
             timeRemaining = 2;
-            //Recycle();
             gameObject.SetActive(false);
         }
+    }
 
+    public void SetDamage(int _damage)
+    {
+        damage = _damage;
     }
 }

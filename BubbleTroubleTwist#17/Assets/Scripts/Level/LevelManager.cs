@@ -13,17 +13,20 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// <summary>
     /// list of all the levels we have
     /// </summary>
-    public List<Level> levels = new List<Level>();
+    [SerializeField] private List<Level> levels = new List<Level>();
+    public List<Level> Levels { get => levels; set => levels = value; }
 
     /// <summary>
     /// list of all players in the game
     /// </summary>
-    public List<GameObject> players = new List<GameObject>();
+    [SerializeField] private List<GameObject> players = new List<GameObject>();
+    public List<GameObject> Players { get => players; set => players = value; }
 
     /// <summary>
     /// string to store the levelJson data in
     /// </summary>
-    private string levelJsongString;
+    private string LevelJsongString { get; set; }
+
 
     private void OnEnable()
     {
@@ -47,12 +50,6 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     private void Start()
     {
         /*
-       //When the game starts we want to load the json data
-       FromJson();
-       //EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
-       EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
-       EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
-       //EventManager.Broadcast(EVENT.initializeGame);
 
        //TO DO:
 
@@ -119,11 +116,11 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
 
     public void SelectLevel(int levelIndex)
     {
-        if (levels.Count < 1) return;
-        levels[levelIndex].done = false;
-        for (int i = levelIndex; i < levels.Count; i++)
+        if (Levels.Count < 1) return;
+        Levels[levelIndex].done = false;
+        for (int i = levelIndex; i < Levels.Count; i++)
         {
-            levels[i].done = false;
+            Levels[i].done = false;
         }
         SerializeToJson(0);
         StartCoroutine(LoadSceneAsyncInBackground());
@@ -143,8 +140,8 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     private void NextLevel(Level level)
     {
         level.done = true;
-        if (players == null) return;
-        foreach (GameObject player in players)
+        if (Players == null) return;
+        foreach (GameObject player in Players)
         {
             if (player == null) continue;
             if (player != null) player.transform.position = level.nextLevelPosition;
@@ -158,7 +155,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// </summary>
     public void ResetGameOnClick()
     {
-        foreach(Level level in levels)
+        foreach(Level level in Levels)
         {
             level.enemiesAlive = level.enemyAmounts;
             level.done = false;           
@@ -171,7 +168,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// </summary>
     public void ResetLevels()
     {
-        foreach(Level level in levels)
+        foreach(Level level in Levels)
         {
             level.enemiesAlive = level.enemyAmounts;
         }
@@ -183,13 +180,13 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     {
         if (File.Exists(Application.dataPath + "/LevelsData.json"))
         {
-            levelJsongString = File.ReadAllText(Application.dataPath + "/LevelsData.json");
+            LevelJsongString = File.ReadAllText(Application.dataPath + "/LevelsData.json");
         }
-        if (levelJsongString == null || levelJsongString == string.Empty)
+        if (LevelJsongString == null || LevelJsongString == string.Empty)
         {
             return;
         }
-        levels = JsonHelper.FromJsonList<Level>(levelJsongString);
+        Levels = JsonHelper.FromJsonList<Level>(LevelJsongString);
     }
 
     /// <summary>
@@ -198,11 +195,11 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// <param name="x"></param>
     public void SerializeToJson(float x)
     {
-        if (levels == null || levels.Count < 1) return;
+        if (Levels == null || Levels.Count < 1) return;
         //Convert to Json
-        levelJsongString = JsonHelper.ToJsonList(levels);
-        Debug.Log(levelJsongString);
-        File.WriteAllText(Application.dataPath + "/LevelsData.json", levelJsongString);
+        LevelJsongString = JsonHelper.ToJsonList(Levels);
+        Debug.Log(LevelJsongString);
+        File.WriteAllText(Application.dataPath + "/LevelsData.json", LevelJsongString);
     }
 
     /// <summary>
@@ -212,7 +209,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     public void ResetPlayerPositions()
     {
         Level _level = LastPlayedLevel();
-        foreach (GameObject player in players)
+        foreach (GameObject player in Players)
         {
             if (player == null) return;
             player.transform.position = _level.currentLevelPostion;
@@ -226,7 +223,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// <returns></returns>
     public Level LastPlayedLevel()
     {
-        return levels?.Find(l => l.done.Equals(false));
+        return Levels?.Find(l => l.done.Equals(false));
     }
 
     /// <summary>
@@ -235,7 +232,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// <returns></returns>
     public List<Level> GiveLevels()
     {
-        return levels;
+        return Levels;
     }
 
     /// <summary>
@@ -243,7 +240,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// </summary>
     public void ClearPlayers()
     {
-        players.Clear();
+        Players.Clear();
     }
 
     /// <summary>
@@ -252,16 +249,16 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// <param name="player"></param>
     public void AddPlayer(GameObject player, List<PlayerData> playersData)
     {
-        foreach(GameObject _player in players)
+        foreach(GameObject _player in Players)
         {
             if (_player == null)
             {
-                players.Remove(_player);
+                Players.Remove(_player);
             }
         }
         //if (players.Count > playersData.Count) players.Clear();
         //else players.Add(player);
-        players.Add(player);
+        Players.Add(player);
     }
 
     /// <summary>

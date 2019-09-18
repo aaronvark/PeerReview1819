@@ -13,27 +13,13 @@ public class PlayerManager : MonoBehaviour, IPlayer
     /// list of player data, here we make and give the players its using stats
     /// </summary>
     [SerializeField] private List<PlayerData> playersStats;
-    public List<PlayerData> PlayersStats
-    {
-        get { return playersStats; }
-        set
-        {
-            playersStats = value;
-        }
-    }
+    public List<PlayerData> PlayersStats { get => playersStats; set => playersStats = value; }
 
     /// <summary>
     /// Placeholder player gameobject 
     /// </summary>
     [SerializeField] private GameObject player;
-    public GameObject Player
-    {
-        get { return player; }
-        set
-        {
-            player = value;
-        }
-    }
+    public GameObject Player { get => player; set => player = value; }
 
     private void OnEnable()
     {
@@ -55,7 +41,7 @@ public class PlayerManager : MonoBehaviour, IPlayer
         foreach (PlayerData playerStats in PlayersStats)
         {
             //Spawn a player foreach player in the PlayerData list
-            GameObject playerGameObject = ObjectPoolerLearning.Instance.SpawnFromPool<PlayerMovement>(playerStats.spawnVector, Quaternion.identity).gameObject;
+            GameObject playerGameObject = ObjectPoolerLearning.Instance.SpawnFromPool<PlayerMovement>(LevelManager.Instance.LastPlayedLevel().currentLevelPostion, Quaternion.identity).gameObject;
             //Get the interface of each player and give it its stats
             playerGameObject.GetComponent<IStats<PlayerData>>().SetStats(playerStats);
             //Add the player in the levelManger                       

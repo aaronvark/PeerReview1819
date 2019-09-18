@@ -39,7 +39,6 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
         {
             enemyInput = new EnemyData();
         }
-        if (enemyInput.splitChildPrefab == null) enemyInput.splitChildPrefab = this.gameObject;
         GetComponent<Renderer>().material.color = Random.ColorHSV();
 
         /// We add all children to the splitPoints list stored in the enemyInput data
@@ -49,11 +48,11 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
         }
 
         /// We give a random force so every enemy acts different
-        rBody.AddForce(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5) * 10f), ForceMode.Impulse);
+        RBody.AddForce(new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5) * 10f), ForceMode.Impulse);
 
         ///We always need points
-        if (enemyInput.points == 0)
-            enemyInput.points = 10;
+        if (enemyInput.Points == 0)
+            enemyInput.Points = 10;
     }
 
     private void FixedUpdate()
@@ -76,7 +75,7 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
 
         if (time > _low)
         {
-            rBody.AddForce(new Vector3(Random.Range(-1,1), Random.Range(-1,2), Random.Range(-1,1)) * (Speed), ForceMode.Impulse);
+            RBody.AddForce(new Vector3(Random.Range(-1,1), Random.Range(-1,2), Random.Range(-1,1)) * (Speed), ForceMode.Impulse);
             time = 0;
             yield return new WaitForSeconds(_low);
             checking = true;
@@ -87,19 +86,7 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
             checking = true;
         }
     }
-    private bool ToLowCheck(float _low)
-    {
-        int time = 0;
-        while(transform.position.y < _low)
-        {
-            time++;
-            if (time > 5)
-                return true;
-            else
-                return false;
-        }
-        return false;
-    }
+
     /// <summary>
     /// Handles the activations and regulation of the children 
     /// </summary>

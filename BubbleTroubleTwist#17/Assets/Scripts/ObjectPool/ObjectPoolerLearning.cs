@@ -38,7 +38,6 @@ public class ObjectPoolerLearning : GenericSingleton<ObjectPoolerLearning, IGene
                 poolableObj.gameObject.SetActive(false);
                 poolDictionary[poolableObj.GetType()].Enqueue(poolableObj);
             }
-            Debug.Log(prototype.GetType());
         }
     }
 

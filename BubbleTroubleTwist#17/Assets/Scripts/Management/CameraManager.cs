@@ -9,7 +9,8 @@ public class CameraManager : MonoBehaviour
     /// <summary>
     /// the speed the camera uses when moving
     /// </summary>
-    public float cameraSpeed = 5f;
+    [SerializeField] private float cameraSpeed = 5f;
+    public float CameraSpeed { get => cameraSpeed; set => cameraSpeed = value; }
 
     /// <summary>
     /// the amount of distance the camera should travel
@@ -58,6 +59,9 @@ public class CameraManager : MonoBehaviour
         MainCamera = FindObjectOfType<Camera>();
         if (MainCamera == null) return;
 
-        MainCamera.transform.LerpTransform(this, new Vector3(xPosition, MainCamera.transform.position.y, MainCamera.transform.position.z), cameraSpeed);
+        MainCamera.transform.LerpTransform(this, new Vector3(xPosition, MainCamera.transform.position.y, MainCamera.transform.position.z), CameraSpeed);
+
     }
+
+
 }

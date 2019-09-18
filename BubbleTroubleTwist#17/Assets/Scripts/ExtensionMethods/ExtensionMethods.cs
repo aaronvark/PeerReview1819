@@ -28,31 +28,33 @@ public static class ExtensionMethods
     public static RectTransform ActivateCoroutineLerpRectTransformPositions(RectTransform rectTransform, MonoBehaviour owner, Vector3 targetPosition, float speed)
     {
         if (rectTransform == null) return null;
-        try
-        {
-            owner.StartCoroutine(ExtensionHelpers.LerpRectTransformPositions(rectTransform, targetPosition, speed));
-        }
-        catch (Exception e)
-        {
 
+        if (owner != null)
+        { 
+            owner.StartCoroutine(ExtensionHelpers.LerpRectTransformPositions(rectTransform, targetPosition, speed));
+            return rectTransform;
         }
-        return rectTransform;
+        else
+        {
+            Debug.Log("Our Owner is null");
+            return null;
+        }
     }
 
-    public static Transform ActivateCoroutineLerpTransformPositions(Transform currentTransform, MonoBehaviour owner, Vector3 targetPosition,
-        float speed)
+    public static Transform ActivateCoroutineLerpTransformPositions(Transform currentTransform, MonoBehaviour owner, Vector3 targetPosition, float speed)
     {
         if (currentTransform == null) return null;
 
-        try
+        if (owner != null)
         {
             owner.StartCoroutine(ExtensionHelpers.LerpTransformPositions(currentTransform, targetPosition, speed));
+            return currentTransform;
         }
-        catch(Exception e)
+        else
         {
-
+            Debug.Log("Our Owner is null");
+            return null;
         }
-        return currentTransform;
     }
 }
 

@@ -5,10 +5,6 @@ using Bas.Interfaces;
 
 public class PlayerMovement : AbstractAvatarClass, IPoolable
 {
-    private void OnEnable()
-    {
-    }
-
     private void FixedUpdate()
     {
         if (PlayerInput != null)
@@ -19,6 +15,6 @@ public class PlayerMovement : AbstractAvatarClass, IPoolable
     {
         float _vertical = Input.GetAxis(PlayerInput.verticalAxis);
         float _horizontal = Input.GetAxis(PlayerInput.horizontalAxis);
-        rBody.velocity = new Vector3(_horizontal * Speed, rBody.velocity.y, _vertical * Speed);
+        RBody.velocity = new Vector3(_horizontal * Speed, RBody.velocity.y, _vertical * Speed);
     }
 }

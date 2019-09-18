@@ -19,7 +19,7 @@ public class EnemyCollision : AbstractAvatarClass
         {
             StartCoroutine(CollisionReady());
 
-            EventManager.OnPlayerHitHandler(damage);
+            EventManager.OnPlayerHitHandler(Damage);
             //checkForDamagableObject.TakeDamage(damage);
         }
     }
