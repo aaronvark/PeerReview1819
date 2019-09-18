@@ -39,7 +39,7 @@ public class EnemyManager : MonoBehaviour
         foreach (EnemyData enemyStats in enemysStats)
         {
             //Spawn a player foreach player in the PlayerData list
-            GameObject enemyGameObject = ObjectPooler.Instance.SpawnFromPool(enemy.name, enemyStats.spawnPoint.position, Quaternion.identity);
+            GameObject enemyGameObject = ObjectPooler.Instance.SpawnFromPool(enemy, enemyStats.spawnPoint.position, Quaternion.identity);
             //Get the interface of each player and give it its stats
             var component = enemyGameObject.GetComponent<IStats<EnemyData>>();
             component.SetStats(enemyStats);

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
-public class MyScriptableObjectClass : ScriptableObject, IPoolable
+public class MyScriptableObjectClass : ScriptableObject
 {
-    public System.Type instanceType;
-    public string tag;
-    public GameObject prefab;
-    public int size;
+    [SerializeField] private MonoBehaviour prefab;
+    public MonoBehaviour Prefab { get { return prefab; } }
+
+    [SerializeField] private int size;
+    public int Size { get { return size; } }
 }

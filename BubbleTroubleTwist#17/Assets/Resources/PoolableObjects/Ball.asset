@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b7a782fe7b5f414f8952cba274f9adf, type: 3}
   m_Name: Ball
   m_EditorClassIdentifier: 
-  tag: 
-  prefab: {fileID: 2381273675624277185, guid: fb9b86a68ff052b45bec7a831b4b38fc, type: 3}
+  tag: Ball
+  prefab: {fileID: 2381273675624277199, guid: fb9b86a68ff052b45bec7a831b4b38fc, type: 3}
   size: 100

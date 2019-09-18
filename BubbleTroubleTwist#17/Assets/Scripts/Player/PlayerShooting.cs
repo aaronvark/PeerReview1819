@@ -23,6 +23,13 @@ public class PlayerShooting : AbstractAvatarClass
         currentWeapon = new Weapon(usingWeaponData);
     }
 
+    private void OnEnable()
+    {
+        //if(projectilePool == null)
+        //projectilePool = new GenericObjectPooler<Projectile>(thisWeaponData.projectileGameObject, 30);
+        //EventManager.OnLevelUpdateHandler += StopOnHit;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(PlayerInput.fireKey) && currentWeapon.WeaponReady())
@@ -34,8 +41,15 @@ public class PlayerShooting : AbstractAvatarClass
         Coroutine cooldownRoutine = StartCoroutine(currentWeapon.WaitForCooldown(cooldown, timeBetween));
     }
 
+    private void StopOnHit()
+    {
+        StopAllCoroutines();
+        currentWeapon.ready = true;
+    }
+
     private void OnDestroy()
     {
         OnDeathHandler -= OnDeath;
+        EventManager.OnLevelUpdateHandler -= StopOnHit;
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Camera management class/ manages all camera related behaviour
@@ -18,7 +19,7 @@ public class CameraManager : MonoBehaviour
     /// <summary>
     /// reference to the first main camera in the scene
     /// </summary>
-    private Camera mainCamera;
+    private Camera MainCamera { get; set; }
 
     /// <summary>
     /// last known camera position
@@ -29,7 +30,7 @@ public class CameraManager : MonoBehaviour
     void Awake()
     {
         //get the main camera reference from this scene
-        mainCamera = Camera.main;
+        MainCamera = Camera.main;
 
         //add the ResetCamera method ( subscription ) to the gameUpdateEvent EVENT
         EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, ResetCamera);
@@ -51,7 +52,9 @@ public class CameraManager : MonoBehaviour
     /// <param name="xPosition"></param>
     public void ResetCamera(float xPosition)
     {
-        if (mainCamera == null) return;
-        mainCamera.transform.LerpTransform(new Vector3(xPosition, mainCamera.transform.position.y, mainCamera.transform.position.z), cameraSpeed);
+        MainCamera = FindObjectOfType<Camera>();
+        if (MainCamera == null) return;
+
+        MainCamera.transform.LerpTransform(this, new Vector3(xPosition, MainCamera.transform.position.y, MainCamera.transform.position.z), cameraSpeed);
     }
 }

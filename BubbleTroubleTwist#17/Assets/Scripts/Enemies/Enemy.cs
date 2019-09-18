@@ -6,7 +6,7 @@ using Bas.Interfaces;
 /// <summary>
 /// Enemy base class, inherits from abstract avatar base and uses IStats interface to regulate its entity data
 /// </summary>
-public class Enemy : AbstractAvatarClass, IStats<EnemyData>
+public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
 {
     /// <summary>
     /// Input of this enemy instance
@@ -23,6 +23,7 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
     public float toLow = 1f;
 
     public bool checking = true;
+
     /// <summary>
     /// Overriden start method
     /// </summary>
@@ -38,13 +39,13 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
         {
             enemyInput = new EnemyData();
         }
-
+        if (enemyInput.splitChildPrefab == null) enemyInput.splitChildPrefab = this.gameObject;
         GetComponent<Renderer>().material.color = Random.ColorHSV();
 
         /// We add all children to the splitPoints list stored in the enemyInput data
         for (int childIndex = 0; childIndex < transform.childCount; childIndex++)
         {
-            enemyInput.splitPoints.Add(transform.GetChild(childIndex));
+            enemyInput.SplitPoints.Add(transform.GetChild(childIndex));
         }
 
         /// We give a random force so every enemy acts different
@@ -75,7 +76,7 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
 
         if (time > _low)
         {
-            rBody.AddForce(Vector3.right * (Speed), ForceMode.Impulse);
+            rBody.AddForce(new Vector3(Random.Range(-1,1), Random.Range(-1,2), Random.Range(-1,1)) * (Speed), ForceMode.Impulse);
             time = 0;
             yield return new WaitForSeconds(_low);
             checking = true;
@@ -105,14 +106,15 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>
     public void SplitEnemy()
     {
         if (enemyInput == null) return;
-        if (enemyInput.level < MaxLevel)
+        if (enemyInput.Level < MaxLevel)
         {
-            foreach (Transform point in enemyInput.splitPoints)
+            foreach (Transform point in enemyInput.SplitPoints)
             {
-                GameObject child = ObjectPooler.Instance.SpawnFromPool(enemyInput.splitChildName, point.position, Quaternion.identity);
+                GameObject child = ObjectPoolerLearning.Instance.SpawnFromPool<Enemy>(point.position, Quaternion.identity).gameObject;
+
                 child.transform.localScale = new Vector3(child.transform.localScale.x / 2, child.transform.localScale.y / 2, child.transform.localScale.z / 2);
-                enemyInput.level++;
-                child.GetComponent<Enemy>().enemyInput.level = enemyInput.level;            
+                enemyInput.Level++;
+                child.GetComponent<Enemy>().enemyInput.Level = enemyInput.Level;            
             }
         }
         else

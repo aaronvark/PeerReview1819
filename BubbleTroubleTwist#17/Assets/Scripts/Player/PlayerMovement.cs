@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
 
-public class PlayerMovement : AbstractAvatarClass
+public class PlayerMovement : AbstractAvatarClass, IPoolable
 {
     private void OnEnable()
     {

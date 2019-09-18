@@ -6,9 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class ObjectPoolerLearning : GenericSingleton<ObjectPoolerLearning, IGenericPooler>, IGenericPooler
 {
-    private Dictionary<Type, Queue<UnityEngine.Object>> poolDictionary = new Dictionary<Type, Queue<UnityEngine.Object>>();
+    private Dictionary<Type, Queue<MonoBehaviour>> poolDictionary = new Dictionary<Type, Queue<MonoBehaviour>>();
 
-    private const int startAmount = 30;
+    //private List<PoolableContainerClass>
+
+    private const int startAmount = 1;
+
+    public override void Awake()
+    {
+        InitPools();
+    }
 
     public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
@@ -19,20 +26,23 @@ public class ObjectPoolerLearning : GenericSingleton<ObjectPoolerLearning, IGene
     private void InitPools()
     {
         //Load All poolable objects found in the Resources/PoolableObjects
-        UnityEngine.Object[] allPoolableObjects = Resources.LoadAll("PoolableObjects", typeof(IPoolable));
-        foreach (UnityEngine.Object prototype in allPoolableObjects)
+        UnityEngine.Object[] allPoolableObjects = Resources.LoadAll("PoolableObjects", typeof(MyScriptableObjectClass));
+        foreach (MyScriptableObjectClass prototype in allPoolableObjects)
         {
-            if(!poolDictionary.ContainsKey(prototype.GetType()))
-                poolDictionary.Add(prototype.GetType(), new Queue<UnityEngine.Object>());
+            if(!poolDictionary.ContainsKey(prototype.Prefab.GetType()))
+                poolDictionary.Add(prototype.Prefab.GetType(), new Queue<MonoBehaviour>());
 
-            for (int i = 0; i < startAmount; i++)
+            for (int i = 0; i < prototype.Size; i++)
             {
-                poolDictionary[prototype.GetType()].Enqueue(MonoBehaviour.Instantiate(prototype));
+                MonoBehaviour poolableObj = Instantiate(prototype.Prefab);
+                poolableObj.gameObject.SetActive(false);
+                poolDictionary[poolableObj.GetType()].Enqueue(poolableObj);
             }
+            Debug.Log(prototype.GetType());
         }
     }
 
-    public T GetObjectFromPool<T>() where T : UnityEngine.Object
+    public MonoBehaviour GetObjectFromPool<T>() where T : MonoBehaviour
     {
         if (poolDictionary.ContainsKey(typeof(T)))
         {
@@ -45,7 +55,7 @@ public class ObjectPoolerLearning : GenericSingleton<ObjectPoolerLearning, IGene
         return default;
     }
 
-    public GameObject SpawnFromPool<T>(Vector3 position, Quaternion rotation) where T : UnityEngine.Object
+    public MonoBehaviour SpawnFromPool<T>(Vector3 position, Quaternion rotation) where T : MonoBehaviour
     {
         if (!poolDictionary.ContainsKey(typeof(T)))
         {
@@ -53,14 +63,26 @@ public class ObjectPoolerLearning : GenericSingleton<ObjectPoolerLearning, IGene
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[typeof(T)].Dequeue() as GameObject;
-        objectToSpawn.SetActive(true);
-        objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = rotation;
+        if (poolDictionary.Count > 1)
+        {
+            MonoBehaviour objectToSpawn = poolDictionary[typeof(T)].Dequeue();
+            objectToSpawn.gameObject.SetActive(true);
+            objectToSpawn.gameObject.transform.position = position;
+            objectToSpawn.gameObject.transform.rotation = rotation;
+            poolDictionary[typeof(T)].Enqueue(objectToSpawn);
+            return objectToSpawn;
+        }
+        else
+        {
+            MonoBehaviour obj = poolDictionary[typeof(T)].Peek();
+            obj = UnityEngine.Object.Instantiate(obj);
+            return obj;
+        }
+    }
 
-        poolDictionary[typeof(T)].Enqueue(objectToSpawn);
+    public void Recycle<T>(IPoolable owner)
+    {
 
-        return objectToSpawn;
     }
 
     public static UnityEngine.Object[] FindObjectsOfTypeByName(string aClassName)

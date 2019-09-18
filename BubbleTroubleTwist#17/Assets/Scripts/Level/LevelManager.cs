@@ -31,36 +31,42 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         EventManager.OnLevelUpdateHandler += UpdateLevel;
     }
 
+    public override void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     private void Start()
     {
-        //When the game starts we want to load the json data
-        FromJson();
-        EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
-        EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
-        EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
-        EventManager.Broadcast(EVENT.initializeGame);
-
-
-        //TO DO:
         /*
-         * BUG analysis: als ik op de reset game knop druk dan wordt het event OnGameOver gecalled 
-         * die ervoor zorgt dat de scene opnieuw opstart. Op het moment dat de scene opnieuw is geladen
-         * krijg ik meerdere nullreferenties die alleemaal erop neer komen dat bepaalde instanties niet meer 
-         * te bereiken zijn. De objecten referen naar een oude "versie" van de instanties en omdat het level
-         * herladen is zijn er nieuwe instanties. Deze instanties worden niet geupdate bij de objecten. Dit zorgt
-         * voor een nullreferentie. 
-         * 
-         * Misschien kan het zijn dat omdat ik mijn scene herlaad en ik bepaalde events in mijn EventManager 
-         * nog niet un-subscribe deze conflicten en oude referenties blijven zoeken. 
-         * 
-         * Oplossingen:
-         * --Kijken of ik de objecten kan laten updaten zodat deze de nieuwe versie van de instanties krijgen.
-         * --Kijken of als ik ipv het herladen van dezelfde scene eerst terug kan gaan naar het menu en dan 
-         * opnieuw het spel in kan laden het probleem zich nog voordoet. 
-         * --De resetGame veranderen naar dat ipv de scene opnieuw wordt geladen alleen alle data die gereset 
-         * zou moeten worden resetten. Dit zorgt ervoor dat er geen nieuwere versie van de instanties gemaakt 
-         * kan worden. 
-         */
+       //When the game starts we want to load the json data
+       FromJson();
+       //EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
+       EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
+       EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
+       //EventManager.Broadcast(EVENT.initializeGame);
+
+       //TO DO:
+
+        * BUG analysis: als ik op de reset game knop druk dan wordt het event OnGameOver gecalled 
+        * die ervoor zorgt dat de scene opnieuw opstart. Op het moment dat de scene opnieuw is geladen
+        * krijg ik meerdere nullreferenties die alleemaal erop neer komen dat bepaalde instanties niet meer 
+        * te bereiken zijn. De objecten referen naar een oude "versie" van de instanties en omdat het level
+        * herladen is zijn er nieuwe instanties. Deze instanties worden niet geupdate bij de objecten. Dit zorgt
+        * voor een nullreferentie. 
+        * 
+        * Misschien kan het zijn dat omdat ik mijn scene herlaad en ik bepaalde events in mijn EventManager 
+        * nog niet un-subscribe deze conflicten en oude referenties blijven zoeken. 
+        * 
+        * Oplossingen:
+        * --Kijken of ik de objecten kan laten updaten zodat deze de nieuwe versie van de instanties krijgen.
+        * --Kijken of als ik ipv het herladen van dezelfde scene eerst terug kan gaan naar het menu en dan 
+        * opnieuw het spel in kan laden het probleem zich nog voordoet. 
+        * --De resetGame veranderen naar dat ipv de scene opnieuw wordt geladen alleen alle data die gereset 
+        * zou moeten worden resetten. Dit zorgt ervoor dat er geen nieuwere versie van de instanties gemaakt 
+        * kan worden. 
+        */
     }
 
     public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
@@ -69,6 +75,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         //EventManager.AddHandler(EVENT.initializeGame, FromJson);
         FromJson();
         EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
+        EventManager.AddHandler(EVENT.initializeGame, ResetLevels);
         EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
         EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
         EventManager.Broadcast(EVENT.initializeGame);
@@ -92,19 +99,28 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
             if(CheckEnemiesAlive(level))
             {
                 level.enemiesAlive--;
+                if(level.enemiesAlive < 1)
+                {
+                    NextLevel(level);
+                }
                 return;
             }
             else
             {
-                level.done = true;
-                if (players == null) return;
-                foreach(GameObject player in players)
-                {
-                    player.transform.position = level.nextLevelPosition;
-                }
-                EventManagerGen<float>.Broadcast(EVENT.gameUpdateEvent, LastPlayedLevel().currentCameraX);
+                NextLevel(level);
             }
         }
+    }
+
+    private void NextLevel(Level level)
+    {
+        level.done = true;
+        if (players == null) return;
+        foreach (GameObject player in players)
+        {
+            player.transform.position = level.nextLevelPosition;
+        }
+        EventManagerGen<float>.Broadcast(EVENT.gameUpdateEvent, LastPlayedLevel().currentCameraX);
         EventManager.Broadcast(EVENT.initializeGame);
     }
 
@@ -121,6 +137,16 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         EventManager.OnGameOverHandler();
     }
 
+    /// <summary>
+    /// Resets the levelss
+    /// </summary>
+    public void ResetLevels()
+    {
+        foreach(Level level in levels)
+        {
+            level.enemiesAlive = level.enemyAmounts;
+        }
+    }
     /// <summary>
     /// Reads the Json file if found. And gives the levels list all the level data. 
     /// </summary>

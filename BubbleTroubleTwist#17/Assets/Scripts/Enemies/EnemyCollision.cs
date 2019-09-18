@@ -17,8 +17,9 @@ public class EnemyCollision : AbstractAvatarClass
         var checkForDamagableObject = collision.gameObject.GetComponent<IDamagable<int>>();
         if (checkForDamagableObject != null && collisionReadyCheck)
         {
-            EventManager.OnPlayerHitHandler(damage);
             StartCoroutine(CollisionReady());
+
+            EventManager.OnPlayerHitHandler(damage);
             //checkForDamagableObject.TakeDamage(damage);
         }
     }

@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 2381273675624277185}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.50471044, y: 5.02, z: -3.44}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 6505261965191340245}
   - {fileID: 3747175605356577686}
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   enemyInput:
-    splitChildName: Ball
+    splitChildPrefab: {fileID: 2381273675624277185}
     speed: 0
     level: 0
     splitPoints: []

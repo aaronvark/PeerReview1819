@@ -11,6 +11,11 @@ public class ObjectPoolerTypes : GenericSingleton<ObjectPoolerTypes, IScriptable
     private List<object> pools = new List<object>();
     private Dictionary<string, Queue<GameObject>> poolDictionary;
 
+    public override void Awake()
+    {
+        InitPools();
+    }
+
     public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         base.OnLevelFinishedLoading(scene, mode);
@@ -33,14 +38,14 @@ public class ObjectPoolerTypes : GenericSingleton<ObjectPoolerTypes, IScriptable
             GameObject containerObject = new GameObject(pool.name);
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
-            for (int i = 0; i < pool.size; i++)
+            for (int i = 0; i < pool.Size; i++)
             {
-                GameObject obj = GameObject.Instantiate(pool.prefab, containerObject.transform);
-                obj.SetActive(false);
-                objectPool.Enqueue(obj);
+                MonoBehaviour obj = GameObject.Instantiate(pool.Prefab, containerObject.transform);
+                obj.gameObject.SetActive(false);
+                objectPool.Enqueue(obj.gameObject);
             }
-            if(!poolDictionary.ContainsKey(pool.tag))
-                poolDictionary.Add(pool.tag, objectPool);
+            if(!poolDictionary.ContainsKey(pool.Prefab.name))
+                poolDictionary.Add(pool.Prefab.name, objectPool);
         }
     }
 
@@ -51,7 +56,7 @@ public class ObjectPoolerTypes : GenericSingleton<ObjectPoolerTypes, IScriptable
             Debug.LogWarning("Pool with prefab: " + prefab + " doesn't exist.");
             return null;
         }
-
+        Debug.Log(prefab.name);
         GameObject objectToSpawn = poolDictionary[prefab.name].Dequeue();
 
         objectToSpawn.SetActive(true);

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Projectile
   m_EditorClassIdentifier: 
   tag: CubeStreamProjectile
-  prefab: {fileID: 5299671328839668858, guid: b46d08fd774f82245bc790c89d3e6e33, type: 3}
+  prefab: {fileID: 204343497927664190, guid: 48faf786ecca07c478b8dd65738c868f, type: 3}
   size: 100

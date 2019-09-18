@@ -8,24 +8,25 @@ using UnityEngine;
 public class EnemyData
 {
     /// <summary>
-    /// string for the splitting child objects we want to spawn
+    /// Gameobject for the splitting child objects we want to spawn
     /// </summary>
-    public string splitChildName;
+    public GameObject splitChildPrefab;
 
     /// <summary>
     /// sets the amount of speed where the enemy should be moving with
     /// </summary>
-    public float speed;
+    [SerializeField] private float speed;
+    public float Speed { get { return speed; } }
 
     /// <summary>
     /// the level of the current enemy
     /// </summary>
-    public int level;
+    public int Level { get; set; }
 
     /// <summary>
     /// List of transforms for all split point spawns
     /// </summary>
-    public List<Transform> splitPoints;
+    public List<Transform> SplitPoints { get; set; } = new List<Transform>();
 
     /// <summary>
     /// current enemy spawnpoint 

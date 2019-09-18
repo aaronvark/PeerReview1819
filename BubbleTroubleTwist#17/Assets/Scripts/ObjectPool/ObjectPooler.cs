@@ -76,6 +76,11 @@ public class ObjectPooler : GenericSingleton<ObjectPooler, IPooler>, IPooler
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
 
+    public override void Awake()
+    {
+        InitPools();
+    }
+
     public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         base.OnLevelFinishedLoading(scene, mode);
@@ -102,21 +107,21 @@ public class ObjectPooler : GenericSingleton<ObjectPooler, IPooler>, IPooler
         }
     }
 
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    public GameObject SpawnFromPool(GameObject prefab, Vector3 position, Quaternion rotation)
     {
-        if (!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(prefab.name))
         {
-            Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+            Debug.LogWarning("Pool with tag " + prefab + " doesn't exist.");
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+        GameObject objectToSpawn = poolDictionary[prefab.name].Dequeue();
 
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = rotation;
 
-        poolDictionary[tag].Enqueue(objectToSpawn);
+        poolDictionary[prefab.name].Enqueue(objectToSpawn);
 
         return objectToSpawn;
     }

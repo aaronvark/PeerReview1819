@@ -29,7 +29,6 @@ public class GenericSingleton<T, A> : MonoBehaviour where T : Component, A
 
     public virtual void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
 
         if (instance == null)
         {

@@ -25,7 +25,7 @@ public class ProjectilePool : GenericSingleton<ProjectilePool, IPooler>, IPooler
         return obj;
     }
 
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    public GameObject SpawnFromPool(GameObject tag, Vector3 position, Quaternion rotation)
     {
         throw new System.NotImplementedException();
     }

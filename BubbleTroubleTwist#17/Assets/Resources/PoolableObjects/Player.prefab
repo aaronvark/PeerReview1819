@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 7790578033780216300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.135, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7790578034072351145}
   m_Father: {fileID: 0}
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: ff785ae38ead86d4b91e86b9c888d056, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   timeBetween: 0.05
   currentProjectileName: CubeStreamProjectile
   usingWeaponData:
-    projectileGameObject: {fileID: 5299671328839668858, guid: b46d08fd774f82245bc790c89d3e6e33,
+    projectileGameObject: {fileID: 204343497927664179, guid: 48faf786ecca07c478b8dd65738c868f,
       type: 3}
     projectileName: CubeStreamProjectile
     firePoint: {fileID: 7790578034072351145}
@@ -193,7 +193,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7790578034072351144}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.044, z: 0}
+  m_LocalPosition: {x: 0, y: -0.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7790578033780216273}

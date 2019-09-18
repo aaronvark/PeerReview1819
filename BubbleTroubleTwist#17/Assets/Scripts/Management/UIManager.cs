@@ -10,7 +10,6 @@ public class UIManager : MonoBehaviour
     public Color allTextColor;
     protected List<TextMeshProUGUI> allUIText { get; set; }
 
-
     private void Start()
     {
         allUIText = FindObjectsOfType<TextMeshProUGUI>().ToList();
