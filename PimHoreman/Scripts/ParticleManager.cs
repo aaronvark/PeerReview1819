@@ -5,6 +5,7 @@ using UnityEngine;
 public class ParticleManager : MonoBehaviour
 {
 	[SerializeField] private List<ParticleSystem> particles = new List<ParticleSystem>();
+	private GameObject particleObject;
 
     private void Awake()
     {
