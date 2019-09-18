@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
+    public GameManager gameManager;
+
     [SerializeField] private int type = 0; //types from 0-5
     public Player owner;
     public HashSet<Block> connected = new HashSet<Block>();
@@ -34,7 +36,7 @@ public class Block : MonoBehaviour
 
     public void Move(float _x, float _y)
     {
-        rigidB.velocity = new Vector2(_x, _y) * GameManager.Instance.blockSpeed;
+        rigidB.velocity = new Vector2(_x, _y) * GameManager.blockSpeed;
     }
 
     public void Rotate(float _direction)
@@ -47,16 +49,17 @@ public class Block : MonoBehaviour
         rigidB.AddForce(target - transform.position.normalized * force);
     }
 
-    //TODO: Fix multiple collisions awarding points, because multiple blocks trigger at the same time.
-    private void OnTriggerEnter2D(Collider2D _other)
+    //TODO: Check and Fix multiple collisions
+    private void OnTriggerStay2D(Collider2D _other)
     {
-        
+        if(_other.tag == "Wall") { return; }
 
         if (Time.time < _firstTouch)
         {
-            owner.NewBlock(); //TODO: sometimes not called?
+            //TODO: sometimes called when block spawns and then no new blocks spawn
+            owner.NewBlock(); 
             _firstTouch = Time.time;
-            GameManager.Instance.Attract += Attract;
+            gameManager.Attract += Attract;
         }
         Block _otherBlock = _other.transform.parent?.parent?.GetComponent<Block>();
         if (_otherBlock != null)
@@ -72,26 +75,20 @@ public class Block : MonoBehaviour
             }
 
             //If 3 blocks are connected remove them and award points
-            if (connected.Count >= 3)
+            if (connected.Contains(_otherBlock) && connected.Count >= 3)
             {
                 Debug.Log("Instance " + gameObject.GetInstanceID() +" hit " + _other.GetInstanceID() + " - Time: " + Time.time);
                 if (gameObject.GetInstanceID() > _other.GetInstanceID())//only 1 object will execute, hopefully
                 {
-                    if (transform.position.x < 0)
-                    {
-                        GameManager.Instance.players[0].AddScore(30);
-                    }
-                    else
-                    {
-                        GameManager.Instance.players[1].AddScore(30);
-                    }
+                    gameManager.AddScore(transform.position.x, connected.Count);                    
 
                     connected.Remove(this);
                     foreach (Block b in new HashSet<Block>(connected))
                     {
                         BlockPool.Return(b.gameObject);
                     }
-                    BlockPool.Return(this.gameObject); 
+                    BlockPool.Return(this.gameObject);
+                    AudioPlayer.Instance.PlaySound("ConnectedBlock",1);
                 }
             }
         }

@@ -2,31 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput
+public static class PlayerInput
 {
-    public float[] GetInput(int player)
+    public enum InputType
     {
-        float[] input = new float[4];
-        //buttons set in Project settings
-        if (player == 0)
-        {
-            input[0] = (int)Input.GetAxisRaw("Player1Hor");
-            input[1] = (int)Input.GetAxisRaw("Player1Ver");
-            input[2] = (int)Input.GetAxisRaw("Player1Rot");
-            input[3] = Input.GetButtonDown("Player1Sav") ? 1 : 0;
-        }
-        else if(player == 1)
-        {
-            input[0] = Input.GetAxisRaw("Player2Hor");
-            input[1] = Input.GetAxisRaw("Player2Ver");
-            input[2] = Input.GetAxisRaw("Player2Rot");
-            input[3] = Input.GetButtonDown("Player2Sav") ? 1 : 0;
-        }
-        else
-        {
-            Debug.LogWarning("Player number unknown");
-        }
+        HORIZONTAL,
+        VERTICAL,
+        ROTATE,
+        SAVE
+    }
 
-        return input;
+    public static float Get(int player, InputType type)
+    {
+        //buttons set in Project settings
+        //Axis names are Player + number + InputType, example: Player1Hor
+        switch (type)
+        {
+            case InputType.HORIZONTAL:
+                return Input.GetAxisRaw("Player" + player + "Hor");
+            case InputType.VERTICAL:
+                return Input.GetAxisRaw("Player" + player + "Ver");
+            case InputType.ROTATE:
+                return Input.GetAxisRaw("Player" + player + "Rot");
+            case InputType.SAVE:
+                return Input.GetButtonDown("Player" + player + "Sav") ? 1 : 0;
+        };
+        return 0;
+    }
+
+    public static bool GetPause()
+    {
+        return Input.GetButtonDown("Pause");
     }
 }
