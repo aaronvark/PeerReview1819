@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 
+/// <summary>
+/// TargetPoints class, there are small white blocks in the game, when hit by the ball the targets give points and play particles.
+/// </summary>
 public class TargetPoints : MonoBehaviour
 {
 	public static Action<int, Transform> ParticleHitEvent;

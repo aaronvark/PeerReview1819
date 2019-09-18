@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// ScreenShake class, When the ball hits an object, the object fires an Action to the screenshake class to send a screenshake.
+/// </summary>
 public class ScreenShake : MonoBehaviour
 {
 	[SerializeField] private Transform camTransform;
@@ -15,16 +16,6 @@ public class ScreenShake : MonoBehaviour
 	private void ShakeScreen()
 	{
 		isActivated = true;
-	}
-
-	private void OnEnable()
-	{
-		Bouncer.BouncerHitEvent += ShakeScreen;
-	}
-
-	private void OnDisable()
-	{
-		Bouncer.BouncerHitEvent -= ShakeScreen;
 	}
 
 	private void Update()
@@ -43,5 +34,15 @@ public class ScreenShake : MonoBehaviour
 				isActivated = false;
 			}
 		}
+	}
+
+	private void OnEnable()
+	{
+		Bouncer.BouncerScreenshakeEvent += ShakeScreen;
+	}
+
+	private void OnDisable()
+	{
+		Bouncer.BouncerScreenshakeEvent -= ShakeScreen;
 	}
 }

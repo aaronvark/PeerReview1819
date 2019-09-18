@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 
+/// <summary>
+/// Brick, the brick has a different states for different colored blocks. 
+/// </summary>
 public class Brick : MonoBehaviour
 {
 	public static Action<int> ScoreUpdateEvent;
-	public static Action SpawnItemEvent;
+
 	public DifferentBricks diffBrick;
 
 	[SerializeField] private int lowPoints;
@@ -92,11 +94,6 @@ public class Brick : MonoBehaviour
 
 	private void DestroyBrick()
 	{
-		if(SpawnItemEvent != null)
-		{
-			SpawnItemEvent();
-		}
-
 		Destroy(gameObject);
 	}
 }

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
-using System;
 
+/// <summary>
+/// Ball class, the ball uses a rigidbody to move around and uses 1 Interface (IReset).
+/// </summary>
 public class Ball : MonoBehaviour, IReset
 {
 	public Vector3 ResetPosition { get; set; }
@@ -11,14 +13,16 @@ public class Ball : MonoBehaviour, IReset
 	private Rigidbody rb;
 	private float ballSpeed;
 	private bool isGameOver;
-	private int health;
 	private int maxHealth = 3;
+	private int health;
 
+	/// <summary>
+	/// IReset(Interface) Resets the object in ResetZone.cs whenever the ball gets out of bounds.
+	/// </summary>
 	public void ResetObject()
 	{
 		if(isGameOver)
 		{
-			Debug.Log("Game Over");
 			Destroy(gameObject);
 			return;
 		}
@@ -32,12 +36,24 @@ public class Ball : MonoBehaviour, IReset
 		}
 	}
 
+	/// <summary>
+	/// VecolictyBall is to add force to the ball when launced by the Plunger (SpringLauncher.cs)
+	/// </summary>
+	/// <param name="_deltaPosition"></param>
+	/// <param name="_force"></param>
+	/// <param name="_forceMode"></param>
 	public void VelocityBall(float _deltaPosition, int _force, ForceMode _forceMode)
 	{
 		rb.AddForce(Vector3.up * (_deltaPosition * _force), _forceMode);
 		ballSpeed = _deltaPosition * _force;
 	}
 
+	/// <summary>
+	/// ApplyForce is to 'apply' force to the ball whenever it hits a object that uses this function. 
+	/// </summary>
+	/// <param name="_forcePosition"></param>
+	/// <param name="_power"></param>
+	/// <param name="_forceMode"></param>
 	public void ApplyForce(Vector3 _forcePosition, int _power, ForceMode _forceMode)
 	{
 		Vector3 _direction = _forcePosition + transform.position;

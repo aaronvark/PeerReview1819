@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// UIManager class, manages the UI, for now the total of ball in the playing field left (ScoreManager could be implemented in the UIManager).
+/// </summary>
 public class UIManager : MonoBehaviour
 {
 	[SerializeField] private Text ballAmountText;

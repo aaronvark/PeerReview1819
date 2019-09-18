@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// SpringLauncher class, Pulls the plunger down an fires it back up with force and applies it to the ball.
+/// </summary>
 public class SpringLauncher : MonoBehaviour
 {
 	[Header("Amount of Velocity/Power:")]

@@ -1,18 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ScoreManager class, updates the score and the highscore.
+/// </summary>
 public class ScoreManager : MonoBehaviour
 {
+	private const string KEY = "localHighscore";
+
 	[SerializeField] private Text scoreText;
 	[SerializeField] private Text highscoreText;
 	[SerializeField] private string scoreString, highScoreString;
 
 	private int scoreAmount;
 	private int scoreTotal;
-
-	private const string KEY = "localHighscore";
 
 	private void Start()
     {

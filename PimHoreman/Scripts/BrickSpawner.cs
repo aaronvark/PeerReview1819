@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The BrickSpawner handles the spawning of the bricks in different rows.
+/// </summary>
 public class BrickSpawner : MonoBehaviour
 {
 	[Tooltip("Type of Brick")]
@@ -12,10 +15,10 @@ public class BrickSpawner : MonoBehaviour
 
 	private int[] level = new int[]
 	{
-			3,3,3,3,4,4,4,3,3,3,3,
-			3,2,2,2,4,1,4,2,2,2,3,
-			2,2,2,2,2,2,2,2,2,2,2,
-	};
+		3,3,3,3,4,4,4,3,3,3,3,
+		3,2,2,2,4,1,4,2,2,2,3,
+		2,2,2,2,2,2,2,2,2,2,2,
+	};	
 
 	private void Awake()
 	{
