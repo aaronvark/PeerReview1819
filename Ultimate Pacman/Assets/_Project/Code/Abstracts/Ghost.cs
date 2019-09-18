@@ -14,11 +14,6 @@ public abstract class Ghost : MonoBehaviour, IScore
 
     public float ScoreValue => scoreValue;
 
-    // Methods for the animator state machine to access in the Standard Behaviour
-    public virtual void StateEnter() { }
-    public virtual void StateUpdate() { }
-    public virtual void StateExit() { }
-
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
