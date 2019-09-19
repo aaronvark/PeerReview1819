@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour
         LevelSelectButtons[0].image.color = Color.green;
         for (int i = 1; i < LevelSelectButtons.Count; i++)
         {
-            LevelSelectButtons[i].enabled = levels[i - 1].done;
+            LevelSelectButtons[i].enabled = levels[i - 1].Done;
             if (LevelSelectButtons[i].enabled)
             {
                 LevelSelectButtons[i].image.color = LevelSelectButtonColors[0];
@@ -67,7 +67,7 @@ public class UIManager : MonoBehaviour
 
     public void SelectLevel(int levelIndex)
     {
-        EventManagerGen<int>.Broadcast(EVENT.selectGame, levelIndex);
+        EventManagerGen<int>.BroadCast(EVENT.selectGame, levelIndex);
     }
 
 

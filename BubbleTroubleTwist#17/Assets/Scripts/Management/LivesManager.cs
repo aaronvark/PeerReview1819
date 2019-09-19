@@ -8,12 +8,12 @@ public class LivesManager : MonoBehaviour
     /// <summary>
     /// The maximum amount of lives the players can have
     /// </summary>
-    public int maxLives = 3;
+    private const int MAXLIVES = 3;
 
     /// <summary>
     /// the amount of lives the players have ( lives are shared )
     /// </summary>
-    public int lives = 3;
+    private int lives = 3;
 
     /// <summary>
     /// list of images to visualize the lives
@@ -53,7 +53,7 @@ public class LivesManager : MonoBehaviour
         lives -= _amount;
         if (lives < 1)
         {
-            lives = maxLives;
+            lives = MAXLIVES;
             EventManager.OnGameOverHandler();
         }
         for (int attackTimes = 0; attackTimes <= _amount - 1; attackTimes++)

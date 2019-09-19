@@ -15,14 +15,14 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
     /// <summary>
     /// Maximum level the enemy and his childs should be able to reach
     /// </summary>
-    public int MaxLevel = 2;
+    public const int MAXLEVEL = 2;
 
     /// <summary>
     /// Enemy his to low spot to check if the enemy is to low
     /// </summary>
-    public float toLow = 1f;
+    public const float TOLOW = 1f;
 
-    public bool checking = true;
+    private bool checking = true;
 
     /// <summary>
     /// Overriden start method
@@ -57,9 +57,9 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
 
     private void FixedUpdate()
     {        
-        if(transform.position.y < toLow && checking)
+        if(transform.position.y < TOLOW && checking)
         {
-            StartCoroutine(ToLowChecking(toLow));
+            StartCoroutine(ToLowChecking(TOLOW));
         }
     }
 
@@ -93,7 +93,7 @@ public class Enemy : AbstractAvatarClass, IStats<EnemyData>, IPoolable
     public void SplitEnemy()
     {
         if (enemyInput == null) return;
-        if (enemyInput.Level < MaxLevel)
+        if (enemyInput.Level < MAXLEVEL)
         {
             foreach (Transform point in enemyInput.SplitPoints)
             {

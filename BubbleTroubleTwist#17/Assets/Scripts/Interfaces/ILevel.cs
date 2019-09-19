@@ -9,7 +9,7 @@ namespace Bas.Interfaces
     public interface ILevel
     {
         void UpdateLevel();
-        void AddPlayer(GameObject player, List<PlayerData> playersData);
+        void AddPlayer(GameObject player);
         void CreateLevel(GameObject prefab, Vector3 position);
         void ClearPlayers();
         List<Level> GiveLevels();

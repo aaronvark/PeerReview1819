@@ -46,17 +46,17 @@ public class LevelEditorWindow : EditorWindow
         GUILayout.Label("Level Management", EditorStyles.boldLabel);
         GUILayout.Label("Default Add Level", EditorStyles.boldLabel);
         GUILayout.Label("Level Enemy Amounts: ", EditorStyles.boldLabel);
-        placeHolderLevel.enemyAmounts = EditorGUILayout.IntField(placeHolderLevel.enemyAmounts);
+        placeHolderLevel.EnemyAmounts = EditorGUILayout.IntField(placeHolderLevel.EnemyAmounts);
         GUILayout.Label("Level Enemies Alive: ", EditorStyles.boldLabel);
-        placeHolderLevel.enemiesAlive = EditorGUILayout.IntField(placeHolderLevel.enemiesAlive);
+        placeHolderLevel.EnemiesAlive = EditorGUILayout.IntField(placeHolderLevel.EnemiesAlive);
         GUILayout.Label("Level Done: ", EditorStyles.boldLabel);
-        placeHolderLevel.done = EditorGUILayout.Toggle(placeHolderLevel.done);
+        placeHolderLevel.Done = EditorGUILayout.Toggle(placeHolderLevel.Done);
         GUILayout.Label("Next Level Player Position: ", EditorStyles.boldLabel);
-        placeHolderLevel.nextLevelPosition = EditorGUILayout.Vector3Field("NextLevelPosition:",placeHolderLevel.nextLevelPosition);
+        placeHolderLevel.NextLevelPosition = EditorGUILayout.Vector3Field("NextLevelPosition:",placeHolderLevel.NextLevelPosition);
         GUILayout.Label("Current Level Player Position: ", EditorStyles.boldLabel);
-        placeHolderLevel.currentLevelPostion = EditorGUILayout.Vector3Field("CurrentLevelPosition:", placeHolderLevel.currentLevelPostion);
+        placeHolderLevel.CurrentLevelPostion = EditorGUILayout.Vector3Field("CurrentLevelPosition:", placeHolderLevel.CurrentLevelPostion);
         GUILayout.Label("Level Prefab: ", EditorStyles.boldLabel);
-        placeHolderLevel.levelPrefab = EditorGUILayout.ObjectField(placeHolderLevel.levelPrefab, typeof(GameObject), true) as GameObject;
+        placeHolderLevel.LevelPrefab = EditorGUILayout.ObjectField(placeHolderLevel.LevelPrefab, typeof(GameObject), true) as GameObject;
         if (GUILayout.Button("Add Level"))
         {
             AddLevel();
@@ -68,17 +68,17 @@ public class LevelEditorWindow : EditorWindow
             {
                 EditorGUI.indentLevel = 0;              
                 GUILayout.Label("Level Enemy Amounts: ", EditorStyles.boldLabel);
-                placeHolderLevel.enemyAmounts = EditorGUILayout.IntField(placeHolderLevel.enemyAmounts);
+                placeHolderLevel.EnemyAmounts = EditorGUILayout.IntField(placeHolderLevel.EnemyAmounts);
                 GUILayout.Label("Level Enemies Alive: ", EditorStyles.boldLabel);
-                placeHolderLevel.enemiesAlive = EditorGUILayout.IntField(placeHolderLevel.enemiesAlive);
+                placeHolderLevel.EnemiesAlive = EditorGUILayout.IntField(placeHolderLevel.EnemiesAlive);
                 GUILayout.Label("Level Done: ", EditorStyles.boldLabel);
-                placeHolderLevel.done = EditorGUILayout.Toggle(placeHolderLevel.done);
+                placeHolderLevel.Done = EditorGUILayout.Toggle(placeHolderLevel.Done);
                 GUILayout.Label("Next Level Player Position: ", EditorStyles.boldLabel);
-                placeHolderLevel.nextLevelPosition = EditorGUILayout.Vector3Field("NextLevelPosition:", placeHolderLevel.nextLevelPosition);
+                placeHolderLevel.NextLevelPosition = EditorGUILayout.Vector3Field("NextLevelPosition:", placeHolderLevel.NextLevelPosition);
                 GUILayout.Label("Current Level Player Position: ", EditorStyles.boldLabel);
-                placeHolderLevel.currentLevelPostion = EditorGUILayout.Vector3Field("CurrentLevelPosition:", placeHolderLevel.currentLevelPostion);
+                placeHolderLevel.CurrentLevelPostion = EditorGUILayout.Vector3Field("CurrentLevelPosition:", placeHolderLevel.CurrentLevelPostion);
                 GUILayout.Label("Level Prefab: ", EditorStyles.boldLabel);
-                placeHolderLevel.levelPrefab = EditorGUILayout.ObjectField(placeHolderLevel.levelPrefab, typeof(GameObject), true) as GameObject;
+                placeHolderLevel.LevelPrefab = EditorGUILayout.ObjectField(placeHolderLevel.LevelPrefab, typeof(GameObject), true) as GameObject;
                 if(GUILayout.Button("Remove Level"))
                 {
                     RemoveLevel(level);
@@ -95,13 +95,13 @@ public class LevelEditorWindow : EditorWindow
         if (placeHolderLevel == null)
         {
             placeHolderLevel = new Level();
-            placeHolderLevel.enemyAmounts = 0;
-            placeHolderLevel.enemiesAlive = 0;
-            placeHolderLevel.done = false;
-            placeHolderLevel.nextLevelPosition = Vector3.zero;
+            placeHolderLevel.EnemyAmounts = 0;
+            placeHolderLevel.EnemiesAlive = 0;
+            placeHolderLevel.Done = false;
+            placeHolderLevel.NextLevelPosition = Vector3.zero;
         }
         var tmpLevel = placeHolderLevel;
-        LevelManager.Instance.CreateLevel(tmpLevel.levelPrefab, tmpLevel.currentLevelPostion);
+        LevelManager.Instance.CreateLevel(tmpLevel.LevelPrefab, tmpLevel.CurrentLevelPostion);
         levels.Add(tmpLevel);
     }
 

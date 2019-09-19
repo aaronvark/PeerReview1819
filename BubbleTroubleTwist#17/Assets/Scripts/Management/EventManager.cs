@@ -69,13 +69,13 @@ public static class EventManagerGen<T>
     }
 
     // Fires the event
-    public static void Broadcast(EVENT evnt, T c)
+    public static void BroadCast(EVENT evnt, T c)
     {
         if (genericEventTable[evnt] != null) genericEventTable[evnt](c);
     }
 
     //Un-Subscribes the listeners to the event
-    public static void RemoveHandler(EVENT evnt)
+    public static void RemoveHandlers(EVENT evnt)
     {
         if (!genericEventTable.ContainsKey(evnt))
         {

@@ -41,11 +41,11 @@ public class PlayerManager : MonoBehaviour, IPlayer
         foreach (PlayerData playerStats in PlayersStats)
         {
             //Spawn a player foreach player in the PlayerData list
-            GameObject playerGameObject = ObjectPoolerLearning.Instance.SpawnFromPool<PlayerMovement>(LevelManager.Instance.LastPlayedLevel().currentLevelPostion, Quaternion.identity).gameObject;
+            GameObject playerGameObject = ObjectPoolerLearning.Instance.SpawnFromPool<PlayerMovement>(LevelManager.Instance.LastPlayedLevel().CurrentLevelPostion, Quaternion.identity).gameObject;
             //Get the interface of each player and give it its stats
             playerGameObject.GetComponent<IStats<PlayerData>>().SetStats(playerStats);
             //Add the player in the levelManger                       
-            LevelManager.Instance.AddPlayer(playerGameObject, PlayersStats);
+            LevelManager.Instance.AddPlayer(playerGameObject);
         }
     }
 

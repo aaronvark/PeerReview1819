@@ -46,9 +46,6 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         base.Awake();
         DontDestroyOnLoad(this.gameObject);
     }
-
-    private void Start()
-    {
         /*
 
        //TO DO:
@@ -71,7 +68,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         * zou moeten worden resetten. Dit zorgt ervoor dat er geen nieuwere versie van de instanties gemaakt 
         * kan worden. 
         */
-    }
+    
 
     public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
@@ -79,7 +76,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         //EventManager.AddHandler(EVENT.initializeGame, FromJson);
         FromJson();
         
-        EventManagerGen<float>.Broadcast(EVENT.reloadGame, LastPlayedLevel().currentCameraX);
+        EventManagerGen<float>.BroadCast(EVENT.reloadGame, LastPlayedLevel().CurrentCameraX);
         EventManager.Broadcast(EVENT.initializeGame);
     }
 
@@ -100,8 +97,8 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         {
             if(CheckEnemiesAlive(level))
             {
-                level.enemiesAlive--;
-                if(level.enemiesAlive < 1)
+                level.EnemiesAlive--;
+                if(level.EnemiesAlive < 1)
                 {
                     NextLevel(level);
                 }
@@ -117,10 +114,10 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     public void SelectLevel(int levelIndex)
     {
         if (Levels.Count < 1) return;
-        Levels[levelIndex].done = false;
+        Levels[levelIndex].Done = false;
         for (int i = levelIndex; i < Levels.Count; i++)
         {
-            Levels[i].done = false;
+            Levels[i].Done = false;
         }
         SerializeToJson(0);
         StartCoroutine(LoadSceneAsyncInBackground());
@@ -139,14 +136,14 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     
     private void NextLevel(Level level)
     {
-        level.done = true;
+        level.Done = true;
         if (Players == null) return;
         foreach (GameObject player in Players)
         {
             if (player == null) continue;
-            if (player != null) player.transform.position = level.nextLevelPosition;
+            if (player != null) player.transform.position = level.NextLevelPosition;
         }
-        EventManagerGen<float>.Broadcast(EVENT.gameUpdateEvent, LastPlayedLevel().currentCameraX);
+        EventManagerGen<float>.BroadCast(EVENT.gameUpdateEvent, LastPlayedLevel().CurrentCameraX);
         EventManager.Broadcast(EVENT.initializeGame);
     }
 
@@ -157,8 +154,8 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     {
         foreach(Level level in Levels)
         {
-            level.enemiesAlive = level.enemyAmounts;
-            level.done = false;           
+            level.EnemiesAlive = level.EnemyAmounts;
+            level.Done = false;           
         }
         EventManager.OnGameOverHandler();
     }
@@ -170,7 +167,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     {
         foreach(Level level in Levels)
         {
-            level.enemiesAlive = level.enemyAmounts;
+            level.EnemiesAlive = level.EnemyAmounts;
         }
     }
     /// <summary>
@@ -212,7 +209,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
         foreach (GameObject player in Players)
         {
             if (player == null) return;
-            player.transform.position = _level.currentLevelPostion;
+            player.transform.position = _level.CurrentLevelPostion;
         }
     }
 
@@ -223,7 +220,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// <returns></returns>
     public Level LastPlayedLevel()
     {
-        return Levels?.Find(l => l.done.Equals(false));
+        return Levels?.Find(l => l.Done.Equals(false));
     }
 
     /// <summary>
@@ -247,7 +244,7 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// Add a player to the player list
     /// </summary>
     /// <param name="player"></param>
-    public void AddPlayer(GameObject player, List<PlayerData> playersData)
+    public void AddPlayer(GameObject player)
     {
         foreach(GameObject _player in Players)
         {
@@ -289,6 +286,6 @@ public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
     /// <returns></returns>
     private bool CheckEnemiesAlive(Level level)
     {
-        return level.enemiesAlive > 0 ? true : false;
+        return level.EnemiesAlive > 0 ? true : false;
     }
 }

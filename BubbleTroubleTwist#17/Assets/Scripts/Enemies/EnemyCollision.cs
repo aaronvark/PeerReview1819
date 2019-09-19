@@ -8,7 +8,7 @@ using Bas.Interfaces;
 /// </summary>
 public class EnemyCollision : AbstractAvatarClass
 {
-    public float collisionCooldownTime = 2f;
+    private const float COLLISIONCOOLDOWNTIME = 2f;
 
     private bool collisionReadyCheck = true;
 
@@ -20,14 +20,13 @@ public class EnemyCollision : AbstractAvatarClass
             StartCoroutine(CollisionReady());
 
             EventManager.OnPlayerHitHandler(Damage);
-            //checkForDamagableObject.TakeDamage(damage);
         }
     }
 
     private IEnumerator CollisionReady()
     {
         collisionReadyCheck = false;
-        yield return new WaitForSeconds(collisionCooldownTime);
+        yield return new WaitForSeconds(COLLISIONCOOLDOWNTIME);
         collisionReadyCheck = true;
     }
 }

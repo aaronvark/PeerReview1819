@@ -15,7 +15,8 @@ public class CameraManager : MonoBehaviour
     /// <summary>
     /// the amount of distance the camera should travel
     /// </summary>
-    public float cameraTravelDistance = 50f;
+    [SerializeField] private float cameraTravelDistance = 50f;
+    public float CameraTravelDistance { get => cameraTravelDistance; set => cameraTravelDistance = value; }
 
     /// <summary>
     /// reference to the first main camera in the scene
@@ -25,7 +26,7 @@ public class CameraManager : MonoBehaviour
     /// <summary>
     /// last known camera position
     /// </summary>
-    private Vector3 currentCameraPosition;
+    private Vector3 CurrentCameraPosition { get; set; }
 
     // Start is called before the first frame update
     void Awake()
