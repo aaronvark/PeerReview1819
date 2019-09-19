@@ -8,15 +8,12 @@ public sealed class GameManager : Singleton<GameManager>
     [SerializeField]
     private string nextScene = "";
 
-    public new Collider2D collider { get; private set; }
-    public List<Ghost> ghosts = new List<Ghost>();
-
-    public ReadOnlyCollection<Ghost> GetGhosts => new ReadOnlyCollection<Ghost>(ghosts);
-
+    private List<Ghost> ghosts = new List<Ghost>();
     private float duration = 0f;
     private Coroutine ghostsVulnerable = null;
 
-    public float CurrentVulnerabilityDuration => duration;
+    public new Collider2D collider { get; private set; }
+    public ReadOnlyCollection<Ghost> GetGhosts => new ReadOnlyCollection<Ghost>(ghosts);
 
     private void Awake()
     {
@@ -46,7 +43,7 @@ public sealed class GameManager : Singleton<GameManager>
     }
 
     // Set the ghosts in their vulnerable state for the running duration
-    IEnumerator RunSetGhostsVulnerable(float _duration)
+    private IEnumerator RunSetGhostsVulnerable(float _duration)
     {
         foreach (var ghost in ghosts)
         {
@@ -71,7 +68,7 @@ public sealed class GameManager : Singleton<GameManager>
         foreach (var ghost in ghosts)
         {
             ghost.animator.SetFloat("VulnerableTime", 0f);
-            if (ghost.stateMachine != null && ghost.stateMachine.currentState is FleeState)
+            if (ghost.stateMachine != null && ghost.stateMachine.CurrentState is FleeState)
             {
                 ghost.stateMachine.SwitchState(ghost.defaultState);
             }
