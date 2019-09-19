@@ -50,7 +50,14 @@ namespace Breakin.Behaviour
             }
         }
 
-        public void SetLevelData(LevelData data)
+        private void OnReset()
+        {
+            BlockPool?.ReclaimAll();
+            timeToNextRingSpawn = 0;
+            ringsSpawned = 0;
+        }
+
+        private void SetLevelData(LevelData data)
         {
             OnReset();
 
@@ -65,13 +72,6 @@ namespace Breakin.Behaviour
             {
                 BlockPool = new MultiPrefabPool<Block>(data.BlockCountRing, transform, data.StandardBlock);
             }
-        }
-
-        private void OnReset()
-        {
-            BlockPool?.ReclaimAll();
-            timeToNextRingSpawn = 0;
-            ringsSpawned = 0;
         }
 
         private void SpawnRing()

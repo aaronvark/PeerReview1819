@@ -18,13 +18,20 @@ namespace Breakin.Behaviour
             cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
 
             EventManager.gameUpdate += OnUpdate;
-            EventManager.levelSetup += Reset;
+            EventManager.levelSetup += OnReset;
         }
 
         private void OnDestroy()
         {
             EventManager.gameUpdate -= OnUpdate;
-            EventManager.levelSetup -= Reset;
+            EventManager.levelSetup -= OnReset;
+        }
+
+        private void OnDrawGizmos()
+        {
+            // Handy gizmo that visualizes the sphere where the bat can go
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(Vector3.zero, radius);
         }
 
         private void OnUpdate()
@@ -35,19 +42,12 @@ namespace Breakin.Behaviour
             ApplyPosition();
         }
 
-        private void Reset()
+        private void OnReset()
         {
             Angle = 0;
 
             ApplyPosition();
             ApplyRotation();
-        }
-
-        private void OnDrawGizmos()
-        {
-            // Handy gizmo that visualizes the sphere where the bat can go
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(Vector3.zero, radius);
         }
 
         /// <summary>

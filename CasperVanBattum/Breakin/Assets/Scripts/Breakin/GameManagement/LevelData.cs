@@ -16,10 +16,7 @@ namespace Breakin.GameManagement
         public int BlockCountRing => blockCountRing;
         [SerializeField] private int ringCount = 5; // Number of rings to spawn
         public int RingCount => ringCount;
-
-        [SerializeField]
-        private int maxRings = 7; // When a ring is spawned but this var is already reached, it's game over
-
+        [SerializeField] private int maxRings = 7; // When a ring is spawned but this var is already reached, it's game over
         public int MaxRings => maxRings;
         [SerializeField] private float ringSpacing = .3f; // Distance between each ring (center to center)
         public float RingSpacing => ringSpacing;

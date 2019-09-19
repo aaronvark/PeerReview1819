@@ -1,5 +1,3 @@
-using System;
-
 namespace Breakin.GameManagement
 {
     public interface IScoreManager
@@ -9,7 +7,7 @@ namespace Breakin.GameManagement
         /// <summary>
         /// Invoked each time the Score property is changed
         /// </summary>
-        event Action ScoreChanged;
+        event System.Action ScoreChanged;
     }
 
     public class ScoreManager : IScoreManager
@@ -17,7 +15,7 @@ namespace Breakin.GameManagement
         private static IScoreManager instance;
         public static IScoreManager Instance => instance ?? (instance = new ScoreManager());
 
-        public event Action ScoreChanged;
+        public event System.Action ScoreChanged;
 
         private int score;
 
