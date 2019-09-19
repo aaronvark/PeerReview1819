@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// The gamemanager makes sure that the global game state is working properly. Like starting the initial wave and handling pause and game over screen
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     [SerializeField]

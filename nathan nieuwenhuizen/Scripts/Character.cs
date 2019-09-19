@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Handles the movement and the health.
+/// </summary>
 public class Character : MonoBehaviour, IDestroyable
 {
     //movement
@@ -15,11 +18,9 @@ public class Character : MonoBehaviour, IDestroyable
 
     [SerializeField]
     private GameObject deathParticle;
-
-    //components
-    [SerializeField]
-    public Gun gun;
     private Rigidbody2D rb;
+
+    public Gun gun;
 
     //states
     private bool dead = false;

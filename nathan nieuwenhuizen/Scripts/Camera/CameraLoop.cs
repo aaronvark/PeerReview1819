@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The camera repositions the camera to give the player gthe feeling of an endless area.
+/// </summary>
 public class CameraLoop : MonoBehaviour
 {
     [SerializeField]
@@ -12,6 +15,9 @@ public class CameraLoop : MonoBehaviour
     private Camera cam;
     private float camWidth;
     private float camHeight;
+
+    private float widthDevideOffset = 4.5f;
+    private float heigthDevideOffset = 1.1f;
     private void Start()
     {
         cam = Camera.main;
@@ -21,7 +27,7 @@ public class CameraLoop : MonoBehaviour
     }
     void Update()
     {
-        cameraTransform.position = new Vector3(player.position.x + transform.position.x - camWidth / 4.5f, player.position.y + transform.position.y + camHeight * 1.1f, -7f);
+        cameraTransform.position = new Vector3(player.position.x + transform.position.x - camWidth / widthDevideOffset, player.position.y + transform.position.y + camHeight * heigthDevideOffset, -7f);
     }
 
 }

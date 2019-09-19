@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+/// <summary>
+/// Handles the scene calls
+/// </summary>
 public class SceneHandeler : MonoBehaviour
 {
-
 
     public void GoToScene(int _index)
     {

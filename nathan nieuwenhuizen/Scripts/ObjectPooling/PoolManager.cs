@@ -53,7 +53,7 @@ public class PoolManager : MonoBehaviour
 
         if (poolDictionary.ContainsKey(key))
         {
-            return poolDictionary[key].ReuseObject(prefab, pos, rot);
+            return poolDictionary[key].ReuseObject(pos, rot);
         }
         return null;
     }
@@ -91,7 +91,7 @@ public class PoolManager : MonoBehaviour
             newObject.SetParent(group.transform);
             return newObject;
         }
-        public GameObject ReuseObject(GameObject prefab, Vector3 pos, Quaternion rot)
+        public GameObject ReuseObject(Vector3 pos, Quaternion rot)
         {
             ObjectInstance<T> obj = objects.Dequeue();
             objects.Enqueue(obj);

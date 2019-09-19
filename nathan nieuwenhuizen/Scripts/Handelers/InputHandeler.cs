@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Handles all the input the player makes (exception to button presses)
+/// </summary>
 public class InputHandeler : MonoBehaviour
 {
     private Character character;

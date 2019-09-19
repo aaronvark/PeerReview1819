@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Is responsible of the in game ui.
+/// </summary>
 public class InGameUI : MonoBehaviour
 {
     [SerializeField]
     private Text waveText;
-
 
     private void OnEnable()
     {

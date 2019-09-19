@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The floating entity is a parent class of bullet and asteroid class. It contains the rigidbody and is poolable.
+/// </summary>
 public class FloatingEntity : PoolObject
 {
     [SerializeField]

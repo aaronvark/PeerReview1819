@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Handles the shooting of the bullet and where it goes.
+/// </summary>
 public class Gun : MonoBehaviour
 {
     [SerializeField]

@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class makes sure that the object is within the bounds of the world by transporting it to the other side of the screen.
+/// It also has a duplicate sprite to make the transition seemeless.
+/// </summary>
 public class LoopAbleEntity : MonoBehaviour
 {
     private Vector2 minBoundaries = new Vector2(-8f, -5);

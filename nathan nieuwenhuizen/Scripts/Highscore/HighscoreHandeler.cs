@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the score data by using playerprefs
+/// </summary>
 public class HighscoreHandeler : MonoBehaviour
 {
     public static string HIGHSCORE_KEY = "highscore";

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// This only shows the highscore at the menu screen ;p
+/// </summary>
 public class Menu : MonoBehaviour
 {
     [SerializeField]

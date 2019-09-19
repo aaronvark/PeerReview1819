@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the spawning of asteroids and where to place them.
+/// </summary>
 public class WaveManager : MonoBehaviour
 {
     [SerializeField]
