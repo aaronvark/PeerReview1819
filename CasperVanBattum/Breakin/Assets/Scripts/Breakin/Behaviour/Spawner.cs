@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Breakin.GameManagement;
 using Breakin.Pooling;
 using UnityEngine;
@@ -37,14 +35,14 @@ namespace Breakin.Behaviour
         private void OnGameUpdate()
         {
             timeToNextRingSpawn -= Time.deltaTime;
-            
+
             if (timeToNextRingSpawn <= 0 && ringsSpawned < data.RingCount)
             {
                 if (ringsSpawned >= data.MaxRings)
                 {
                     EventManager.maxRingsReached?.Invoke("You didn't break the blocks in time...'");
                 }
-                
+
                 SpawnRing();
                 ringsSpawned++;
 
@@ -72,6 +70,7 @@ namespace Breakin.Behaviour
         private void OnReset()
         {
             BlockPool?.ReclaimAll();
+            timeToNextRingSpawn = 0;
             ringsSpawned = 0;
         }
 

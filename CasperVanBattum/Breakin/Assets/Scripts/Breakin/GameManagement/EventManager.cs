@@ -27,12 +27,12 @@ namespace Breakin.GameManagement
         /// Is invoked to let everyone load the new level.
         /// </summary>
         public static LevelBroadcaster broadcastLevel;
-        
+
         /// <summary>
         /// Is invoked to tell the relevant behaviours to start themselves.
         /// </summary>
         public static System.Action activate;
-        
+
         /// <summary>
         /// Is invoked each frame to update the relevant behaviours.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Breakin.GameManagement
         /// Is invoked when the level is deactivated.
         /// </summary>
         public static System.Action deactivate;
-        
+
         /// <summary>
         /// Is invoked when the game wants to start over completely.
         /// </summary>

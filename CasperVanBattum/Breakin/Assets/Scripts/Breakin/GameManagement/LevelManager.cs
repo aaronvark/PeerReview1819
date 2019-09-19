@@ -9,7 +9,7 @@ namespace Breakin.GameManagement
         [SerializeField] private LevelData[] levels;
 
         private int nextLevel;
-        
+
         public LevelData GetNextLevel()
         {
             // There must be levels added to the levelmanager for the game to run

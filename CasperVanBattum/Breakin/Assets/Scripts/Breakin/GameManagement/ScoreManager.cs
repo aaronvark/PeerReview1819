@@ -31,5 +31,20 @@ namespace Breakin.GameManagement
                 ScoreChanged?.Invoke();
             }
         }
+
+        private ScoreManager()
+        {
+            EventManager.reset += ResetScore;
+        }
+
+        ~ScoreManager()
+        {
+            EventManager.reset -= ResetScore;
+        }
+
+        private void ResetScore()
+        {
+            Score = 0;
+        }
     }
 }

@@ -7,7 +7,8 @@ namespace Breakin.FSM.States
     {
         public event StateChange RequestTransition;
 
-        private IState originalState;
+        private readonly IState originalState;
+        private float originalTimescale;
 
         public PauseState(IState originalState)
         {
@@ -17,6 +18,9 @@ namespace Breakin.FSM.States
         public void Start()
         {
             EventManager.displayMessage.Invoke("Press esc to resume");
+
+            originalTimescale = Time.timeScale;
+            Time.timeScale = 0;
         }
 
         public void Run()
@@ -29,6 +33,8 @@ namespace Breakin.FSM.States
 
         public void Complete()
         {
+            Time.timeScale = originalTimescale;
+
             EventManager.hideMessage?.Invoke();
         }
     }

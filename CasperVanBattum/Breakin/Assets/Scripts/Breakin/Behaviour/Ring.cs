@@ -64,7 +64,6 @@ namespace Breakin.Behaviour
                 _block.BlockBroken += CheckRingEmpty;
 
                 // Set block properties
-                // TODO this is temporary, to be removed
                 _block.SetColor(new Color(index / 5f, .5f, .5f));
 
                 if (_block.GetType() == typeof(BasicBlock))

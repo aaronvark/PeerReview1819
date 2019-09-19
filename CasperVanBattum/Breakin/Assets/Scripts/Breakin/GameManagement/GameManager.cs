@@ -1,4 +1,3 @@
-using Breakin.Behaviour;
 using Breakin.FSM;
 using Breakin.FSM.States;
 using UnityEngine;
@@ -40,7 +39,7 @@ namespace Breakin.GameManagement
         {
             EventManager.levelSetup += LoadNextLevel;
             EventManager.reset += levelManager.Reset;
-            
+
             gameStateMachine = new StateMachine(new StartLevelState());
         }
 
@@ -54,7 +53,6 @@ namespace Breakin.GameManagement
             LevelData _data = levelManager.GetNextLevel();
 
             if (_data) EventManager.broadcastLevel(_data);
-            
         }
     }
 }

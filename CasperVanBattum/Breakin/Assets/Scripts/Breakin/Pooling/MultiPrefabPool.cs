@@ -48,12 +48,12 @@ namespace Breakin.Pooling
 
         public void ReclaimAll()
         {
-            foreach (List<T> _list in objectLists.Values) 
+            foreach (List<T> _list in objectLists.Values)
             {
                 _list.ForEach(obj => obj.IsActive = false);
             }
         }
-        
+
         /// <summary>
         /// Fills the pools for each prefab with inactive instances of those prefabs up to the base capacity set at
         /// construction time

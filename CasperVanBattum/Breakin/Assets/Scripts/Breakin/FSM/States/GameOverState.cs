@@ -8,7 +8,7 @@ namespace Breakin.FSM.States
         public override event StateChange RequestTransition;
 
         private string reason;
-        
+
         public GameOverState(string reason)
         {
             this.reason = reason;

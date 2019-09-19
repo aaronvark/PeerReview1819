@@ -1,4 +1,3 @@
-using System;
 using Breakin.GameManagement;
 using UnityEngine;
 
@@ -17,6 +16,7 @@ namespace Breakin.Behaviour
         private Rigidbody2D rb;
 
         private int lives;
+
         /// <summary>
         /// The number of lives of this game. When this is set to a value lower than 0, the GameOver function is called.
         /// </summary>

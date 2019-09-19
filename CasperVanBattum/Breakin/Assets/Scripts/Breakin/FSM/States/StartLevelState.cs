@@ -8,7 +8,7 @@ namespace Breakin.FSM.States
         public override event StateChange RequestTransition;
 
         private LevelData loadedData;
-        
+
         public override void Start()
         {
             EventManager.deactivate?.Invoke();
@@ -17,8 +17,8 @@ namespace Breakin.FSM.States
             EventManager.broadcastLevel += data => loadedData = data;
             // Tell listeners to set up the level
             EventManager.levelSetup?.Invoke();
-            
-            EventManager.displayMessage?.Invoke("Click anywhere to start!");
+
+            EventManager.displayMessage?.Invoke($"{loadedData.name}\nClick anywhere to start!");
         }
 
         public override void Run()
@@ -28,7 +28,7 @@ namespace Breakin.FSM.States
             {
                 RequestTransition?.Invoke(new GameWonState());
             }
-            
+
             // Wait for a mouse click to progress to the next state
             if (Input.GetMouseButtonDown(0))
             {
