@@ -25,9 +25,6 @@ public class CameraController : MonoBehaviour
         Offset = target.position - transform.position;
         Pivot.transform.position = target.position;
         Pivot.transform.parent = target;
-
-        Cursor.lockState = CursorLockMode.Locked;
-
     }
 
     // Update is called once per frame

@@ -10,22 +10,44 @@ public class Lava : MonoBehaviour
     public float RiseSpeed;
 
     //Private variables
-    private bool CanDamage;
+    private bool canDamage;
+
+    private bool rising;
 
     private void Awake()
     {
-        CanDamage = true;
+        canDamage = true;
+        rising = false;
+        InstanceManager<GameManager>.GetInstance("GameManager").onDeath += OnPlayerDeath;
+        InstanceManager<GameManager>.GetInstance("GameManager").onStartGame += OnStartGameLava;
+
     }
 
     private void Update()
     {
-        Rise();
+        if(rising)
+        {
+            Rise();
+        }
     }
 
     private void Rise()
     {
         //TODO-Optional: Add logic for speeding up over time.
         transform.Translate(new Vector3(0, RiseSpeed / 100, 0));
+    }
+
+    private void OnStartGameLava()
+    {
+        rising = true;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    void OnPlayerDeath()
+    {
+        rising = false;
+        canDamage = false;
+        StopAllCoroutines();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -43,18 +65,18 @@ public class Lava : MonoBehaviour
         if (damageTaker != null)
         {
             StopAllCoroutines();
-            CanDamage = true;
+            canDamage = true;
         }
     }
 
     private IEnumerator Damage(IDamagable damageTaker)
     {
-        if(CanDamage)
+        if(canDamage)
         {
             damageTaker.TakeDamage(DamageGiven);
-            CanDamage = false;
+            canDamage = false;
             yield return new WaitForSeconds(DamageInterval);
-            CanDamage = true;
+            canDamage = true;
             StartCoroutine(Damage(damageTaker));
         }
         else

@@ -14,9 +14,12 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         ObjectPoolerInstance = InstanceManager<ObjectPooler>.GetInstance("ObjectPooler");
-        InvokeRepeating("SpawnCube", 3f, SpawnTime);
-        StartCoroutine(RepeatingCoroutine(1f, SpawnCube));
+        InstanceManager<GameManager>.GetInstance("GameManager").onStartGame += OnStartGameSpawner;
+    }
 
+    private void OnStartGameSpawner()
+    {
+        StartCoroutine(RepeatingCoroutine(SpawnTime, 2f ,SpawnCube));
     }
 
     private void SpawnCube()
@@ -25,10 +28,11 @@ public class Spawner : MonoBehaviour
         ObjectPoolerInstance.SpawnFromPool("Box", position, Quaternion.identity);
     }
 
-    private IEnumerator RepeatingCoroutine(float repeatTime, System.Action action)
+    private IEnumerator RepeatingCoroutine(float repeatTime, float startTime, System.Action action)
     {
+        yield return new WaitForSeconds(startTime);
         action?.Invoke();
         yield return new WaitForSeconds(repeatTime);
-        StartCoroutine(RepeatingCoroutine(repeatTime, action));
+        StartCoroutine(RepeatingCoroutine(repeatTime, 0f, action));
     }
 }

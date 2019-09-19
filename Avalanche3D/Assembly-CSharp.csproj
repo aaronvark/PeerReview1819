@@ -73,6 +73,9 @@
     <Compile Include="Assets\Scripts\ObjectPooler.cs" />
     <Compile Include="Assets\Scripts\PlayerDamagable.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\SavingAndLoading\PlayerData.cs" />
+    <Compile Include="Assets\Scripts\SavingAndLoading\SaveSystem.cs" />
+    <Compile Include="Assets\Scripts\ScorePane.cs" />
     <Compile Include="Assets\Scripts\ScriptablePool.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\SpawnerHeightChanger.cs" />

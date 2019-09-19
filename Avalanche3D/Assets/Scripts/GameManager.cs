@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
     public delegate void OnScoreChanged();
     public OnScoreChanged onScoreChanged;
 
+    public delegate void OnDeath();
+    public OnDeath onDeath;
+
+    public delegate void OnStartGame();
+    public OnDeath onStartGame;
+
     //References
     public GameObject Player;
 
@@ -19,6 +25,11 @@ public class GameManager : MonoBehaviour
         onScoreChanged += ChangeScore;
         InstanceManager<GameManager>.CreateInstance("GameManager", this);
 
+    }
+
+    public void StartGame()
+    {
+        onStartGame();
     }
 
     public void ChangeScore()

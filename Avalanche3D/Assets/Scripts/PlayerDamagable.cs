@@ -6,6 +6,6 @@ public class PlayerDamagable : DamagableEntity
 {
     protected override void Die()
     {
-        gameObject.SetActive(false);
+        InstanceManager<GameManager>.GetInstance("GameManager").onDeath();
     }
 }

@@ -25,10 +25,8 @@ public class ObjectPooler : MonoBehaviour
     {
         PoolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        print(Pools.Count);
         if(Pools.Count < 1)
         {
-
             return;
         }
         foreach (ScriptablePool pool in Pools)
