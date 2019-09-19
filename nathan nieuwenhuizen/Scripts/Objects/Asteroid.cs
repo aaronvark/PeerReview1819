@@ -7,8 +7,8 @@ public class Asteroid : FloatingEntity , IDestroyable
 
     private int health = 3;
 
-    private float baseScale = 5f;
-    private float scaleIncremention = 2f;
+    private float baseScale = .5f;
+    private float scaleIncremention = .3f;
 
     public override void OnObjectReuse()
     {
@@ -17,11 +17,14 @@ public class Asteroid : FloatingEntity , IDestroyable
     }
     public void TakeDamage(int val)
     {
-        health-= val;
+        CameraShake.OnShake?.Invoke();
+
+        health -= val;
         if (health != 0)
         {
             Split();
         }
+        WaveManager.onAsteroidDestroy(this);
         base.Destroy();
     }
 
@@ -29,7 +32,7 @@ public class Asteroid : FloatingEntity , IDestroyable
     public void Split()
     {
         for (int i = 0; i < willBeDevidedBy; i++) {
-            AsteroidSpawner.Instance.SpawnAsteroid(transform.position, Health);
+            WaveManager.Instance.SpawnAsteroid(transform.position, Health);
         }
     }
 

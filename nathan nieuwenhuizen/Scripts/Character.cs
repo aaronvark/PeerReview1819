@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Handles the movement and the health.
+/// </summary>
 public class Character : MonoBehaviour, IDestroyable
 {
     //movement
@@ -13,10 +16,11 @@ public class Character : MonoBehaviour, IDestroyable
     [SerializeField]
     private float gravityScale = 1f;
 
-    //components
     [SerializeField]
-    public Gun gun;
+    private GameObject deathParticle;
     private Rigidbody2D rb;
+
+    public Gun gun;
 
     //states
     private bool dead = false;
@@ -27,6 +31,7 @@ public class Character : MonoBehaviour, IDestroyable
 
     void Start()
     {
+        PoolManager.instance.CreatePool(deathParticle, 1);
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -108,6 +113,10 @@ public class Character : MonoBehaviour, IDestroyable
     {
         rb.gravityScale = gravityScale;
         dead = true;
+        CameraShake.OnShake?.Invoke(0.2f);
+        PoolManager.instance.ReuseObject(deathParticle, transform.position, Quaternion.identity);
+
+        GameManager.Instance.EndScreen();
         gameObject.SetActive(false);
     }
 }

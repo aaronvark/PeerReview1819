@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Handles all the input the player makes (exception to button presses)
+/// </summary>
 public class InputHandeler : MonoBehaviour
 {
     private Character character;
+
+    private readonly string fireKey = "Fire1";
+    private readonly string walkKey = "Horizontal";
+    private readonly string jumpKey = "Jump";
 
     private void Start()
     {
@@ -11,25 +18,29 @@ public class InputHandeler : MonoBehaviour
 
     void FixedUpdate()
     {
-        character.Walking(Input.GetAxis("Horizontal"));
+        character.Walking(Input.GetAxis(walkKey));
 
-        if (Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetButtonDown(jumpKey) || Input.GetKeyDown(KeyCode.Space)){
             character.Jump();
-        } else if (Input.GetButtonUp("Jump") || Input.GetKeyUp(KeyCode.Space)) {
+        } else if (Input.GetButtonUp(jumpKey) || Input.GetKeyUp(KeyCode.Space)) {
             character.CancelJump();
         }
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown(fireKey))
         {
             character.Trigger();
         }
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButton(fireKey))
         {
             character.TriggerHold();
         }
-        if (Input.GetButtonUp("Fire1"))
+        if (Input.GetButtonUp(fireKey))
         {
             character.Untrigger();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            GameManager.Instance.Pause(Time.timeScale == 1);
         }
     }
 }
