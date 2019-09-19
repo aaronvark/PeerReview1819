@@ -9,6 +9,8 @@
 !/[Aa]ssets/**/*.fnt
 !/[Aa]ssets/**/*.cd
 !/[Aa]ssets/**/*.asmref
+!/[Aa]ssets/**/*.uxml
+!/[Aa]ssets/**/*.uss
 
 # even in subdirectories
 !*/
