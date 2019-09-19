@@ -1,28 +1,28 @@
 ﻿public sealed class StateMachine
 {
-    public IState currentState { get; private set; }
+    public IState CurrentState { get; private set; }
 
     public StateMachine(IState startState)
     {
-        currentState = startState;
-        currentState.OnStateEnter();
+        CurrentState = startState;
+        CurrentState.OnStateEnter();
     }
 
     public void Update()
     {
-        if (currentState != null)
+        if (CurrentState != null)
         {
-            currentState.OnStateUpdate();
+            CurrentState.OnStateUpdate();
         }
     }
 
     public void SwitchState(IState newState)
     {
         // Complete current state
-        if (currentState != null)
+        if (CurrentState != null)
         {
-            currentState.OnStateSwitch -= SwitchState;
-            currentState.OnStateExit();
+            CurrentState.OnStateSwitch -= SwitchState;
+            CurrentState.OnStateExit();
         }
 
         if (newState != null)
@@ -33,6 +33,6 @@
         }
 
         // Assign the new state
-        currentState = newState;
+        CurrentState = newState;
     }
 }

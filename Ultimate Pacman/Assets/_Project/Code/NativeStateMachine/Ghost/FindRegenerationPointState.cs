@@ -57,7 +57,7 @@ public class FindRegenerationPointState : AbstractState
         ghost.StartCoroutine(SetDefaultState());
     }
 
-    IEnumerator SetDefaultState()
+    private IEnumerator SetDefaultState()
     {
         Animator animator = transform.GetComponent<Animator>();
         AnimatorClipInfo currentClipInfo = animator.GetCurrentAnimatorClipInfo(0)[0];

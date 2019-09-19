@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AbstractState : IState
+public abstract class AbstractState : IState
 {
     public Transform transform;
 
@@ -11,7 +11,7 @@ public class AbstractState : IState
 
     public virtual IStateDelegate OnStateSwitch { get; set; }
 
-    public virtual void OnStateExit() { }
-    public virtual void OnStateUpdate() { }
     public virtual void OnStateEnter() { }
+    public virtual void OnStateUpdate() { }
+    public virtual void OnStateExit() { }
 }
