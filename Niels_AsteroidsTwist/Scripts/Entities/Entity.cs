@@ -12,22 +12,33 @@ public class Entity : MonoBehaviour
     [SerializeField]
     protected float health;
     [SerializeField]
-    protected GameObject[] destroyInstObjects;
-    [SerializeField]
     protected EntityType typeOfEntity;
+    public EntityType lastCollidedType;
 
-    protected EntityType lastCollidedType;
+    protected ObjectPooler smokePool;
 
-    public void DamageEntity(float damagePoints)
+    // checks if entity is damaged
+    public virtual void DamageEntity(float damagePoints)
     {
         health -= damagePoints;
         if(health <= 0)
         {
-            Destroy(this.gameObject);
+            gameObject.SetActive(false);
         }
     }
+
+    protected virtual void Awake()
+    {
+        smokePool = GameObject.Find("SmokePool").GetComponent<ObjectPooler>();
+    }
+
+    protected virtual void OnDeath()
+    {
+        smokePool.GetNext(0, transform.position, transform.rotation);
+    }
+
     // Detects colission with objects
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.gameObject)
         { 
@@ -46,27 +57,11 @@ public class Entity : MonoBehaviour
     {
         if (health <= 0)
         {
-            foreach (GameObject _intObject in destroyInstObjects)
-            {
-                Instantiate(_intObject, transform.position, transform.rotation);
-            }
-
-            if (lastCollidedType != EntityType.Asteroid && lastCollidedType != EntityType.LargeAsteroid)
-            {
-                switch (typeOfEntity)
-                {
-                    case EntityType.Asteroid:
-                        ScoreManager.Instance.addPoint(1f);
-                        break;
-                    case EntityType.LargeAsteroid:
-                        ScoreManager.Instance.addPoint(2f);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            OnDeath();
         }
     }
+
+
 }
 
 

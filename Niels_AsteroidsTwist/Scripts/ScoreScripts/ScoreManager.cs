@@ -5,10 +5,13 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance { get; private set; }
+    public float currentHighScore;
     private float scorePoints;
-    public float highScore;
 
-
+    public void OnEnable()
+    {
+        currentHighScore = PlayerPrefs.GetFloat("highScore");
+    }
 
     // adds points to the current score value
     public void addPoint(float _points) {
@@ -25,15 +28,24 @@ public class ScoreManager : MonoBehaviour
         {
             PlayerPrefs.SetFloat("highScore", 0);
         }
-        float _tempHighScore = PlayerPrefs.GetFloat("highScore");
-        if (highScore > _tempHighScore)
+        if (scorePoints > currentHighScore)
         {
-            PlayerPrefs.SetFloat("highScore", highScore);
+            PlayerPrefs.SetFloat("highScore", scorePoints);
         }
     }
 
+    public float GetHighScore()
+    {
+        if (!PlayerPrefs.HasKey("highScore"))
+        {
+            PlayerPrefs.SetFloat("highScore", 0);
+        }
+        return currentHighScore;
+    }
+
     // creates  a singleton instance of the object
-    private void Awake() { 
+    private void Awake()
+    { 
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);

@@ -4,28 +4,78 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public SceneLoader SceneManager;
+    public static GameManager Instance { get; private set; }
 
-    public static System.Action endGameSystems;
+    public SceneLoader sceneManager;
+    public GameStateFSM gameStates;
 
-    public static void OnReset()
+    public bool gameIsPlaying = false;
+    public int playerLevel;
+    public delegate void GameSystems();
+    GameSystems endGameSystem;
+
+    public void OnDeath()
     {
-        endGameSystems();
+        EndGame();
+    }
+
+    public void OnReset()
+    {
+        endGameSystem.Invoke();
+    }
+
+    public void MainMenu()
+    {
+        OnReset();
+        gameStates.SwitchState(new GStart());
+    }
+
+    public void StartGame()
+    {
+        gameStates.SwitchState(new GRunning());
+    }
+
+    public void EndGame()
+    {
+        gameStates.SwitchState(new GEndGame());
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
+        // DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
-        endGameSystems += ScoreManager.Instance.SetHighScore;
-        endGameSystems += SceneManager.ResetScene;
+        gameStates.SwitchState(new GStart());
+        sceneManager = GetComponent<SceneLoader>();
+    }
+
+    private void OnEnable()
+    {
+        GameManager.Instance.playerLevel = 0;
+        endGameSystem += ScoreManager.Instance.SetHighScore;
+        endGameSystem += sceneManager.ResetScene;
     }
 
     private void OnDisable()
     {
-        endGameSystems -= ScoreManager.Instance.SetHighScore;
-        endGameSystems -= SceneManager.ResetScene;
+        endGameSystem -= ScoreManager.Instance.SetHighScore;
+        endGameSystem -= sceneManager.ResetScene;
     }
-
-
 
 
 

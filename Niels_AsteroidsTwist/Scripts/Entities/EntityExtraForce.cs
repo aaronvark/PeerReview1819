@@ -4,6 +4,21 @@ using UnityEngine;
 
 public class EntityExtraForce : Entity
 {
+    protected ObjectPooler shockWavePool;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        shockWavePool = GameObject.Find("ShockWavePool").GetComponent<ObjectPooler>();
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        shockWavePool.GetNext(0, transform.position, transform.rotation);
+    }
+
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 2f);
@@ -12,7 +27,11 @@ public class EntityExtraForce : Entity
         foreach(Collider2D col in colliders)
         {
             Entity _tempEntity = col.transform.gameObject.GetComponent<Entity>();
-            _tempEntity?.DamageEntity(damage);
+            if (_tempEntity != null)
+            {
+                _tempEntity.lastCollidedType = typeOfEntity;
+                _tempEntity?.DamageEntity(damage);
+            }
 
             Rigidbody2D rb = col.GetComponent<Rigidbody2D>();
             if(rb != null && rb.transform.name != "Player")
@@ -24,7 +43,8 @@ public class EntityExtraForce : Entity
                 rb.AddRelativeForce(_Vector);
             }
         }
-        Destroy(this.gameObject);
+        CameraShake.OnShake?.Invoke(.1f, 5f, .01f);
+        gameObject.SetActive(false);
         
     }
 }

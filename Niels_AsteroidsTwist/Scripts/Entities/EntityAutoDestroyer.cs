@@ -8,19 +8,14 @@ public class EntityAutoDestroyer : MonoBehaviour
     private float destroyTime;
 
     // script that destroys the entity after a specific amount of time after spawning
-    private void Start()
+    private void OnEnable()
     { 
         StartCoroutine(DestroyObj(destroyTime));
     }
 
-    IEnumerator DestroyObj(float waitTime)
+    private IEnumerator DestroyObj(float waitTime)
     { 
         yield return new WaitForSeconds(waitTime);
-        Destroy(this.gameObject);
-    }
-
-    private void OnDisable()
-    {
-        Destroy(this.gameObject);
+        gameObject.SetActive(false);
     }
 }

@@ -10,7 +10,7 @@ public class PickUp : MonoBehaviour, IPickable
 
     public float PickItem()
     {
-        Destroy(this.gameObject);
+        gameObject.SetActive(false);
         return metal;
     }
 

@@ -14,7 +14,7 @@ public class PlayerLevelDisplayer : MonoBehaviour
         textArea = GetComponent<TextMeshProUGUI>();
     }
 
-    void Update()
+    private void Update()
     {
         textArea.text = thisEntity?.GetScrap.ToString();
     }

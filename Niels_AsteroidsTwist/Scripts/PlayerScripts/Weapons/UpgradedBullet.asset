@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e1627078de2cb7459942124c1ea9b8f, type: 3}
+  m_Script: {fileID: 11500000, guid: 48b635f150d27b143b7ade33efb91cd2, type: 3}
   m_Name: UpgradedBullet
   m_EditorClassIdentifier: 
-  weaponName: Bullet
-  rateOfFire: 7
+  weaponName: 
+  rateOfFire: 8
   weaponEntity: {fileID: 1011762369768029943, guid: 577e21e48b1361247b43b20ed9455df0,
     type: 3}
