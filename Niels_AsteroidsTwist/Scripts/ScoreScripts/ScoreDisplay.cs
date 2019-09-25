@@ -7,11 +7,11 @@ public class ScoreDisplay : MonoBehaviour
 {
     private TextMeshProUGUI scoreText;
 
-    void Start() {
+    private void Start() {
         scoreText = GetComponent<TextMeshProUGUI>();
     }
 
-    void Update() {
-        scoreText.text = "Score: " + ScoreManager.Instance.getPoints().ToString();
+    private void Update() {
+        scoreText.text = ScoreManager.Instance?.getPoints().ToString() + " : " + ScoreManager.Instance?.GetHighScore().ToString();
     }
 }
