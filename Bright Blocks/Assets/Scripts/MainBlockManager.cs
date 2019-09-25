@@ -5,50 +5,153 @@ using UnityEngine;
 /// <summary>
 /// Spawns the mainBlocks
 /// </summary>
-public class MainBlockManager : MonoBehaviour {
+public class MainBlockManager : MonoBehaviour
+{
 
-    [SerializeField] private int spawnPositionX, spawnPositionY;
-    private Coordinate spawnCoordinate;
-    private MainBlock mainBlock;
+    private List<Block> currentUsedBlocks = new List<Block>();
 
-    private void Start() {
+    [SerializeField] private Vector2Int spawnCoordinate;
+    private Vector2Int currentMainBlockCoordinate;
+    private Shape currentShape;
 
-        spawnCoordinate = new Coordinate(spawnPositionX, spawnPositionY);
+    [SerializeField] private Material[] MaterialsOfShapes;
+    private List<Shape> availableShapes = new List<Shape>();
+
+    private Grid grid;
+
+    private void Start()
+    {
+        grid = FindObjectOfType<Grid>();
+        //baseColor = Grid.allBlocks[spawnCoordinate].GetComponent<Renderer>().material.color;
+        AddShapes();
     }
 
-    public void SpawnMainBlock() {
 
-        Shape _currentShape = ChooseRandomShape();
-        mainBlock = Grid.allBlocks[spawnCoordinate].gameObject.AddComponent<MainBlock>();
+    public void SpawnShape()
+    {
 
-        //Temporary
-        FindObjectOfType<PlayerInput>().currentMainBlock = mainBlock;
-
-        mainBlock.AssignColor(_currentShape.color);
-        mainBlock.shapeCode = _currentShape.shape;
+        currentMainBlockCoordinate = spawnCoordinate;
+        currentShape = ChooseRandomShape();
+        Grid.allBlocks[spawnCoordinate].AssignColor(currentShape.color);
+        UpdateCurrentUsedBlocks();
+        ColorShapeAroundMainBlock(currentShape.color);
     }
 
-    public void ResetMainBlock() {
 
-        mainBlock.SetAttachedBlocks();
+    public void MoveShapeTowards(Direction _direction)
+    {
 
-        Shape _currentShape = ChooseRandomShape();
+        //Checks if shape can move towards specified direction
+        if (grid.CanShapeMove(ShapeCodeProcessor.ShapeCodeToCoordinates(currentShape.shape, currentMainBlockCoordinate), _direction))
+        {
 
-        //Assigns color to the spawncoordinate block
-        Grid.allBlocks[spawnCoordinate].AssignColor(_currentShape.color);
-        Grid.allBlocks[spawnCoordinate].SetBlock();
+            //Resets current shape to base color
+            //ColorShapeAroundMainBlock(baseColor);                                       FIXME WITH MATERIAL
 
-        //Switches the mainblock with the spawncoordinate block
-        mainBlock.SwitchWithBlock(spawnCoordinate);
+            //Moves the main block down
+            MoveMainBlockTowards(grid.DirectionToCoords(_direction, currentMainBlockCoordinate));
 
-        //Gives the mainblock his new shape information
-        mainBlock.AssignColor(_currentShape.color);
-        mainBlock.shapeCode = _currentShape.shape;
-        mainBlock.UpdateAttachedBlocks();
+            //Updates the list of blocks the shape is made of
+            UpdateCurrentUsedBlocks();
+
+            //Colors the shape around the main block
+            ColorShapeAroundMainBlock(currentShape.color);
+        }
+
     }
 
-    private Shape ChooseRandomShape() {
+    public void RotateShape()
+    {
 
-        return MainBlockShapeList.shapeList[Random.Range(0, MainBlockShapeList.shapeList.Count - 1)];
+        //Checks if shape can rotate
+        if (grid.AreTheseCoordinatesAvailable(ShapeCodeProcessor.RotateAndGiveCoordinates(currentShape.shape, currentMainBlockCoordinate)))
+        {
+
+            //Resets current shape to base color
+            //ColorShapeAroundMainBlock(baseColor);                                         FIXME WITH MATERIAL
+
+            //RotatesShape
+            currentShape.shape = ShapeCodeProcessor.RotateShapeCode(currentShape.shape);
+
+            //Updates the list of blocks the shape is made of
+            UpdateCurrentUsedBlocks();
+
+            //Colors the shape around the main block
+            ColorShapeAroundMainBlock(currentShape.color);
+        }
+
     }
+
+    public void SetShape()
+    {
+
+        Grid.allBlocks[currentMainBlockCoordinate].SetBlock();
+        for (int i = 0; i < currentUsedBlocks.Count; i++)
+        {
+
+            currentUsedBlocks[i].SetBlock();
+            //TODO Assign the shapecode within the blocks
+        }
+
+        SpawnShape();
+    }
+
+    private void UpdateCurrentUsedBlocks()
+    {
+
+        //Clears the list
+        currentUsedBlocks.Clear();
+
+        List<Vector2Int> _currentUsedBlocksCoordinates = ShapeCodeProcessor.ShapeCodeToCoordinates(currentShape.shape, currentMainBlockCoordinate);
+
+        //Finds the blocks linked with the coordinates and adds them to the list
+        for (int i = 0; i < _currentUsedBlocksCoordinates.Count; i++)
+        {
+
+            currentUsedBlocks.Add(Grid.allBlocks[_currentUsedBlocksCoordinates[i]]);
+        }
+    }
+
+    private void ColorShapeAroundMainBlock(Color _color)
+    {
+
+        for (int i = 0; i < currentUsedBlocks.Count; i++)
+        {
+
+            currentUsedBlocks[i].AssignColor(_color);
+        }
+    }
+
+    private void MoveMainBlockTowards(Vector2Int _coordinate)
+    {
+
+        //Resets current block to base color
+        //Grid.allBlocks[currentMainBlockCoordinate].AssignColor(baseColor);            FIXME WITH MATERIAL
+
+        //Picks new block
+        currentMainBlockCoordinate = _coordinate;
+
+        //Colors the new block
+        Grid.allBlocks[currentMainBlockCoordinate].AssignColor(currentShape.color);
+
+    }
+
+
+    private void AddShapes()
+    {
+
+        availableShapes.Add(new Shape(new int[] { 4, 0, 0, 0, 0, 0, 0, 0 }, Color.cyan));
+        availableShapes.Add(new Shape(new int[] { 0, 2, 2, 0, 0, 0, 2, 0 }, Color.yellow));
+        availableShapes.Add(new Shape(new int[] { 2, 2, 0, 2, 0, 0, 0, 0 }, Color.magenta));
+        availableShapes.Add(new Shape(new int[] { 3, 2, 0, 0, 0, 0, 0, 0 }, Color.yellow));
+        availableShapes.Add(new Shape(new int[] { 3, 0, 0, 2, 0, 0, 0, 0 }, Color.blue));
+        availableShapes.Add(new Shape(new int[] { 0, 2, 2, 0, 0, 2, 0, 0 }, Color.red));
+        availableShapes.Add(new Shape(new int[] { 2, 2, 0, 0, 0, 0, 2, 0 }, Color.green));
+    }
+
+    private Shape ChooseRandomShape()
+    {
+        return availableShapes[Random.Range(0, availableShapes.Count)];
+    }
+
 }

@@ -8,24 +8,34 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     public MainBlockManager tempVar;
-    public MainBlock currentMainBlock;
 
-    private void Update() {
+    private void Update()
+    {
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
 
-            tempVar.SpawnMainBlock();
+            tempVar.SpawnShape();
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow)) {
 
-            currentMainBlock.MoveTo(Direction.Down);
-        } else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
 
-            currentMainBlock.MoveTo(Direction.Left);
-        } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
 
-            currentMainBlock.MoveTo(Direction.Right);
+            tempVar.MoveShapeTowards(Direction.Down);
+        } else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+
+            tempVar.MoveShapeTowards(Direction.Left);
+        } else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+
+            tempVar.MoveShapeTowards(Direction.Right);
+        } else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+
+            tempVar.RotateShape();
         }
     }
 }

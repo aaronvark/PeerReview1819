@@ -8,42 +8,58 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    public static Dictionary<Coordinate, Block> allBlocks = new Dictionary<Coordinate, Block>();
+    public static Dictionary<Vector2Int, Block> allBlocks = new Dictionary<Vector2Int, Block>();
 
-    [SerializeField] private int gridSizeX, gridSizeY;
+    [SerializeField] private Vector2Int gridSize;
     [SerializeField] private GameObject blockPrefab;
 
-    private void Awake() {
+    [SerializeField] private Demonstration_MeshProcessing meshOutliner;
+
+    private void Awake()
+    {
         CreateGrid();
     }
 
-    public static bool CanShapeMove(Direction _direction, int[] _shapeCodeArray, Coordinate _fromCoordinate) {
+    public bool CanShapeMove(List<Vector2Int> _fromCoordinates, Direction _direction)
+    {
 
-        List<Coordinate> _potentialCoordinates = new List<Coordinate>();
+        List<Vector2Int> _potentialCoordinates = new List<Vector2Int>();
 
-        switch (_direction) {
-            case Direction.Down:
-                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate - 1));
-                break;
-            case Direction.Left:
-                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate - 1, _fromCoordinate.yCoordinate));
-                break;
-            case Direction.Right:
-                _potentialCoordinates = IntToCoords(_shapeCodeArray, new Coordinate(_fromCoordinate.xCoordinate + 1, _fromCoordinate.yCoordinate));
-                break;
-            default:
-                break;
+        //Adds all potential coordinates to a list
+        for (int i = 0; i < _fromCoordinates.Count; i++)
+        {
+
+            _potentialCoordinates.Add(DirectionToCoords(_direction, _fromCoordinates[i]));
         }
 
-        //Checks if coordinates exist within the grid and are not already occupied by colored blocks
-        for (int i = 0; i < _potentialCoordinates.Count; i++) {
 
-            if (!allBlocks.ContainsKey(_potentialCoordinates[i]) || allBlocks[_potentialCoordinates[i]].isSet) {
+
+        return AreTheseCoordinatesAvailable(_potentialCoordinates, _direction);
+    }
+
+    public bool AreTheseCoordinatesAvailable(List<Vector2Int> _coordinates, Direction _direction = Direction.Left)
+    {
+
+        //Checks if the potential coordinates exist within the grid and are not already occupied by colored blocks
+        for (int i = 0; i < _coordinates.Count; i++)
+        {
+
+            if (!allBlocks.ContainsKey(_coordinates[i]) || allBlocks[_coordinates[i]].isSet)
+            {
 
                 //Checks if the block has reached the bottom or a colored block
-                if(_potentialCoordinates[i].yCoordinate < 0 || (_direction == Direction.Down && allBlocks[_potentialCoordinates[i]].isSet)) {
+                if (_coordinates[i].y < 0 || (_direction == Direction.Down && allBlocks[_coordinates[i]].isSet))
+                {
 
-                    FindObjectOfType<MainBlockManager>().ResetMainBlock();
+                    //Delegate potential
+                    FindObjectOfType<MainBlockManager>().SetShape();
+                    List<Block> _madeBlocks = GetAllMadeLines();
+                    if (_madeBlocks.Count >= gridSize.x)
+                    {
+                        ClearBlocks(GetAllMadeLines());
+                        MoveAllUsedBlocksDown(_madeBlocks.Count / gridSize.x, GetLowestYBlock(_madeBlocks));
+
+                    }
                     return false;
                 }
                 return false;
@@ -53,44 +69,143 @@ public class Grid : MonoBehaviour
         return true;
     }
 
-    public static List<Coordinate> IntToCoords(int[] _shapeCodeArray, Coordinate _fromCoordinate) {
+    public Vector2Int DirectionToCoords(Direction _direction, Vector2Int _coordinate)
+    {
 
-        List<Coordinate> _coordinates = new List<Coordinate>();
+        Vector2Int _newCoordinate = Vector2Int.zero;
 
-        for (int i = 0; i < _shapeCodeArray[0]+1; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate, _fromCoordinate.yCoordinate + i));
+        switch (_direction)
+        {
+            case Direction.Down:
+                _newCoordinate = new Vector2Int(_coordinate.x, _coordinate.y - 1);
+                break;
+            case Direction.Left:
+                _newCoordinate = new Vector2Int(_coordinate.x - 1, _coordinate.y);
+                break;
+            case Direction.Right:
+                _newCoordinate = new Vector2Int(_coordinate.x + 1, _coordinate.y);
+                break;
+            default:
+                break;
         }
 
-        for (int i = 0; i < _shapeCodeArray[1]+1; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate - i, _fromCoordinate.yCoordinate));
-        }
-
-        for (int i = 0; i < _shapeCodeArray[2]+1; i++) {
-            _coordinates.Add(new Coordinate(_fromCoordinate.xCoordinate + i, _fromCoordinate.yCoordinate));
-        }
-
-        return _coordinates;
+        return _newCoordinate;
     }
 
-    private void CreateGrid() {
 
-        for (int y = 0; y < gridSizeY; y++) {
-            for (int x = 0; x < gridSizeX; x++) {
-                //DISCUSS
+
+    private void CreateGrid()
+    {
+
+        for (int y = 0; y < gridSize.y; y++)
+        {
+            for (int x = 0; x < gridSize.x; x++)
+            {
 
                 //Saves the current coordinates for later use
-                Coordinate _currentCoordinate = new Coordinate(x, y);
+                Vector2Int _currentCoordinate = new Vector2Int(x, y);
 
                 //Creates a block, then adds the Block script to the object
                 Block _newBlock = Instantiate(blockPrefab, new Vector3(x, y), Quaternion.identity, transform).AddComponent<Block>();
 
-                //Initializes the newBlock with the coordinates
+                //Initializes the newBlock with the Vector2Ints
                 _newBlock.Initialize(_currentCoordinate);
-                
+
 
                 allBlocks.Add(_currentCoordinate, _newBlock);
+
+                meshOutliner.OutlineMesh(_newBlock.gameObject);
             }
         }
+    }
+
+    private void ClearBlocks(List<Block> _blocks)
+    {
+
+        for (int i = 0; i < _blocks.Count; i++)
+        {
+
+            _blocks[i].ClearBlock();
+        }
+    }
+
+    private void MoveAllUsedBlocksDown(int _linesToMove, int _lowestYCoordinate)
+    {
+        for (int i = 0; i < _linesToMove; i++)
+        {
+            for (int y = _lowestYCoordinate; y < gridSize.y; y++)
+            {
+                for (int x = 0; x < gridSize.x; x++)
+                {
+
+                    allBlocks[new Vector2Int(x, y)].TransferColorDown();
+                }
+            }
+        }
+
+    }
+
+    //TODO only check the lines a shape has interacted with
+    //Check if all the blocks in a horizontal lines have the isSet bool as true
+    public List<Block> GetAllMadeLines()
+    {
+
+        List<Block> _allBlocksInMadeLines = new List<Block>();
+
+        for (int y = 0; y < gridSize.y; y++)
+        {
+            if (CheckIfBlocksAreSet(GetBlocksAtY(y)))
+            {
+                _allBlocksInMadeLines.AddRange(GetBlocksAtY(y));
+            }
+        }
+
+        return _allBlocksInMadeLines;
+
+    }
+
+    private bool CheckIfBlocksAreSet(List<Block> _blockList)
+    {
+
+        for (int i = 0; i < _blockList.Count; i++)
+        {
+            if (!_blockList[i].isSet)
+            {
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private List<Block> GetBlocksAtY(int _y)
+    {
+
+        List<Block> _blocks = new List<Block>();
+
+        for (int x = 0; x < gridSize.x; x++)
+        {
+            _blocks.Add(allBlocks[new Vector2Int(x, _y)]);
+        }
+
+        return _blocks;
+    }
+
+    private int GetLowestYBlock(List<Block> _blockList)
+    {
+        int _lowestY = gridSize.y + 2;
+
+        for (int i = 0; i < _blockList.Count; i++)
+        {
+            if (_lowestY > _blockList[i].coordinate.y)
+            {
+
+                _lowestY = _blockList[i].coordinate.y;
+            }
+        }
+
+        return _lowestY;
     }
 
 }
