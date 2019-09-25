@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Pellet : MonoBehaviour, IScore
 {
-    public static int PelletCount { get; private set; } = 0;
+    public static int PelletCount { get; private set; } = 0;    // Keep a reference to the number of pellets
 
     [SerializeField]
     protected int scoreValue = 10;
@@ -24,7 +22,7 @@ public class Pellet : MonoBehaviour, IScore
     public virtual void Consume()
     {
         Destroy(gameObject);
-        ScoreManager.Instance.AddScore(ScoreValue);
+        ScoreManager.Instance.AddScore(this);
         GameManager.Instance.CheckPellets();
     }
 }

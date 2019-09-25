@@ -25,15 +25,14 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            if (shuttingDown)
+            if (destroyed)
             {
                 var singletonObject = new GameObject();
                 T t = singletonObject.AddComponent<T>();
                 DestroyImmediate(singletonObject);
                 return t;
             }
-
-            lock (lockObject)
+            else lock (lockObject)
             {
                 if (instance == null)
                 {
@@ -47,11 +46,11 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     private static T instance = null;
     private static readonly object lockObject = new object();
-    private static bool shuttingDown = false;
+    private static bool destroyed = false;
 
     public Singleton()
     {
-        shuttingDown = false;
+        destroyed = false;
     }
 
     [Header("Singleton")]
@@ -77,18 +76,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        OnDestroy();
-    }
-
     private void OnDestroy()
     {
-        if (shuttingDown)
-            return;
-
+        destroyed = true;
         instance = null;
-        shuttingDown = true;
     }
 
 #if UNITY_EDITOR
@@ -128,7 +119,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             {
                 if (type == null)
                     return;
-
+                
                 MemberInfo memberInfo = type;
                 RequireComponent[] requiredComponentsOfType =
                     Attribute.GetCustomAttributes(memberInfo, typeof(RequireComponent), true)
