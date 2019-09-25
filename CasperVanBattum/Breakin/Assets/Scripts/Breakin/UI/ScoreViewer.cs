@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Breakin.GameManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Prototype1
+namespace Breakin.UI
 {
+    [RequireComponent(typeof(Text))]
     public class ScoreViewer : MonoBehaviour
     {
         private Text text;
@@ -15,7 +16,13 @@ namespace Prototype1
 
         private void Start()
         {
-            ScoreManager.Instance.OnScoreChanged += UpdateScore;
+            // When the score in the score manager is being updated, the displayed score should be updated
+            ScoreManager.Instance.ScoreChanged += UpdateScore;
+        }
+
+        private void OnDisable()
+        {
+            ScoreManager.Instance.ScoreChanged -= UpdateScore;
         }
 
         private void UpdateScore()
