@@ -4,17 +4,12 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour, IDamagable
 {
+    public int gameID;
     public int health = 3;
     public GameObject bombDummy;
     public Bomb bomb;
 
-    protected UIManager uiManager;
-
-    private void Start()
-    {
-        //uiManager = GetComponent<UIManager>();
-        uiManager = FindObjectOfType<UIManager>();
-    }
+    public UIManager uiManager;
 
     // Update is called once per frame
     private void Update()
@@ -26,9 +21,13 @@ public class Actor : MonoBehaviour, IDamagable
         }
     }
 
-    public virtual void Damage()
+    public void Damage()
     {
         health -= 1;
+
+        //Player zn gameID is altijd 1
+        Debug.Log("ID : " + gameID + " &  health : " + health);
+        uiManager.DecreaseHearts(gameID, health);
         if (health <= 0)
         {
             Die();
@@ -40,10 +39,14 @@ public class Actor : MonoBehaviour, IDamagable
         Debug.Log("Game Over");
     }
 
-    private void DeployBomb()
+    public void DeployBomb()
     {
         bombDummy.SetActive(true);
         bombDummy.transform.position = transform.position;
-        //Instantiate(bomb, transform.position, Quaternion.identity);
+    }
+
+    private float Timer(float _timer)
+    {
+        return _timer -= Time.deltaTime;
     }
 }

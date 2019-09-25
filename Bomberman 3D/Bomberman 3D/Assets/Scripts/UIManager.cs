@@ -6,29 +6,27 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private Image[] playerHearts;
-    //[SerializeField] private Image[] enemy1Hearts;
-    //[SerializeField] private Image[] enemy2Hearts;
-    //[SerializeField] private Image[] enemy3Hearts;
+    [SerializeField] private Image[] enemy1Hearts;
+    [SerializeField] private Image[] enemy2Hearts;
+    [SerializeField] private Image[] enemy3Hearts;
 
-    public void DecreaseHearts(int gameID, int health)
+    public void DecreaseHearts(int _gameID, int _health)
     {
-        Debug.Log("heart decreased");
-        if (gameID == 1)
+        if (_gameID == 1)
         {
-            playerHearts[health].enabled = false;
-            Debug.Log("heart decreased");
+            playerHearts[_health].enabled = false;
         }
-        else if (gameID == 2)
+        if (_gameID == 2)
         {
-            playerHearts[health].enabled = false;
+            enemy1Hearts[_health].enabled = false;
         }
-        else if (gameID == 3)
+        if (_gameID == 3)
         {
-            playerHearts[health].enabled = false;
+            enemy2Hearts[_health].enabled = false;
         }
-        else if (gameID == 4)
+        if (_gameID == 4)
         {
-            playerHearts[health].enabled = false;
+            enemy3Hearts[_health].enabled = false;
         }
     }
 }

@@ -4,12 +4,23 @@ using UnityEngine;
 
 public class Player : Actor
 {
+    private static Player _instance;
 
-    public override void Damage()
+    public static Player Instance
     {
-        base.Damage();
-        uiManager.DecreaseHearts(1, this.health);
-        Debug.Log(health);
+        get
+        {
+            return _instance;
+        }
+        set
+        {
+            _instance = value;
+        }
+    }
+
+    private void Start()
+    {
+        _instance = this;
     }
 
     public override void Die()
