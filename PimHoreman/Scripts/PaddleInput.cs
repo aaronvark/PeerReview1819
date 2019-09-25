@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// PaddleInput class, the paddle only moves horizontal when the key is pressed.
+/// </summary>
 public class PaddleInput : MonoBehaviour
 {
-	[SerializeField] private float speed = 8;
+	[SerializeField] private float paddleSpeed = 30;
 	private Rigidbody rb;
+	private string horizontal = "Horizontal";
 
 	private void Awake()
 	{
@@ -17,9 +21,9 @@ public class PaddleInput : MonoBehaviour
 
 	private void PaddleMovement()
 	{
-		float moveHorizontal = Input.GetAxis("Horizontal");
+		float _moveHorizontal = Input.GetAxis(horizontal);
 
-		Vector3 movement = new Vector3(moveHorizontal, 0, 0);
-		rb.velocity = movement * speed;
+		Vector3 _movement = new Vector3(_moveHorizontal, 0, 0);
+		rb.velocity = _movement * paddleSpeed;
 	}
 }

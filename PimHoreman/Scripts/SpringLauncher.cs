@@ -1,21 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// SpringLauncher class, Pulls the plunger down an fires it back up with force and applies it to the ball.
+/// </summary>
 public class SpringLauncher : MonoBehaviour
 {
-	//[SerializeField] private GameObject ball;
-	[SerializeField] private int plungerForce;
+	[Header("Amount of Velocity/Power:")]
+	[SerializeField] private int plungerVelocity;
+
+	[Header("Type of Ball:")]
+	[SerializeField] private Ball ball;
 
 	private float pullSpeed = 0.5f;
 	private float resetSpeed = 10f;
-	private bool isResetting;
-	private bool isActive;
-	private Vector3 startPos;
-	private Vector3 pullBackAmount;
 	private float deltaPos;
 
-	[SerializeField] private Ball ball;
+	private bool isActive;
+	private bool isResetting;
+
+	private Vector3 pullBackAmount;
+	private Vector3 startPos;
 
 	private void Start()
 	{
@@ -33,14 +37,14 @@ public class SpringLauncher : MonoBehaviour
 		if (!isResetting && isActive && Input.GetKey(KeyCode.Space) && Mathf.Abs(gameObject.transform.position.y - startPos.y) < 1f)
 		{
 			isResetting = false;
-			pullBackAmount = new Vector3(0f, -pullSpeed * Time.deltaTime, 0f);
+			pullBackAmount = new Vector3(0f, 0f, pullSpeed * Time.deltaTime);
 			gameObject.transform.Translate(pullBackAmount);
 		}
 
 		if (Input.GetKeyUp(KeyCode.Space))
 		{
 			deltaPos = startPos.y - gameObject.transform.position.y;
-			ball.VelocityBall(deltaPos, plungerForce);
+			ball.VelocityBall(deltaPos, plungerVelocity, ForceMode.VelocityChange);
 			isResetting = true;
 			isActive = false;
 		}
@@ -49,7 +53,7 @@ public class SpringLauncher : MonoBehaviour
 		{
 			if (gameObject.transform.position.y < startPos.y)
 			{
-				Vector3 _moveToStartPos = new Vector3(0f, resetSpeed * Time.deltaTime, 0f);
+				Vector3 _moveToStartPos = new Vector3(0f, 0f, -resetSpeed * Time.deltaTime);
 				gameObject.transform.Translate(_moveToStartPos);
 			}
 			else
@@ -61,6 +65,9 @@ public class SpringLauncher : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		isActive = true;
+		if(collision.gameObject.tag == Tags.Ball)
+		{
+			isActive = true;	
+		}
 	}
 }

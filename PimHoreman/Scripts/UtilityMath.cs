@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// UtilityMath class, is a class where multiple static function can be written for calculations.
+/// </summary>
 public static class UtilityMath
 {
 	/// <summary>

@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Check if the ball is in the trigger, if it is, then apply gravity, if not then uncheck the gravity.
+/// </summary>
 public class GravityTrigger : MonoBehaviour
 {
 	[SerializeField] private GameObject gate;

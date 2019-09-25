@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// ResetZone class, if the ball reaches the trigger, reset the ball trough the interface IReset.
+/// </summary>
 public class ResetZone : MonoBehaviour
 {
 	[SerializeField] private Vector3 startPosition;

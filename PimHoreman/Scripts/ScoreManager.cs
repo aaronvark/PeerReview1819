@@ -1,33 +1,58 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ScoreManager class, updates the score and the highscore.
+/// </summary>
 public class ScoreManager : MonoBehaviour
 {
+	private const string KEY = "localHighscore";
+
+	[SerializeField] private Text scoreText;
+	[SerializeField] private Text highscoreText;
+	[SerializeField] private string scoreString, highScoreString;
+
 	private int scoreAmount;
 	private int scoreTotal;
-	[SerializeField] private Text scoreText;
 
-	// Start is called before the first frame update
 	private void Start()
     {
+		UpdateLocalHighscore();
 		scoreAmount = 0;
+	}
+
+	private void UpdateLocalHighscore()
+	{
+		highscoreText.text = highScoreString + PlayerPrefs.GetInt(KEY).ToString();
 	}
 
 	private void UpdateScore(int _score)
 	{
 		scoreAmount += _score;
-		scoreText.text = scoreAmount.ToString();
+		scoreTotal = scoreAmount;
+		scoreText.text = scoreString + scoreAmount.ToString();
+	}
+
+	private void Update()
+	{
+		if(PlayerPrefs.GetInt(KEY) <= scoreAmount)
+		{
+			PlayerPrefs.SetInt(KEY, scoreTotal);
+			UpdateLocalHighscore();
+		}
 	}
 
 	private void OnEnable()
 	{
+		TargetPoints.TargetScoreEvent += UpdateScore;
+		Bouncer.BouncerScoreEvent += UpdateScore;
 		Brick.ScoreUpdateEvent += UpdateScore;
 	}
 
 	private void OnDisable()
 	{
+		TargetPoints.TargetScoreEvent -= UpdateScore;
+		Bouncer.BouncerScoreEvent -= UpdateScore;
 		Brick.ScoreUpdateEvent -= UpdateScore;
 	}
 }
