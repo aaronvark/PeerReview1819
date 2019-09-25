@@ -6,6 +6,6 @@ namespace Bas.Interfaces
 {
     public interface IPlayer
     {
-        void InstantiatePlayers();
+        void InitPlayers();
     }
 }

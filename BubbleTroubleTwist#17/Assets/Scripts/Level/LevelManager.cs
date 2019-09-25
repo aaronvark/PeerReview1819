@@ -1,76 +1,291 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Bas.Interfaces;
+using System.IO;
+using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviour, ILevel
+/// <summary>
+/// Level management class that handles all level related behaviour
+/// **Singleton** we may only have one instance at a time
+/// </summary>
+public class LevelManager : GenericSingleton<LevelManager, ILevel>, ILevel
 {
-    public List<Level> levels;
+    /// <summary>
+    /// list of all the levels we have
+    /// </summary>
+    [SerializeField] private List<Level> levels = new List<Level>();
+    public List<Level> Levels { get => levels; set => levels = value; }
 
-    public List<GameObject> players;
+    /// <summary>
+    /// list of all players in the game
+    /// </summary>
+    [SerializeField] private List<GameObject> players = new List<GameObject>();
+    public List<GameObject> Players { get => players; set => players = value; }
 
-    public OnLevelUpdate onLevelUpdate;
+    /// <summary>
+    /// string to store the levelJson data in
+    /// </summary>
+    private string LevelJsongString { get; set; }
 
-    #region Singleton
-    private static LevelManager instance;
-    public static ILevel Instance
+
+    private void OnEnable()
     {
-        get
-        {
-            if (instance == null)
-                instance = new LevelManager();
-            return instance;
-        }
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+
+        //subscribe UpdateLevel to OnLevelUpdateHandler stored in EventManager so we can easy call the update later on
+        EventManager.OnLevelUpdateHandler += UpdateLevel;
+        EventManager.AddHandler(EVENT.initializeGame, ResetPlayerPositions);
+        EventManager.AddHandler(EVENT.initializeGame, ResetLevels);
+        EventManager.AddHandler(EVENT.initializeGame, FromJson);
+        EventManagerGen<int>.AddHandler(EVENT.selectGame, SelectLevel);
+        EventManagerGen<float>.AddHandler(EVENT.gameUpdateEvent, SerializeToJson);
     }
 
-    private void Awake()
+    public override void Awake()
     {
-        instance = this;
+        base.Awake();
+        DontDestroyOnLoad(this.gameObject);
     }
-    #endregion
+        /*
 
-    private void Start()
+       //TO DO:
+
+        * BUG analysis: als ik op de reset game knop druk dan wordt het event OnGameOver gecalled 
+        * die ervoor zorgt dat de scene opnieuw opstart. Op het moment dat de scene opnieuw is geladen
+        * krijg ik meerdere nullreferenties die alleemaal erop neer komen dat bepaalde instanties niet meer 
+        * te bereiken zijn. De objecten referen naar een oude "versie" van de instanties en omdat het level
+        * herladen is zijn er nieuwe instanties. Deze instanties worden niet geupdate bij de objecten. Dit zorgt
+        * voor een nullreferentie. 
+        * 
+        * Misschien kan het zijn dat omdat ik mijn scene herlaad en ik bepaalde events in mijn EventManager 
+        * nog niet un-subscribe deze conflicten en oude referenties blijven zoeken. 
+        * 
+        * Oplossingen:
+        * --Kijken of ik de objecten kan laten updaten zodat deze de nieuwe versie van de instanties krijgen.
+        * --Kijken of als ik ipv het herladen van dezelfde scene eerst terug kan gaan naar het menu en dan 
+        * opnieuw het spel in kan laden het probleem zich nog voordoet. 
+        * --De resetGame veranderen naar dat ipv de scene opnieuw wordt geladen alleen alle data die gereset 
+        * zou moeten worden resetten. Dit zorgt ervoor dat er geen nieuwere versie van de instanties gemaakt 
+        * kan worden. 
+        */
+    
+
+    public override void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        //EventManager.AddHandler(EVENT.MyEvent2, UpdateLevel);
-        EventManager.onLevelUpdateHandler += UpdateLevel;
+        base.OnLevelFinishedLoading(scene, mode);
+        //EventManager.AddHandler(EVENT.initializeGame, FromJson);
+        FromJson();
+        
+        EventManagerGen<float>.BroadCast(EVENT.reloadGame, LastPlayedLevel().CurrentCameraX);
+        EventManager.Broadcast(EVENT.initializeGame);
     }
 
+    /*(OPTIONAL)
+     * Idee: Misschien is het leuk en handig om voor mijn levels een state machine
+     * te bouwen die checkt: OnLevelEntered() OnLevelUpdated() OnLevelExited()
+     * dit zorgt ervoor dat ik meer overzicht krijg over waar de speler zich bevindt 
+     * en over hoe ik de levels kan managen.
+     */
+
+    /// <summary>
+    /// Updates the current level state
+    /// </summary>
     public void UpdateLevel()
     {
-        Level level = levels?.Find(l => l.done.Equals(false));
-        
+        Level level = LastPlayedLevel();
         if(level != null)
         {
             if(CheckEnemiesAlive(level))
             {
-                level.enemiesAlive--;
+                level.EnemiesAlive--;
+                if(level.EnemiesAlive < 1)
+                {
+                    NextLevel(level);
+                }
                 return;
             }
             else
             {
-                level.done = true;
-                if (players == null) return;
-                foreach(GameObject player in players)
-                {
-                    player.transform.position = level.nextLevelPosition.position;
-                }
-                EventManager.Broadcast(EVENT.gameUpdateEvent);
+                NextLevel(level);
             }
         }
     }
 
-    private void OnDestroy()
+    public void SelectLevel(int levelIndex)
     {
-        EventManager.onLevelUpdateHandler -= UpdateLevel;
+        if (Levels.Count < 1) return;
+        Levels[levelIndex].Done = false;
+        for (int i = levelIndex; i < Levels.Count; i++)
+        {
+            Levels[i].Done = false;
+        }
+        SerializeToJson(0);
+        StartCoroutine(LoadSceneAsyncInBackground());
     }
 
+    public System.Collections.IEnumerator LoadSceneAsyncInBackground()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
+
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+    
+    private void NextLevel(Level level)
+    {
+        level.Done = true;
+        if (Players == null) return;
+        foreach (GameObject player in Players)
+        {
+            if (player == null) continue;
+            if (player != null) player.transform.position = level.NextLevelPosition;
+        }
+        EventManagerGen<float>.BroadCast(EVENT.gameUpdateEvent, LastPlayedLevel().CurrentCameraX);
+        EventManager.Broadcast(EVENT.initializeGame);
+    }
+
+    /// <summary>
+    /// Resets the game when clicked ( use with UI button )
+    /// </summary>
+    public void ResetGameOnClick()
+    {
+        foreach(Level level in Levels)
+        {
+            level.EnemiesAlive = level.EnemyAmounts;
+            level.Done = false;           
+        }
+        EventManager.OnGameOverHandler();
+    }
+
+    /// <summary>
+    /// Resets the levelss
+    /// </summary>
+    public void ResetLevels()
+    {
+        foreach(Level level in Levels)
+        {
+            level.EnemiesAlive = level.EnemyAmounts;
+        }
+    }
+    /// <summary>
+    /// Reads the Json file if found. And gives the levels list all the level data. 
+    /// </summary>
+    public void FromJson()
+    {
+        if (File.Exists(Application.dataPath + "/LevelsData.json"))
+        {
+            LevelJsongString = File.ReadAllText(Application.dataPath + "/LevelsData.json");
+        }
+        if (LevelJsongString == null || LevelJsongString == string.Empty)
+        {
+            return;
+        }
+        Levels = JsonHelper.FromJsonList<Level>(LevelJsongString);
+    }
+
+    /// <summary>
+    /// Serializes the levels list to a json string 
+    /// </summary>
+    /// <param name="x"></param>
+    public void SerializeToJson(float x)
+    {
+        if (Levels == null || Levels.Count < 1) return;
+        //Convert to Json
+        LevelJsongString = JsonHelper.ToJsonList(Levels);
+        Debug.Log(LevelJsongString);
+        File.WriteAllText(Application.dataPath + "/LevelsData.json", LevelJsongString);
+    }
+
+    /// <summary>
+    /// Reset the player positions
+    /// </summary>
+    /// <param name="x"></param>
+    public void ResetPlayerPositions()
+    {
+        Level _level = LastPlayedLevel();
+        foreach (GameObject player in Players)
+        {
+            if (player == null) return;
+            player.transform.position = _level.CurrentLevelPostion;
+        }
+    }
+
+
+    /// <summary>
+    /// Search the last played level in levels list
+    /// </summary>
+    /// <returns></returns>
+    public Level LastPlayedLevel()
+    {
+        return Levels?.Find(l => l.Done.Equals(false));
+    }
+
+    /// <summary>
+    /// Returns the current levels
+    /// </summary>
+    /// <returns></returns>
+    public List<Level> GiveLevels()
+    {
+        return Levels;
+    }
+
+    /// <summary>
+    /// Clears the players list 
+    /// </summary>
+    public void ClearPlayers()
+    {
+        Players.Clear();
+    }
+
+    /// <summary>
+    /// Add a player to the player list
+    /// </summary>
+    /// <param name="player"></param>
     public void AddPlayer(GameObject player)
     {
-        players.Add(player);
+        foreach(GameObject _player in Players)
+        {
+            if (_player == null)
+            {
+                Players.Remove(_player);
+            }
+        }
+        //if (players.Count > playersData.Count) players.Clear();
+        //else players.Add(player);
+        Players.Add(player);
     }
 
+    /// <summary>
+    /// Create a new level
+    /// </summary>
+    /// <param name="_prefab"></param>
+    /// <param name="_position"></param>
+    public void CreateLevel(GameObject _prefab, Vector3 _position)
+    {
+        GameObject newLevel = GameObject.Instantiate(_prefab, _position, _prefab.transform.rotation);
+    }
+
+    /// <summary>
+    /// When this instance gets destroyed we unsubscribe 
+    /// </summary>
+    private void OnDisable()
+    {
+        EventManager.OnLevelUpdateHandler -= UpdateLevel;
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+
+        //EventManagerGen<float>.RemoveHandler(EVENT.reloadGame);
+    }
+
+    /// <summary>
+    /// Check if there are enemies alive in the current level
+    /// </summary>
+    /// <param name="level"></param>
+    /// <returns></returns>
     private bool CheckEnemiesAlive(Level level)
     {
-        return level.enemiesAlive > 1 ? true : false;
+        return level.EnemiesAlive > 0 ? true : false;
     }
 }

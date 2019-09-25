@@ -8,7 +8,7 @@ public class PlayerCollisions : AbstractAvatarClass
     {
         if(collision.gameObject.tag == "Enemy")
         {
-            TakeDamage(collision.gameObject.GetComponent<Enemy>().damage);
+            TakeDamage(collision.gameObject.GetComponent<Enemy>().Damage);
             return;
         }
     }
