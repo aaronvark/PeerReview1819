@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 
-public class Pellet : MonoBehaviour, IScore
+public class Pellet : MonoBehaviour, IScore, ISound
 {
     public static int PelletCount { get; private set; } = 0;    // Keep a reference to the number of pellets
 
     [SerializeField]
     protected int scoreValue = 10;
+    [SerializeField]
+    protected AudioClip consumedSound;
 
     public float ScoreValue => scoreValue;
+    public SoundClip[] SoundClips => new []{ new SoundClip(consumedSound) };
 
     protected virtual void OnEnable()
     {
@@ -23,6 +26,7 @@ public class Pellet : MonoBehaviour, IScore
     {
         Destroy(gameObject);
         ScoreManager.Instance.AddScore(this);
+        SoundManager.Instance.PlaySoundClipAtPoint(this);
         GameManager.Instance.CheckPellets();
     }
 }

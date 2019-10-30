@@ -36,6 +36,15 @@ public class Player : Singleton<Player>
         // Stores the input value for use in the fixed update for correct physics handling.
         horizontalInput = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
         AnimateMouth();
     }
 
