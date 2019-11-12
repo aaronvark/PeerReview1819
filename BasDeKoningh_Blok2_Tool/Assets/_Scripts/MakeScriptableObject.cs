@@ -1,22 +1,25 @@
 ﻿using UnityEngine;
 using UnityEditor;
-public class MakeScriptableObject
+namespace EasyAI
 {
+    public class MakeScriptableObject
+    {
 #if UNITY_EDITOR
 
-    [MenuItem("Assets/Create/ScriptableNPC")]
-    public static void CreateMyAsset()
-    {
-        ScriptableNPC asset = ScriptableObject.CreateInstance<ScriptableNPC>();
+        [MenuItem("Assets/Create/ScriptableNPC")]
+        public static void CreateMyAsset()
+        {
+            ScriptableNPC asset = ScriptableObject.CreateInstance<ScriptableNPC>();
 
-        AssetDatabase.CreateAsset(asset, "Assets/Resources/NewScriptableNPC.asset");
-        AssetDatabase.SaveAssets();
+            AssetDatabase.CreateAsset(asset, "Assets/Resources/NewScriptableNPC.asset");
+            AssetDatabase.SaveAssets();
 
-        EditorUtility.FocusProjectWindow();
+            EditorUtility.FocusProjectWindow();
 
-        Selection.activeObject = asset;
-    }
+            Selection.activeObject = asset;
+        }
 
 #endif
 
+    }
 }

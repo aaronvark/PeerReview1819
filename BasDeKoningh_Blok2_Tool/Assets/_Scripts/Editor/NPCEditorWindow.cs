@@ -35,7 +35,7 @@ namespace EasyAI
             scriptableNpc = EditorGUILayout.ObjectField(scriptableNpc, typeof(ScriptableNPC), true) as ScriptableNPC;
             if (GUILayout.Button("Edit This NPC"))
             {
-
+                CreateNPC(scriptableNpc);
             }
 
             /*
@@ -51,6 +51,13 @@ namespace EasyAI
             }*/
 
 
+        }
+
+        private void CreateNPC(ScriptableNPC npc)
+        {
+            GameObject newNpc = GameObject.Instantiate(npc.Prefab, npc.SpawnPosition);
+            MonoBehaviour script = npc.AISystem;
+            newNpc.AddComponent(script.GetType());
         }
 
         private void DrawScriptableObject()

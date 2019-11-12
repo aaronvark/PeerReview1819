@@ -69,6 +69,7 @@
     <Compile Include="Assets\_Scripts\GenerateStruct.cs" />
     <Compile Include="Assets\_Scripts\Globals.cs" />
     <Compile Include="Assets\_Scripts\JsonConverter.cs" />
+    <Compile Include="Assets\_Scripts\JsonHelper.cs" />
     <Compile Include="Assets\_Scripts\MakeScriptableObject.cs" />
     <Compile Include="Assets\_Scripts\ScriptableNPC.cs" />
     <Compile Include="Assets\_Scripts\ScriptableSetting.cs" />

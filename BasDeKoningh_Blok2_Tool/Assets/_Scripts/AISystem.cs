@@ -41,7 +41,9 @@ namespace EasyAI
         public WanderType WanderType;
         public CombatStyle CombatStyle;
     }
-
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(MeshCollider))]
+    [RequireComponent(typeof(Animator))]
     public class AISystem : MonoBehaviour
     {
         [SerializeField] private List<ScriptableSetting> scriptableSettings;
@@ -49,13 +51,19 @@ namespace EasyAI
 
         private void OnEnable()
         {
-            ScriptableSettings = Resources.LoadAll<ScriptableSetting>("Settings/").ToList();
+            //ScriptableSettings = Resources.LoadAll<ScriptableSetting>("Settings/").ToList();
             EventManager<ScriptableSetting>.AddHandler(EVENT.show, ShowSetting);
+
         }
 
         public void ShowSetting(ScriptableSetting setting)
         {
 
+        }
+
+        public void AddSettings(List<ScriptableSetting> settings)
+        {
+            ScriptableSettings = settings;
         }
     }
 }

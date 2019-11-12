@@ -28,20 +28,23 @@ namespace EasyAI
                 SerializedProperty check = setting.FindPropertyRelative("Show");
                 if (check.boolValue)
                 {
-                    SerializedProperty item0 = setting.FindPropertyRelative("Mood");
-                    SerializedProperty item1 = setting.FindPropertyRelative("Confidence");
-                    SerializedProperty item2 = setting.FindPropertyRelative("WanderType");
-                    SerializedProperty item3 = setting.FindPropertyRelative("CombatStyle");
+                    List<SerializedProperty> items = new List<SerializedProperty>();
+                    for (int j = 0; j < setting.arraySize; j++)
+                    {
+                        items.Add(setting.GetArrayElementAtIndex(j));
+                    }
+                    foreach(SerializedProperty property in items)
+                    {
+                        //Draw the properties of the active settings
+                        EditorGUILayout.LabelField("Properties:");
+                        EditorGUILayout.PropertyField(property);
+                        EditorGUILayout.PropertyField(property);
+                        EditorGUILayout.PropertyField(property);
+                        EditorGUILayout.PropertyField(property);
 
-                    //2 : Full custom GUI Layout <-- Choose me I can be fully customized with GUI options.
-                    EditorGUILayout.LabelField("Customizable Field With GUI");
-                    EditorGUILayout.PropertyField(item0);
-                    EditorGUILayout.PropertyField(item1);
-                    EditorGUILayout.PropertyField(item2);
-                    EditorGUILayout.PropertyField(item3);
 
-
-                    EditorGUILayout.Space();
+                        EditorGUILayout.Space();
+                    }
                 }
                 else
                 {
