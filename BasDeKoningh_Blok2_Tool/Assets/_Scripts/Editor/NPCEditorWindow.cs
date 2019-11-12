@@ -2,57 +2,120 @@
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
-public class NPCEditorWindow : EditorWindow
+using System.Reflection;
+
+namespace EasyAI
 {
-    public string LevelJsonString { get; set; }
-
-    private Vector3 scrollPos = new Vector3(500, 0, 0);
-    // declaring our serializable object, that we are working on
-    public ScriptableNPC scriptableNpc;
-    private SerializedObject serializedNpc;
-    private SerializedProperty serializedNpcProperty;
-    private ExtendedScriptableObjectDrawer extendedScriptableObjectDrawer;
-
-    // Add menu named "NPCEditor" to the Window menu
-    [MenuItem("Window/NPCEditor")]
-    static void Init()
+    public class NPCEditorWindow : EditorWindow
     {
-        // Get existing open window or if none, make a new one:
-        NPCEditorWindow window = (NPCEditorWindow)EditorWindow.GetWindow(typeof(NPCEditorWindow));
-        window.Show();       
-    }
+        public string LevelJsonString { get; set; }
 
-    void OnGUI()
-    {
-        EditorGUILayout.BeginHorizontal();
+        private Vector3 scrollPos = new Vector3(500, 0, 0);
+        // declaring our serializable object, that we are working on
+        public ScriptableNPC scriptableNpc;
+        private SerializedObject serializedNpc;
+        private SerializedProperty serializedNpcProperty;
         
-        EditorGUILayout.LabelField("NPC:", EditorStyles.boldLabel);
-
-        // Gets the property of our asset and create a field with its value
-        scriptableNpc = EditorGUILayout.ObjectField(scriptableNpc, typeof(ScriptableNPC), true) as ScriptableNPC;
-        
-        if(GUILayout.Button("Edit This NPC"))
+        // Add menu named "NPCEditor" to the Window menu
+        [MenuItem("Window/NPCEditor")]
+        static void Init()
         {
-            //serializedNpc = new SerializedObject(scriptableNpc);
-            var editor = Editor.CreateEditor(scriptableNpc);
-            if(editor != null)
-            {
-                editor.OnInspectorGUI();
-            }
+            // Get existing open window or if none, make a new one:
+            NPCEditorWindow window = (NPCEditorWindow)EditorWindow.GetWindow(typeof(NPCEditorWindow));
+            window.Show();
         }
 
-        /*
-        if (serializedNpc != null)
+        void OnGUI()
         {
-            // Starting our manipulation
-            // We're doing this before property rendering           
-            serializedNpc.Update();
-            serializedNpcProperty = serializedNpc.FindProperty("npcId");
-            EditorGUILayout.PropertyField(serializedNpcProperty);
-            // Apply changes
-            serializedNpc.ApplyModifiedProperties();
-        }*/
+            EditorGUILayout.BeginHorizontal();
+
+            EditorGUILayout.LabelField("NPC:", EditorStyles.boldLabel);
+
+            // Gets the property of our asset and create a field with its value
+            scriptableNpc = EditorGUILayout.ObjectField(scriptableNpc, typeof(ScriptableNPC), true) as ScriptableNPC;
+            if (GUILayout.Button("Edit This NPC"))
+            {
+
+            }
+
+            /*
+            if (serializedNpc != null)
+            {
+                // Starting our manipulation
+                // We're doing this before property rendering           
+                serializedNpc.Update();
+                serializedNpcProperty = serializedNpc.FindProperty("npcId");
+                EditorGUILayout.PropertyField(serializedNpcProperty);
+                // Apply changes
+                serializedNpc.ApplyModifiedProperties();
+            }*/
 
 
+        }
+
+        private void DrawScriptableObject()
+        {
+            serializedNpc = new SerializedObject(scriptableNpc);
+            foreach (SerializedProperty property in serializedNpc.GetIterator().GetChildren())
+            {
+                if (property.objectReferenceValue != null)
+                {
+                    property.isExpanded = EditorGUILayout.Foldout(property.isExpanded, property.displayName, true);
+                    EditorGUILayout.PropertyField(property, GUIContent.none, true);
+                    if (GUI.changed) property.serializedObject.ApplyModifiedProperties();
+                    if (property.objectReferenceValue == null) EditorGUIUtility.ExitGUI();
+
+                    if (property.isExpanded)
+                    {
+                        // Draw a background that shows us clearly which fields are part of the ScriptableObject
+                        //GUI.Box(new Rect(0, position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing - 1, Screen.width, position.height - EditorGUIUtility.singleLineHeight - EditorGUIUtility.standardVerticalSpacing), "");
+
+                        EditorGUI.indentLevel++;
+                        var data = (ScriptableObject)property.objectReferenceValue;
+                        SerializedObject serializedObject = new SerializedObject(data);
+
+                        // Iterate over all the values and draw them
+                        SerializedProperty prop = serializedObject.GetIterator();
+                        float y = position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+                        if (prop.NextVisible(true))
+                        {
+                            do
+                            {
+                                // Don't bother drawing the class file
+                                if (prop.name == "m_Script") continue;
+                                float height = EditorGUI.GetPropertyHeight(prop, new GUIContent(prop.displayName), true);
+                                EditorGUILayout.PropertyField(prop, true);
+                                y += height + EditorGUIUtility.standardVerticalSpacing;
+                            }
+                            while (prop.NextVisible(false));
+                        }
+                        if (GUI.changed)
+                            serializedObject.ApplyModifiedProperties();
+
+                        EditorGUI.indentLevel--;
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.ObjectField(property);
+                    if (GUI.Button(new Rect(position.x + position.width - 58, position.y, 58, EditorGUIUtility.singleLineHeight), "Create"))
+                    {
+                        string selectedAssetPath = "Assets";
+                        if (property.serializedObject.targetObject is MonoBehaviour)
+                        {
+                            MonoScript ms = MonoScript.FromMonoBehaviour((MonoBehaviour)property.serializedObject.targetObject);
+                            selectedAssetPath = System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(ms));
+                        }
+                        /*
+                        System.Type type = fieldInfo.FieldType;
+                        if (type.IsArray) type = type.GetElementType();
+                        else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) type = type.GetGenericArguments()[0];
+                        property.objectReferenceValue = CreateAssetWithSavePrompt(type, selectedAssetPath);*/
+                    }
+                }
+                property.serializedObject.ApplyModifiedProperties();
+                EditorGUI.EndProperty();
+            }
+        }
     }
 }
