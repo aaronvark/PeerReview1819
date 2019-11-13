@@ -16,9 +16,7 @@ namespace EasyAI
         public string NpcName { get => npcName; set => npcName = value; }
         public NPCType NpcType { get => npcType; set => npcType = value; }
         public GameObject Prefab { get => prefab; set => prefab = value; }
-
         public Transform SpawnPosition { get => spawnPosition; set => spawnPosition = value; }
-
         public AISystem AISystem { get => aiSystem; set => aiSystem = value; }
 
         public List<ScriptableSetting> settings;

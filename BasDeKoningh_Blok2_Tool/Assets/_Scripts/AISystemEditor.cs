@@ -18,7 +18,13 @@ namespace EasyAI
 
         public override void OnInspectorGUI()
         {
-            theTarget.Update();
+            if(theTarget != null)
+                theTarget.Update();
+            else
+            {
+                theTarget = new SerializedObject(target);
+                settings = theTarget.FindProperty("scriptableSettings");
+            }
 
             //Display our settings to the inspector window
 

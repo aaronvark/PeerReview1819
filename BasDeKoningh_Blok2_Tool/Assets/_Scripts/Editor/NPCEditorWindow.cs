@@ -12,7 +12,7 @@ namespace EasyAI
 
         private Vector3 scrollPos = new Vector3(500, 0, 0);
         // declaring our serializable object, that we are working on
-        public ScriptableNPC scriptableNpc;
+        public ScriptableObject scriptableObject;
         private SerializedObject serializedNpc;
         private SerializedProperty serializedNpcProperty;
         
@@ -27,102 +27,30 @@ namespace EasyAI
 
         void OnGUI()
         {
-            EditorGUILayout.BeginHorizontal();
 
             EditorGUILayout.LabelField("NPC:", EditorStyles.boldLabel);
 
             // Gets the property of our asset and create a field with its value
-            scriptableNpc = EditorGUILayout.ObjectField(scriptableNpc, typeof(ScriptableNPC), true) as ScriptableNPC;
-            if (GUILayout.Button("Edit This NPC"))
+            scriptableObject = EditorGUILayout.ObjectField(scriptableObject, typeof(ScriptableObject), true) as ScriptableObject;
+            if(scriptableObject == null) { return; }
+            var editor = Editor.CreateEditor(scriptableObject);
+            if (editor != null)
             {
-                CreateNPC(scriptableNpc);
+                editor.OnInspectorGUI();
             }
-
-            /*
-            if (serializedNpc != null)
+            if (GUILayout.Button("Create This NPC"))
             {
-                // Starting our manipulation
-                // We're doing this before property rendering           
-                serializedNpc.Update();
-                serializedNpcProperty = serializedNpc.FindProperty("npcId");
-                EditorGUILayout.PropertyField(serializedNpcProperty);
-                // Apply changes
-                serializedNpc.ApplyModifiedProperties();
-            }*/
-
-
+                //Create the npc with the selected settings
+                //We need to save the selected settings to maby some json file and we need to load the settings on the prefab. 
+                CreateNPC(scriptableObject as ScriptableNPC);
+            }
         }
 
         private void CreateNPC(ScriptableNPC npc)
         {
-            GameObject newNpc = GameObject.Instantiate(npc.Prefab, npc.SpawnPosition);
-            MonoBehaviour script = npc.AISystem;
-            newNpc.AddComponent(script.GetType());
-        }
-
-        private void DrawScriptableObject()
-        {
-            serializedNpc = new SerializedObject(scriptableNpc);
-            foreach (SerializedProperty property in serializedNpc.GetIterator().GetChildren())
-            {
-                if (property.objectReferenceValue != null)
-                {
-                    property.isExpanded = EditorGUILayout.Foldout(property.isExpanded, property.displayName, true);
-                    EditorGUILayout.PropertyField(property, GUIContent.none, true);
-                    if (GUI.changed) property.serializedObject.ApplyModifiedProperties();
-                    if (property.objectReferenceValue == null) EditorGUIUtility.ExitGUI();
-
-                    if (property.isExpanded)
-                    {
-                        // Draw a background that shows us clearly which fields are part of the ScriptableObject
-                        //GUI.Box(new Rect(0, position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing - 1, Screen.width, position.height - EditorGUIUtility.singleLineHeight - EditorGUIUtility.standardVerticalSpacing), "");
-
-                        EditorGUI.indentLevel++;
-                        var data = (ScriptableObject)property.objectReferenceValue;
-                        SerializedObject serializedObject = new SerializedObject(data);
-
-                        // Iterate over all the values and draw them
-                        SerializedProperty prop = serializedObject.GetIterator();
-                        float y = position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-                        if (prop.NextVisible(true))
-                        {
-                            do
-                            {
-                                // Don't bother drawing the class file
-                                if (prop.name == "m_Script") continue;
-                                float height = EditorGUI.GetPropertyHeight(prop, new GUIContent(prop.displayName), true);
-                                EditorGUILayout.PropertyField(prop, true);
-                                y += height + EditorGUIUtility.standardVerticalSpacing;
-                            }
-                            while (prop.NextVisible(false));
-                        }
-                        if (GUI.changed)
-                            serializedObject.ApplyModifiedProperties();
-
-                        EditorGUI.indentLevel--;
-                    }
-                }
-                else
-                {
-                    EditorGUILayout.ObjectField(property);
-                    if (GUI.Button(new Rect(position.x + position.width - 58, position.y, 58, EditorGUIUtility.singleLineHeight), "Create"))
-                    {
-                        string selectedAssetPath = "Assets";
-                        if (property.serializedObject.targetObject is MonoBehaviour)
-                        {
-                            MonoScript ms = MonoScript.FromMonoBehaviour((MonoBehaviour)property.serializedObject.targetObject);
-                            selectedAssetPath = System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(ms));
-                        }
-                        /*
-                        System.Type type = fieldInfo.FieldType;
-                        if (type.IsArray) type = type.GetElementType();
-                        else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>)) type = type.GetGenericArguments()[0];
-                        property.objectReferenceValue = CreateAssetWithSavePrompt(type, selectedAssetPath);*/
-                    }
-                }
-                property.serializedObject.ApplyModifiedProperties();
-                EditorGUI.EndProperty();
-            }
+            GameObject newNpc = Instantiate(npc.Prefab, npc.SpawnPosition.position, Quaternion.identity);
+            var script = newNpc.AddComponent<AISystem>();
+            script.GiveNpcData(npc);
         }
     }
 }

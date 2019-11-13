@@ -49,6 +49,8 @@ namespace EasyAI
         [SerializeField] private List<ScriptableSetting> scriptableSettings;
         public List<ScriptableSetting> ScriptableSettings { get => scriptableSettings; set => scriptableSettings = value; }
 
+        private ScriptableNPC thisNpc;
+
         private void OnEnable()
         {
             //ScriptableSettings = Resources.LoadAll<ScriptableSetting>("Settings/").ToList();
@@ -64,6 +66,11 @@ namespace EasyAI
         public void AddSettings(List<ScriptableSetting> settings)
         {
             ScriptableSettings = settings;
+        }
+
+        public void GiveNpcData(ScriptableNPC npc)
+        {
+            thisNpc = npc;
         }
     }
 }
