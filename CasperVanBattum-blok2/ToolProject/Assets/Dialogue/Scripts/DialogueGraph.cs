@@ -21,7 +21,6 @@ public class DialogueGraph : NodeGraph {
     }
 
     public void Start() {
-//        Current = FindEntryNode();
         if (Current is EntryNode) MoveNext();
     }
 
@@ -39,7 +38,11 @@ public class DialogueGraph : NodeGraph {
 
     private EntryNode FindEntryNode() {
         var firstEntryNode = nodes.Find((node) => node is EntryNode);
-        return (EntryNode) firstEntryNode;
+        return firstEntryNode as EntryNode;
+    }
+
+    public bool HasEntryNode() {
+        return FindEntryNode() != null;
     }
 }
 }

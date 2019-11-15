@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using XNode;
 
 namespace Dialogue {
 public class DialogueNode : DialogueBaseNode {
@@ -14,7 +13,4 @@ public class DialogueNode : DialogueBaseNode {
         return (DialogueBaseNode) outPort?.Connection.node;
     }
 }
-
-[System.Serializable]
-internal class Empty { }
 }

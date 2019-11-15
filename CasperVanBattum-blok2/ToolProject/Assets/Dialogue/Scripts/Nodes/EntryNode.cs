@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using XNode;
 
 namespace Dialogue {
 public class EntryNode : DialogueBaseNode {
