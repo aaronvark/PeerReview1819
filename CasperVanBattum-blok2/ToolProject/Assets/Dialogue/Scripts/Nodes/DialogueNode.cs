@@ -10,7 +10,12 @@ public class DialogueNode : DialogueBaseNode {
     
     public override DialogueBaseNode GetNextNode() {
         var outPort = GetOutputPort("outputNode");
-        return (DialogueBaseNode) outPort?.Connection.node;
+        if (outPort.Connection == null) {
+            return null;
+        }
+        else {
+            return outPort.Connection.node as DialogueBaseNode;
+        }
     }
 }
 }

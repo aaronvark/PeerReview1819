@@ -8,36 +8,39 @@ namespace Dialogue {
 /// </summary>
 public class Conversation {
     private readonly DialogueGraph dialogue;
+    private DialogueBaseNode current;
+
+    public bool Active { get; private set; }
 
     public Conversation(DialogueGraph dialogue) {
         this.dialogue = dialogue;
     }
-    
-    private DialogueBaseNode _current;
-
-    private DialogueBaseNode Current {
-        get {
-            if (_current == null) {
-                if ((_current = dialogue.FindEntryNode()) == null) {
-                    throw new InvalidOperationException("No entry point in dialogue graph");
-                }
-            }
-
-            return _current;
-        }
-        set => _current = value;
-    }
 
     public void Start() {
-        if (Current is EntryNode) MoveNext();
+        if (!current) {
+            if (!(current = dialogue.FindEntryNode())) {
+                throw new InvalidOperationException("No entry point in dialogue graph");
+            }
+        }
+
+        MoveNext();
+        Active = true;
     }
 
     public void MoveNext() {
-        Current = Current.GetNextNode();
+        current = current.GetNextNode();
 
-        DisplayNode(Current);
+        DisplayNode(current);
+        
+        PeekNext();
     }
-    
+
+    private void PeekNext() {
+        if (!current.GetNextNode()) {
+            Active = false;
+        }
+    }
+
     private void DisplayNode(DialogueBaseNode node) {
         if (node is DialogueNode dialogueNode) {
             Debug.Log(dialogueNode.Text);

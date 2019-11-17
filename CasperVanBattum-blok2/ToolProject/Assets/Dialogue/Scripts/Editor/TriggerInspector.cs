@@ -10,7 +10,7 @@ public class TriggerInspector : Editor {
     private int choiceIndex;
 
     public override void OnInspectorGUI() {
-        var trigger = target as DialogueTrigger;
+        var trigger = (DialogueTrigger) target;
 
         serializedObject.Update();
 
@@ -61,7 +61,7 @@ public class TriggerInspector : Editor {
 
         // Obtain the currently selected index from the underlying DialogueTrigger. Retains selection throughout
         // inspector opening/closing.
-        var trigger = target as DialogueTrigger;
+        var trigger = (DialogueTrigger) target;
         choiceIndex = options.IndexOf(trigger.triggerButton);
     }
 }
