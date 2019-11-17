@@ -36,7 +36,7 @@ public class Conversation {
     }
 
     private void PeekNext() {
-        if (!current.GetNextNode()) {
+        if (current.GetNextNode() is ExitNode) {
             Active = false;
         }
     }

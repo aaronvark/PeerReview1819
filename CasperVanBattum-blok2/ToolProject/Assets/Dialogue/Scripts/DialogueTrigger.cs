@@ -24,7 +24,7 @@ public class DialogueTrigger : MonoBehaviour {
         else if (conversation.Active) {
             conversation.MoveNext();
         }
-        
+
         // conversation.Active will be set to false during MoveNext() when the node after the current one is
         // nonexistent. In order to exit the conversation once the last node in the graph has been reached, it is
         // necessary to put an after-execution check on conversation.Active here.
