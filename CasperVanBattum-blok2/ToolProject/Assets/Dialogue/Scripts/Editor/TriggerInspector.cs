@@ -14,7 +14,7 @@ public class TriggerInspector : Editor {
 
         serializedObject.Update();
 
-        GUILayout.Space(10);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("triggerActive"));
 
         GUILayout.BeginHorizontal();
         {
@@ -24,6 +24,8 @@ public class TriggerInspector : Editor {
             trigger.triggerButton = options[choiceIndex];
         }
         GUILayout.EndHorizontal();
+        
+        GUILayout.Space(10);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("dialogueGraph"));
 

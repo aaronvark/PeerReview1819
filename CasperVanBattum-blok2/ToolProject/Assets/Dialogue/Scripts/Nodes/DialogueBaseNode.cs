@@ -19,9 +19,8 @@ public abstract class DialogueBaseNode : Node {
     public override object GetValue(NodePort port) {
         return null;
     }
-
-    // OnEnter isn't required to have an implementation.
-    public virtual DialogueBaseNode Get() {
+    
+    protected virtual DialogueBaseNode Get() {
         return this;
     }
 }

@@ -7,10 +7,14 @@ public class DialogueTrigger : MonoBehaviour {
 
     [SerializeField] public string triggerButton;
     [SerializeField] private DialogueGraph dialogueGraph;
+    [SerializeField] private bool triggerActive = true;
 
     private Conversation conversation;
 
     private void Update() {
+        if (!triggerActive) return;
+
+        // TODO make better triggers
         if (triggerButton != DO_NOT_USE && Input.GetButtonDown(triggerButton)) {
             Trigger();
         }
@@ -19,7 +23,15 @@ public class DialogueTrigger : MonoBehaviour {
     public void Trigger() {
         if (conversation == null) {
             conversation = new Conversation(dialogueGraph);
-            conversation.Start();
+            try {
+                conversation.Start();
+            }
+            catch (InvalidOperationException) {
+                // Start can throw an InvalidOperationException when the graph doesn't have an entry node. If this is
+                // thrown, the trigger should be deactivated. TODO Avoid this using graph validation.
+                triggerActive = false;
+                throw;
+            }
         }
         else if (conversation.Active) {
             conversation.NextNode();
@@ -31,7 +43,8 @@ public class DialogueTrigger : MonoBehaviour {
         if (!conversation.Active) {
             // Reached end of dialogue graph
             Debug.Log("reached end of convo");
-            Destroy(this);
+//            Destroy(this);
+            triggerActive = false;
         }
     }
 }

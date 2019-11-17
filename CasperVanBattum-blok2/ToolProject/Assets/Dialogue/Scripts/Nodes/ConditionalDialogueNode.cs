@@ -4,7 +4,7 @@ namespace Dialogue {
 public class ConditionalDialogueNode : DialogueNode {
     [SerializeField] private bool condition;
 
-    public override DialogueBaseNode Get() {
+    protected override DialogueBaseNode Get() {
         return condition ? this : GetNextNode();
     }
 }
