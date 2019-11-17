@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Dialogue;
 using UnityEditor;
 using UnityEngine;
@@ -26,7 +25,7 @@ public class TriggerInspector : Editor {
         }
         GUILayout.EndHorizontal();
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("conversation"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("dialogueGraph"));
 
         serializedObject.ApplyModifiedProperties();
     }
