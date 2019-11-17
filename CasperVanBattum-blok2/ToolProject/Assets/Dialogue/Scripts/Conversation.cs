@@ -18,24 +18,28 @@ public class Conversation {
 
     public void Start() {
         if (!current) {
-            if (!(current = dialogue.FindEntryNode())) {
+            // FIXME shouldn't there be an error when the current is already set? Or just always reset the node to entry
+            // If current is not set (which is highly likely when you're starting a conversation) try to assign the
+            // entry node defined by the dialogue graph to the current node. If it is still null, scream.
+            if (!(current = dialogue.EntryNode)) {
                 throw new InvalidOperationException("No entry point in dialogue graph");
             }
         }
 
-        MoveNext();
+        NextNode();
         Active = true;
     }
 
-    public void MoveNext() {
+    public void NextNode() {
         current = current.GetNextNode();
 
         DisplayNode(current);
-        
+
         PeekNext();
     }
 
     private void PeekNext() {
+        // Deactivate the conversation once the graph has reached an exit node
         if (current.GetNextNode() is ExitNode) {
             Active = false;
         }

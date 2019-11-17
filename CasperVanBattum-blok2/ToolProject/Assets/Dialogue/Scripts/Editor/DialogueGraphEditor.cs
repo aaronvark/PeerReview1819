@@ -8,7 +8,7 @@ namespace DialogueEditor {
 public class DialogueGraphEditor : NodeGraphEditor {
     // Override method to check if a node of type EntryNode already exists in the graph, making the user unable to add
     // multiple entry nodes to the same graph via the node editor.
-    // TODO change xNode to make this easier. Most of this method is copied right now while I only need to change the logic that adds the items.
+    // FIXME change xNode to make this easier. Most of this method is copied from the source code while I only need to change the logic that adds the items to the menu.
     public override void AddContextMenuItems(GenericMenu menu) {
         var pos = NodeEditorWindow.current.WindowToGridPosition(Event.current.mousePosition);
 

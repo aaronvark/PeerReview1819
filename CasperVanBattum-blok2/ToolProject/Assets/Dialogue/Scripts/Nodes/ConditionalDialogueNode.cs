@@ -1,7 +1,11 @@
-﻿namespace Dialogue {
+﻿using UnityEngine;
+
+namespace Dialogue {
 public class ConditionalDialogueNode : DialogueNode {
-    public override DialogueBaseNode GetNextNode() {
-        return base.GetNextNode();
+    [SerializeField] private bool condition;
+
+    public override DialogueBaseNode Get() {
+        return condition ? this : GetNextNode();
     }
 }
 }

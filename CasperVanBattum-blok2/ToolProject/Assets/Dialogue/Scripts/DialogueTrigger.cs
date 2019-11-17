@@ -22,7 +22,7 @@ public class DialogueTrigger : MonoBehaviour {
             conversation.Start();
         }
         else if (conversation.Active) {
-            conversation.MoveNext();
+            conversation.NextNode();
         }
 
         // conversation.Active will be set to false during MoveNext() when the node after the current one is
