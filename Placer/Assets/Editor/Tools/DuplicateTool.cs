@@ -29,9 +29,13 @@ namespace Placer.PlacerTools
         public delegate void PerformedDuplicate();
         public PerformedDuplicate performedDuplicate = null; 
 
+        [SerializeField]
+        [HideInInspector]
         private Bounds objectBounds, duplicationBounds = new Bounds();
+
         private BoxBoundsHandle boxBoundsHandle = new BoxBoundsHandle();
 
+        // The tool breaks if it is selected when re-initialising the code. This method deselects the tool on initialization.
         [InitializeOnLoadMethod]
         [SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Called on initialization")]
         private static void RestorePreviousIfSelectedOnInitialize()
@@ -64,28 +68,33 @@ namespace Placer.PlacerTools
             EditorTools.activeToolChanging -= DuplicateIfDeselected;
         }
 
+        // Whenever the active Editor Tool has changed, this method is called to check if this tool was selected.
+        // If it is, the tool does everything it needs to do on selection.
+        // This way, these methods are called even when the Editor Tool is changed from script.
         private void ResetBoundsIfSelected()
         {
             if(EditorTools.IsActiveTool(this))
             {
                 ResetBounds();
                 Selection.selectionChanged += ResetBounds;
+                Undo.undoRedoPerformed += ResetHandleBounds;
             }
         }
 
+        // Same as above, but for deselection.
         private void DuplicateIfDeselected()
         {
             if(EditorTools.IsActiveTool(this))
             {
                 Selection.selectionChanged -= ResetBounds;
+                Undo.undoRedoPerformed -= ResetHandleBounds;
                 Duplicate();
             }
         }
 
+        // When the selection is changed, reset the bounds of the tool.
         public void ResetBounds()
         {
-            RecordObject("Bounds Reset");
-
             GameObject[] selectedGameObjects = Selection.gameObjects;
             if(selectedGameObjects.Length > 0)
             {
@@ -106,10 +115,18 @@ namespace Placer.PlacerTools
             }
 
             duplicationBounds.SetMinMax(objectBounds.center, objectBounds.center);
-            boxBoundsHandle.center = objectBounds.center;
-            boxBoundsHandle.size = objectBounds.size;
+            ResetHandleBounds();
         }
 
+        // Handle Bounds need to be manually changed on UndoRedoPerformed because it can't be serialized.
+        // Basically, don't worry about it.
+        private void ResetHandleBounds()
+        {
+            boxBoundsHandle.center = duplicationBounds.center;
+            boxBoundsHandle.size = duplicationBounds.max - duplicationBounds.min + objectBounds.size;
+        }
+
+        // Duplicate the selection and move them accordingly.
         public void Duplicate()
         {
             if(Mathf.Approximately(objectBounds.size.x, 0)
@@ -117,8 +134,7 @@ namespace Placer.PlacerTools
                 || Mathf.Approximately(objectBounds.size.z, 0))
                 return;
 
-            Object[] targetArray = targets.ToArray();
-            Selection.objects = targetArray;
+            Selection.objects = targets.ToArray();
 
             Vector3 offset = new Vector3();
             for(offset.x = duplicationBounds.min.x; offset.x < duplicationBounds.max.x || Mathf.Approximately(offset.x, duplicationBounds.max.x); offset.x += objectBounds.size.x)
@@ -144,6 +160,7 @@ namespace Placer.PlacerTools
             }
         }
 
+        // Draw the tool.
         public override void OnToolGUI(EditorWindow window)
         {
             if(objectBounds.size == Vector3.zero)
@@ -152,7 +169,8 @@ namespace Placer.PlacerTools
             EditorGUI.BeginChangeCheck();
 
             boxBoundsHandle.DrawHandle();
-
+            
+            // When the handle is resized, update the necessary values.
             if(EditorGUI.EndChangeCheck())
             {
                 Vector3 min = new Vector3();
@@ -174,19 +192,11 @@ namespace Placer.PlacerTools
 
                 duplicationBounds.SetMinMax(min, max);
 
-                RecordObject("Bounds Changed");
+                Undo.RegisterCompleteObjectUndo(this, "Bounds Changed");
             }
 
             Handles.color = Handles.xAxisColor;
             Handles.DrawWireCube(duplicationBounds.center, duplicationBounds.max - duplicationBounds.min + objectBounds.size);
-        }
-
-        private void RecordObject(string name)
-        {
-            Debug.Log(name);
-            Undo.RegisterCompleteObjectUndo(this, name);
-            Undo.FlushUndoRecordObjects();
-            EditorUtility.SetDirty(this);
         }
     }
 }
