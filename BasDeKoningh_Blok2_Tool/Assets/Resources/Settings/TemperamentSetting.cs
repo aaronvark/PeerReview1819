@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace EasyAI
 {
+
     public class TemperamentSetting : ScriptableSetting
     {
         [SerializeField] private bool show;

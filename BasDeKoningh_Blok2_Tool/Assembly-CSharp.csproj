@@ -62,18 +62,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\_Scripts\AiSettingData.cs" />
     <Compile Include="Assets\_Scripts\AISystem.cs" />
     <Compile Include="Assets\_Scripts\AISystemEditor.cs" />
-    <Compile Include="Assets\_Scripts\EventManager.cs" />
-    <Compile Include="Assets\_Scripts\ExtensionHelpers.cs" />
-    <Compile Include="Assets\_Scripts\ExtensionMethods.cs" />
+    <Compile Include="Assets\_Scripts\AnimationData.cs" />
+    <Compile Include="Assets\_Scripts\EventSystem\EventManager.cs" />
+    <Compile Include="Assets\_Scripts\ExtensionMethods\ExtensionHelpers.cs" />
+    <Compile Include="Assets\_Scripts\ExtensionMethods\ExtensionMethods.cs" />
     <Compile Include="Assets\_Scripts\GenerateStruct.cs" />
     <Compile Include="Assets\_Scripts\Globals.cs" />
+    <Compile Include="Assets\_Scripts\ISetting.cs" />
     <Compile Include="Assets\_Scripts\JsonConverter.cs" />
     <Compile Include="Assets\_Scripts\JsonHelper.cs" />
     <Compile Include="Assets\_Scripts\MakeScriptableObject.cs" />
     <Compile Include="Assets\_Scripts\ScriptableNPC.cs" />
     <Compile Include="Assets\_Scripts\ScriptableSetting.cs" />
+    <Compile Include="Assets\_Scripts\SettingBase.cs" />
+    <Compile Include="Assets\_Scripts\TemperamentData.cs" />
+    <Compile Include="Assets\_Scripts\WayPointData.cs" />
     <Compile Include="Assets\Resources\Settings\TemperamentSetting.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/School/Jaar2/KernModuleGameTools/BasDeKoningh_Blok2_Tool/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

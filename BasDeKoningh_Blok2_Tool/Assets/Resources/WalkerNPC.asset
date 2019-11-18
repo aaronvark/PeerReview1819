@@ -20,8 +20,7 @@ MonoBehaviour:
     type: 3}
   aiSystem: {fileID: 0}
   settings:
-  - {fileID: 11400000, guid: 6cc5bc43257f258448af8f8548c97d3a, type: 2}
-  - {fileID: 11400000, guid: d805031b80796784e864d8dc220a6c0f, type: 2}
-  - {fileID: 11400000, guid: 03739130c56d39e409f1746c05d0e9ba, type: 2}
-  - {fileID: 11400000, guid: 1116c3f1d566c4f49b86e77f2301d903, type: 2}
-  - {fileID: 11400000, guid: 7f5da0de2ce9ba34288e50f30e03d01c, type: 2}
+  - {fileID: 11500000, guid: 02a798919c3503d4b83221e263e2e61f, type: 3}
+  - {fileID: 11500000, guid: a8c8d9bc2496c3a4886576aabc63661a, type: 3}
+  - {fileID: 11500000, guid: b675bfc66c58499408d69136714fa9be, type: 3}
+  - {fileID: 11500000, guid: 388cc45fac0c8f8408a17d2d296c32cb, type: 3}

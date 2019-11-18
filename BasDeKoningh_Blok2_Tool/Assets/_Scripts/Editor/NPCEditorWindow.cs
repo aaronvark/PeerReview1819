@@ -51,6 +51,10 @@ namespace EasyAI
             GameObject newNpc = Instantiate(npc.Prefab, npc.SpawnPosition.position, Quaternion.identity);
             var script = newNpc.AddComponent<AISystem>();
             script.GiveNpcData(npc);
+            script.InitAI();
+            //We still need to make a change so we can save the selected properties on the npc
+            //However what happens now is that it overrides the selected settings scriptable objects
+
         }
     }
 }

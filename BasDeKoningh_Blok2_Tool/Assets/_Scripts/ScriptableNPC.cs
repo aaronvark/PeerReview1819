@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace EasyAI
 {
+    [System.Serializable]
     public class ScriptableNPC : ScriptableObject
     {
         [SerializeField] private string npcId;
@@ -19,7 +20,7 @@ namespace EasyAI
         public Transform SpawnPosition { get => spawnPosition; set => spawnPosition = value; }
         public AISystem AISystem { get => aiSystem; set => aiSystem = value; }
 
-        public List<ScriptableSetting> settings;
+        [SerializeField] public List<Object> settings;
 
     }
 }

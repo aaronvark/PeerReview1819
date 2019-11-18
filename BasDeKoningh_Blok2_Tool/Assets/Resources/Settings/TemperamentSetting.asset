@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: TemperamentSetting
   m_EditorClassIdentifier: 
   jsonSettingString: 
+  currentSetting: {fileID: 0}
   settingType: 0

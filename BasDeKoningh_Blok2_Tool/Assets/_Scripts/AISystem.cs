@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace EasyAI
-
 { 
     public enum Mood
     {
@@ -33,44 +32,78 @@ namespace EasyAI
         InBetween = 2
     }
 
-
-    public struct TemperamentData
+    public enum AiType
     {
-        public Mood Mood;
-        public Confidence Confidence;
-        public WanderType WanderType;
-        public CombatStyle CombatStyle;
+        Close = 0,
+        Ranged = 1,
+        Medic = 2
     }
+    
+    
+
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(MeshCollider))]
     [RequireComponent(typeof(Animator))]
     public class AISystem : MonoBehaviour
     {
-        [SerializeField] private List<ScriptableSetting> scriptableSettings;
-        public List<ScriptableSetting> ScriptableSettings { get => scriptableSettings; set => scriptableSettings = value; }
+        [HideInInspector]private Dictionary<int, Object> settingsData = new Dictionary<int, Object>();
 
+        [SerializeField]
         private ScriptableNPC thisNpc;
+        [SerializeField]
+        public TemperamentData temperamentData;
+        [SerializeField]
+        public AiSettingData aiSettingData;
+        [SerializeField]
+        public AnimationData animationData;
+        [SerializeField]
+        public WayPointData wayPointData;
 
-        private void OnEnable()
+        public void InitAI()
         {
-            //ScriptableSettings = Resources.LoadAll<ScriptableSetting>("Settings/").ToList();
-            EventManager<ScriptableSetting>.AddHandler(EVENT.show, ShowSetting);
-
+            temperamentData = new TemperamentData();
+            aiSettingData = new AiSettingData();
+            animationData = new AnimationData();
+            wayPointData = new WayPointData();
         }
 
-        public void ShowSetting(ScriptableSetting setting)
+        public void ShowSetting(SettingType settingType)
         {
+            //EventManager<Object>.BroadCast(EVENT.setSettings, settingsData[(int)settingType]/*thisNpc.settings.Find(s => s.SettingType.Equals(settingType))*/);
 
-        }
-
-        public void AddSettings(List<ScriptableSetting> settings)
-        {
-            ScriptableSettings = settings;
+            /*
+            switch (settingType)
+            {
+                case SettingType.Temperament:
+                    
+                    if (!settingBases.Contains(temperamentData))
+                        settingBases.Add(temperamentData);
+                    settingBases.Find(sb => sb.Equals(temperamentData)).ShowSetting();
+                    temperamentData.ShowSetting();
+                    break;
+                case SettingType.AISettings:
+                    if (!settingBases.Contains(aiSettings))
+                        settingBases.Add(aiSettings);
+                    settingBases.Find(sb => sb.Equals(aiSettings)).ShowSetting();
+                    break;
+                default:
+                    if (!settingBases.Contains(temperamentData))
+                        settingBases.Add(temperamentData);
+                    settingBases.Find(sb => sb.Equals(temperamentData)).ShowSetting();
+                    break;
+            }*/
         }
 
         public void GiveNpcData(ScriptableNPC npc)
         {
-            thisNpc = npc;
+            thisNpc = ScriptableObject.Instantiate(npc);
+            this.gameObject.name = thisNpc.NpcName;
+            for (int i = 0; i < thisNpc.settings.Count; i++)
+            {
+                //ScriptableObject settingClone = ScriptableObject.Instantiate(thisNpc.settings[i]) as ScriptableObject;
+                settingsData.Add(i, thisNpc.settings[i]);
+            }
+            //EventManager<SettingType>.AddHandler(EVENT.show, ShowSetting);
         }
     }
 }
