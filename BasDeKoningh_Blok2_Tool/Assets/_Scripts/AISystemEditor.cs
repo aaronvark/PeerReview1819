@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 namespace EasyAI
 {
@@ -72,10 +73,30 @@ namespace EasyAI
                 data = theTarget.FindProperty("temperamentData");
                 EventManager<SettingType>.AddHandler(EVENT.show, ChangeOpenSetting);
             }
-            /*0
-             * Create enum die kijkt welke propertie die wilt uitlezen.
-             * in elke button zet je de waarde en aan de hand daarvan.
-             */
+            //this.data = serializedObject.FindProperty("settings");
+            //((ISetting)data.GetArrayElementAtIndex((int)currenOpenSetting).objectReferenceValue).RenderUI(data.GetArrayElementAtIndex((int)currenOpenSetting));
+            //TODO
+            //We hebben instances van alle classes nodig om de objectReference op te halen
+
+            switch ((int)currenOpenSetting)
+            {
+                case 0:
+                    this.data = serializedObject.FindProperty("settings");
+                    Debug.Log(this.data.isArray);
+                    Debug.Log(data.GetArrayElementAtIndex(0));
+                    ISetting setting = data.GetArrayElementAtIndex(0).objectReferenceValue as ISetting;
+                    Debug.Log(setting);
+                    setting.RenderUI(data.GetArrayElementAtIndex(0));
+                    //ISetting ding = ((ISetting)data.GetArrayElementAtIndex(0).objectReferenceValue);
+                    //((ISetting)data.GetArrayElementAtIndex(0).objectReferenceValue).RenderUI(data.GetArrayElementAtIndex(0));
+                    break;
+                case 1:
+                    break;
+                default:
+                    break;
+            }
+
+            /*
             switch(currenOpenSetting)
             {
                 case SettingType.Temperament:
@@ -120,7 +141,7 @@ namespace EasyAI
                     break;
                 default:
                     return;
-            }
+            }*/
 
             if (GUILayout.Button("Save Prefab!"))
             {

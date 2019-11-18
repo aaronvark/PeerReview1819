@@ -75,6 +75,9 @@
     <Compile Include="Assets\_Scripts\JsonConverter.cs" />
     <Compile Include="Assets\_Scripts\JsonHelper.cs" />
     <Compile Include="Assets\_Scripts\MakeScriptableObject.cs" />
+    <Compile Include="Assets\_Scripts\Managers\ManagerBase.cs" />
+    <Compile Include="Assets\_Scripts\Managers\TemperamentManager.cs" />
+    <Compile Include="Assets\_Scripts\Managers\WayPointManager.cs" />
     <Compile Include="Assets\_Scripts\ScriptableNPC.cs" />
     <Compile Include="Assets\_Scripts\ScriptableSetting.cs" />
     <Compile Include="Assets\_Scripts\SettingBase.cs" />

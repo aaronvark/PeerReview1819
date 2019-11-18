@@ -27,7 +27,6 @@ namespace EasyAI
 
         void OnGUI()
         {
-
             EditorGUILayout.LabelField("NPC:", EditorStyles.boldLabel);
 
             // Gets the property of our asset and create a field with its value
@@ -50,6 +49,13 @@ namespace EasyAI
         {
             GameObject newNpc = Instantiate(npc.Prefab, npc.SpawnPosition.position, Quaternion.identity);
             var script = newNpc.AddComponent<AISystem>();
+            foreach(var setting in npc.settings)
+            {
+                Debug.Log(setting);
+                MonoScript monoScript = setting as MonoScript;
+                System.Type settingType = monoScript.GetClass();
+                newNpc.AddComponent(settingType);
+            }
             script.GiveNpcData(npc);
             script.InitAI();
             //We still need to make a change so we can save the selected properties on the npc

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace EasyAI
@@ -59,6 +60,8 @@ namespace EasyAI
         [SerializeField]
         public WayPointData wayPointData;
 
+        [SerializeField]public List<Component> settings = new List<Component>();
+
         public void InitAI()
         {
             temperamentData = new TemperamentData();
@@ -100,10 +103,18 @@ namespace EasyAI
             this.gameObject.name = thisNpc.NpcName;
             for (int i = 0; i < thisNpc.settings.Count; i++)
             {
-                //ScriptableObject settingClone = ScriptableObject.Instantiate(thisNpc.settings[i]) as ScriptableObject;
-                settingsData.Add(i, thisNpc.settings[i]);
+                //if(!settings.Contains(thisNpc.settings[i] as ISetting))
+                MonoScript monoScript = thisNpc.settings[i] as MonoScript;
+                var comp = GetComponent(monoScript.GetClass());
+                settings.Add(comp);
             }
-            //EventManager<SettingType>.AddHandler(EVENT.show, ShowSetting);
+            Debug.Log(settings);
+            /*
+            foreach(var setting in settings)
+            {
+                var settingType = setting.GetChildType();
+                gameObject.AddComponent(settingType);
+            }*/
         }
     }
 }

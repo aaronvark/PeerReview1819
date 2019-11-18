@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace EasyAI
 {
     [System.Serializable]
-    public class AnimationData
+    public class AnimationData : MonoBehaviour, ISetting
     {
         [Header("MovementAnimations:")]
         [SerializeField]
@@ -20,5 +19,28 @@ namespace EasyAI
         public AnimationClip AttackAnimation;
         [SerializeField]
         public AnimationClip DeathAnimation;
+
+        public void RenderUI(SerializedProperty property)
+        {
+            Debug.Log(this.GetType().Assembly);
+            var idleAnimation = property.FindPropertyRelative("IdleAnimation");
+            var walkAnimation = property.FindPropertyRelative("WalkAnimation");
+            var runAnimation = property.FindPropertyRelative("RunAnimation");
+            var attackAnimation = property.FindPropertyRelative("AttackAnimation");
+            var deathAnimation = property.FindPropertyRelative("DeathAnimation");
+            EditorGUILayout.LabelField("MovementAnimations:");
+            EditorGUILayout.PropertyField(idleAnimation);
+            EditorGUILayout.PropertyField(walkAnimation);
+            EditorGUILayout.PropertyField(runAnimation);
+            EditorGUILayout.LabelField("CombatAnimations:");
+            EditorGUILayout.PropertyField(attackAnimation);
+            EditorGUILayout.PropertyField(deathAnimation);
+        }
+
+
+        public System.Type GetChildType()
+        {
+            return this.GetType();
+        }
     }
 }
