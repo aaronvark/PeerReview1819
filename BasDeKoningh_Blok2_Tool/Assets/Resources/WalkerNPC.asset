@@ -15,7 +15,7 @@ MonoBehaviour:
   npcId: 4
   npcName: Walker
   npcType: 0
-  prefab: {fileID: 972517399053107033, guid: af8d309582a88f646941f63bbcff0c6c, type: 3}
+  prefab: {fileID: -927199367670048503, guid: 41827ddb2b608844ea96d065f4e8f6f5, type: 3}
   spawnPosition: {fileID: 3252926882991414915, guid: ceb85c8d3ac849b4697e08111a86acb8,
     type: 3}
   aiSystem: {fileID: 0}

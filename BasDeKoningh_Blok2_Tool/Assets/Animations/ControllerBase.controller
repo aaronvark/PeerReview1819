@@ -14,7 +14,8 @@ AnimatorState:
   - {fileID: -8809080998174872006}
   - {fileID: -150006512389184241}
   - {fileID: 683380116505577945}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 7532858484916935649}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -23,7 +24,8 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: -1610863427237328480, guid: 41827ddb2b608844ea96d065f4e8f6f5,
+    type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -208,7 +210,8 @@ AnimatorState:
   - {fileID: 7611084853543241069}
   - {fileID: -7416609454087284087}
   - {fileID: -6145996474198148540}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2923064435866516701}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -217,7 +220,8 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: -1610863427237328480, guid: 41827ddb2b608844ea96d065f4e8f6f5,
+    type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -287,25 +291,25 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Running
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Attacking
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Die
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -361,7 +365,8 @@ AnimatorState:
   - {fileID: 7314653935574547569}
   - {fileID: -3938289482793007664}
   - {fileID: -7410089767448376173}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 2245278949710897960}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -370,12 +375,31 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: -203655887218126122, guid: dbb0b93bebccc1648aeff3511c558c8c,
+    type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &2245278949710897960
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f043551a7ca533649baa88fe7232f473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  temperamentData: {fileID: 0}
+  wayPointData: {fileID: 0}
+  aiSettingData: {fileID: 0}
+  playerPos: {fileID: 0}
+  attackRange: 0
+  moodRange: 0
 --- !u!1102 &2901949725116161795
 AnimatorState:
   serializedVersion: 5
@@ -390,7 +414,8 @@ AnimatorState:
   - {fileID: 5450221111075379097}
   - {fileID: -1022376639243159752}
   - {fileID: 7417196178095037511}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 4944294056607342629}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -399,12 +424,31 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: -203655887218126122, guid: 62e1fc7cf79776d4ea2e9cbbf5757be2,
+    type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &2923064435866516701
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac94c3213a5a6ce42b75733ea21dae69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  temperamentData: {fileID: 0}
+  wayPointData: {fileID: 0}
+  aiSettingData: {fileID: 0}
+  playerPos: {fileID: 0}
+  attackRange: 0
+  moodRange: 0
 --- !u!1102 &4519343515954590257
 AnimatorState:
   serializedVersion: 5
@@ -425,12 +469,31 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 0}
+  m_Motion: {fileID: -203655887218126122, guid: 34db4fad3fc5d3f4b80a70cd443906eb,
+    type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &4944294056607342629
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0471c8d3d02114287739979a8e7ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  temperamentData: {fileID: 0}
+  wayPointData: {fileID: 0}
+  aiSettingData: {fileID: 0}
+  playerPos: {fileID: 0}
+  attackRange: 0
+  moodRange: 0
 --- !u!1101 &5450221111075379097
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -509,6 +572,24 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &7532858484916935649
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8d1049b71a8e5c498b1bdf069ea7ac3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  temperamentData: {fileID: 0}
+  wayPointData: {fileID: 0}
+  aiSettingData: {fileID: 0}
+  playerPos: {fileID: 0}
+  attackRange: 0
+  moodRange: 0
 --- !u!1101 &7611084853543241069
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

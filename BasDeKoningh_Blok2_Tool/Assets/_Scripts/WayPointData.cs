@@ -22,7 +22,7 @@ namespace EasyAI
             {
                 point.parent = null;
             }
-            EventManager<MonoBehaviour>.BroadCast(EVENT.setBehaviour, this);
+            //EventManager<MonoBehaviour>.BroadCast(EVENT.setBehaviour, this);
 
         }
 

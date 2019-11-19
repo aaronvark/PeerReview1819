@@ -21,6 +21,21 @@ namespace EasyAI
             }
         }
 
+        public static float CombatTriggerRange(CombatStyle combatStyle)
+        {
+            switch(combatStyle)
+            {
+                case CombatStyle.Defensive:
+                    return 5;
+                case CombatStyle.InBetween:
+                    return 10;
+                case CombatStyle.Offensive:
+                    return 15;
+                default:
+                    return 10;
+            }
+        }
+
 
     }
 }

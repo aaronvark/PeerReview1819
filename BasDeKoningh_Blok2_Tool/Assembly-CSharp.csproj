@@ -84,6 +84,9 @@
     <Compile Include="Assets\_Scripts\TemperamentData.cs" />
     <Compile Include="Assets\_Scripts\WayPointData.cs" />
     <Compile Include="Assets\Animations\AnimationClipOverrides.cs" />
+    <Compile Include="Assets\Animations\AttackState.cs" />
+    <Compile Include="Assets\Animations\IdleState.cs" />
+    <Compile Include="Assets\Animations\RunState.cs" />
     <Compile Include="Assets\Animations\StateMachineBase.cs" />
     <Compile Include="Assets\Animations\WalkState.cs" />
     <Compile Include="Assets\Resources\Settings\TemperamentSetting.cs" />
