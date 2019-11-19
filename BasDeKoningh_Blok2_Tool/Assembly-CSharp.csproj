@@ -83,6 +83,9 @@
     <Compile Include="Assets\_Scripts\SettingBase.cs" />
     <Compile Include="Assets\_Scripts\TemperamentData.cs" />
     <Compile Include="Assets\_Scripts\WayPointData.cs" />
+    <Compile Include="Assets\Animations\AnimationClipOverrides.cs" />
+    <Compile Include="Assets\Animations\StateMachineBase.cs" />
+    <Compile Include="Assets\Animations\WalkState.cs" />
     <Compile Include="Assets\Resources\Settings\TemperamentSetting.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/School/Jaar2/KernModuleGameTools/BasDeKoningh_Blok2_Tool/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

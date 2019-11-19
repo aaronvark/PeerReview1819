@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum EVENT { show, setSettings }; // ... Other events
+public enum EVENT { show, setSettings, setBehaviour }; // ... Other events
 /// <summary>
 /// Generic event management/ this class is re-usable in every project
 /// </summary>

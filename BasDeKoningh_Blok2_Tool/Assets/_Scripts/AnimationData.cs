@@ -22,7 +22,6 @@ namespace EasyAI
 
         public void RenderUI(SerializedProperty property)
         {
-            Debug.Log(this.GetType().Assembly);
             var idleAnimation = property.FindPropertyRelative("IdleAnimation");
             var walkAnimation = property.FindPropertyRelative("WalkAnimation");
             var runAnimation = property.FindPropertyRelative("RunAnimation");
@@ -37,7 +36,13 @@ namespace EasyAI
             EditorGUILayout.PropertyField(deathAnimation);
         }
 
-
+        private Animator animator;
+        private AnimatorControllerParameter animatorController;
+        private void Start()
+        {
+            animator = GetComponent<Animator>();
+            animatorController = new AnimatorControllerParameter();
+        }
         public System.Type GetChildType()
         {
             return this.GetType();

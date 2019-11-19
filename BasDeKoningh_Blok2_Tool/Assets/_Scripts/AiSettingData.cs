@@ -13,6 +13,8 @@ namespace EasyAI
         [SerializeField]
         public float Range;
         [SerializeField]
+        public float Speed;
+        [SerializeField]
         public AiType AiType;
 
         public void RenderUI(SerializedProperty property)

@@ -4,18 +4,23 @@ using UnityEngine;
 
 namespace EasyAI
 {
-    public class TemperamentManager : ManagerBase
+    public static class TemperamentManager
     {
-        TemperamentData temperamentData;
-        public override void Run(MonoBehaviour reference)
+        public static float MoodTriggerRange(Mood mood)
         {
-            temperamentData = reference as TemperamentData;
+            switch(mood)
+            {
+                case Mood.Aggresive:
+                    return 20;
+                case Mood.AtEase:
+                    return 10;
+                case Mood.Sleeping:
+                    return 1;
+                default:
+                    return 10;
+            }
         }
 
-        public void Update()
-        {
-            //we need to act on the given data
-            //somewhere we need to move the npc(I think in waypointsystem)
-        }
+
     }
 }
