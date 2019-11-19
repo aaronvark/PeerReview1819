@@ -16,15 +16,9 @@ public class TriggerInspector : Editor {
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("triggerActive"));
 
-        GUILayout.BeginHorizontal();
-        {
-            GUILayout.Label("Trigger button/axis");
-            choiceIndex = EditorGUILayout.Popup(choiceIndex, options.ToArray());
+        choiceIndex = EditorGUILayout.Popup("Trigger button/axis", choiceIndex, options.ToArray());
+        trigger.triggerButton = options[choiceIndex];
 
-            trigger.triggerButton = options[choiceIndex];
-        }
-        GUILayout.EndHorizontal();
-        
         GUILayout.Space(10);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("dialogueGraph"));

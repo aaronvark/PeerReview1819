@@ -46,7 +46,7 @@ public class Conversation {
     }
 
     private void DisplayNode(DialogueBaseNode node) {
-        if (node is DialogueNode dialogueNode) {
+        if (node is TextNode dialogueNode) {
             Debug.Log(dialogueNode.Text);
         }
     }

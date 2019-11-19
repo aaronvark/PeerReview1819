@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace Dialogue {
-public class ConditionalDialogueNode : DialogueNode {
+public class ConditionalTextNode : TextNode {
     [SerializeField] private bool condition;
 
     protected override DialogueBaseNode Get() {

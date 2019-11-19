@@ -28,7 +28,7 @@ public class DialogueTrigger : MonoBehaviour {
             }
             catch (InvalidOperationException) {
                 // Start can throw an InvalidOperationException when the graph doesn't have an entry node. If this is
-                // thrown, the trigger should be deactivated. TODO Avoid this using graph validation.
+                // thrown, the trigger should be deactivated. TODO Avoid this try/catch by validating graph beforehand.
                 triggerActive = false;
                 throw;
             }
