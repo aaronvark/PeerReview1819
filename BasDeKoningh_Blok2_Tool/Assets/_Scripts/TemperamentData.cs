@@ -35,5 +35,22 @@ namespace EasyAI
         {
             return this.GetType();
         }
+
+
+        private void OnDrawGizmos()
+        {
+            // Draw a yellow sphere at the transform's position
+            if (TemperamentManager.CombatTriggerRange(CombatStyle) != 0)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawWireSphere(transform.position, TemperamentManager.CombatTriggerRange(CombatStyle));
+            }
+            if (TemperamentManager.MoodTriggerRange(Mood) != 0)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(transform.position, TemperamentManager.MoodTriggerRange(Mood));
+            }
+
+        }
     }
 }

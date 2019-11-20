@@ -29,7 +29,7 @@ namespace EasyAI
                 wayPointData.WayPointIndex = Random.Range(0, wayPointData.WayPoints.Count);
             }
 
-            if (playerDistance.sqrMagnitude < TemperamentManager.MoodTriggerRange(temperamentData.Mood))
+            if (playerDistance.sqrMagnitude < moodRange * moodRange)
             {
                 animator.SetBool("Walking", false);
                 animator.SetBool("Running", true);

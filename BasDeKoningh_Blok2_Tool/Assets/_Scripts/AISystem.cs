@@ -43,7 +43,7 @@ namespace EasyAI
     
 
     [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(MeshCollider))]
+    [RequireComponent(typeof(BoxCollider))]
     [RequireComponent(typeof(Animator))]
     public class AISystem : MonoBehaviour
     {
@@ -68,6 +68,7 @@ namespace EasyAI
             aiSettingData = new AiSettingData();
             animationData = new AnimationData();
             wayPointData = new WayPointData();
+
         }
 
         public void ShowSetting(SettingType settingType)
@@ -108,13 +109,6 @@ namespace EasyAI
                 var comp = GetComponent(monoScript.GetClass());
                 settings.Add(comp);
             }
-            Debug.Log(settings);
-            /*
-            foreach(var setting in settings)
-            {
-                var settingType = setting.GetChildType();
-                gameObject.AddComponent(settingType);
-            }*/
         }
     }
 }

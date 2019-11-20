@@ -36,10 +36,10 @@ public static class EventManager<T>
     //Un-subscribe the action
     public static void RemoveHandler(EVENT evnt, GenericDelegate<T> action)
     {
-        if (!genericEventTable.ContainsKey(evnt)) genericEventTable[evnt] = action;
-        else genericEventTable[evnt] -= action;
+        if (genericEventTable.ContainsKey(evnt)) genericEventTable[evnt] -= action;
+        //else genericEventTable[evnt] -= action;
     }
-
+    
     //Un-Subscribes the listeners to the event
     public static void RemoveHandlers(EVENT evnt)
     {

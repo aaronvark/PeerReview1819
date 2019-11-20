@@ -33,11 +33,11 @@ namespace EasyAI
             animatorOverrideController.GetOverrides(clipOverrides);
             
 
-            clipOverrides[animator.runtimeAnimatorController.animationClips[0].name] = animationData.IdleAnimation;
-            clipOverrides[animator.runtimeAnimatorController.animationClips[1].name] = animationData.WalkAnimation;
-            clipOverrides[animator.runtimeAnimatorController.animationClips[2].name] = animationData.RunAnimation;
-            clipOverrides[animator.runtimeAnimatorController.animationClips[3].name] = animationData.AttackAnimation;
-            clipOverrides[animator.runtimeAnimatorController.animationClips[4].name] = animationData.DeathAnimation;
+            clipOverrides["Idle"] = animationData.IdleAnimation;
+            clipOverrides["Walking"] = animationData.WalkAnimation;
+            clipOverrides["Running"] = animationData.RunAnimation;
+            clipOverrides["Attacking"] = animationData.AttackAnimation;
+            clipOverrides["Death"] = animationData.DeathAnimation;
             animatorOverrideController.ApplyOverrides(clipOverrides);
             animator.runtimeAnimatorController = animatorOverrideController;
 

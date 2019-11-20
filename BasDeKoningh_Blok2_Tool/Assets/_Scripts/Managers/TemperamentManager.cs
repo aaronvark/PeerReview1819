@@ -26,13 +26,13 @@ namespace EasyAI
             switch(combatStyle)
             {
                 case CombatStyle.Defensive:
-                    return 5;
+                    return 2;
                 case CombatStyle.InBetween:
-                    return 10;
+                    return 5;
                 case CombatStyle.Offensive:
-                    return 15;
+                    return 7;
                 default:
-                    return 10;
+                    return 5;
             }
         }
 
