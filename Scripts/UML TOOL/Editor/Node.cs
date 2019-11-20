@@ -12,8 +12,9 @@ namespace UnityEngine.Scripting.UML
         public Rect maxNodeSize = new Rect(30, 30, 225, 250);
         public NodeInfo nodeInfo;
         public int id;
-        private bool minalize = false;
-        private Node instance;
+        public bool minalized = false;
+        public Node instance;
+        private static Node selectedNode;
 
         public Node(int id)
         {
@@ -23,11 +24,21 @@ namespace UnityEngine.Scripting.UML
             instance = this;
         }
 
+        private void IsSelected()
+        {
+            selectedNode = this;
+        }
+
         public void OnGUI()
         {
             if (instance != null)
             {
-                if (!minalize)
+                Event e = Event.current;
+
+                if ((!minalized && maxNodeSize.Contains(e.mousePosition)) || (minalized && minNodeSize.Contains(e.mousePosition)))
+                    IsSelected();
+
+                if (!minalized)
                     maxNodeSize = GUI.Window(id, maxNodeSize, DragNode, nodeInfo.ClassName + " node");
                 else
                     minNodeSize = GUI.Window(id, minNodeSize, DragNode, nodeInfo.ClassName + " node");
@@ -36,39 +47,37 @@ namespace UnityEngine.Scripting.UML
 
         public void DragNode(int id)
         {
-            if (!minalize)
+            if (!minalized)
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, false);
+         
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
 
-            if (!minalize)
+            if (!minalized)
                 if (GUILayout.Button("X", GUILayout.Width(20)))
                     instance = null;
 
-            if (minalize)
+            if (minalized)
             {
                 GUILayout.Label(nodeInfo.ClassName);
                 if (GUILayout.Button("+", GUILayout.MaxWidth(20)))
-                    minalize = !minalize;
+                    minalized = !minalized;
             }
             else
             {
                 if (GUILayout.Button("-", GUILayout.MaxWidth(20)))
-                    minalize = !minalize;
+                    minalized = !minalized;
             }
             GUILayout.EndHorizontal();
 
 
-            if (!minalize)
+            if (!minalized)
                 nodeInfo.Draw();
-
             GUILayout.EndVertical();
-            if (!minalize)
+            if (!minalized)
                 GUILayout.EndScrollView();
+
             GUI.DragWindow();
         }
-
-
-
     }
 }

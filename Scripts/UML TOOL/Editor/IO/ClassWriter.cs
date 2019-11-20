@@ -7,14 +7,15 @@ using UnityEditor;
 
 namespace UnityEngine.Scripting.UML
 {
-    public class ClassWriter : MonoBehaviour
+    public class ClassWriter : ICodeGenerator
     {
         public void GenerateClass(NodeInfo nodeInfo)
         {
-            string directoryPath = Environment.CurrentDirectory;
+            string directoryPath = Environment.CurrentDirectory + "/Assets";
 
-            using (StreamWriter sw = new StreamWriter(Path.Combine(directoryPath + "/Assets", nodeInfo.ClassName + ".cs")))
+            using (StreamWriter sw = new StreamWriter(Path.Combine(directoryPath, nodeInfo.ClassName + ".cs")))
             {
+
                 //adding library's
                 sw.WriteLine("using UnityEngine;");
                 sw.WriteLine("using System.Collections;");
@@ -22,10 +23,13 @@ namespace UnityEngine.Scripting.UML
 
                 sw.WriteLine(""); //white space
 
+                sw.WriteLine("/// <Information>\n");
+                sw.WriteLine("/// This class is generated with the UML tool from Geoffrey Hendrikx.\n");
+                sw.WriteLine("/// </Information>\n");
                 if (nodeInfo.Parent != string.Empty)
-                    sw.WriteLine("public class " + nodeInfo.ClassName + " : " + nodeInfo.Parent);
+                    sw.WriteLine(nodeInfo.classAccesModifiers.ToString().ToLower() + " class " + nodeInfo.ClassName + " : " + nodeInfo.Parent);
                 else
-                    sw.WriteLine("public class" + nodeInfo.ClassName);
+                    sw.WriteLine(nodeInfo.classAccesModifiers.ToString().ToLower() + " class " + nodeInfo.ClassName);
 
                 sw.WriteLine("{");
                 //adding variables
@@ -55,4 +59,5 @@ namespace UnityEngine.Scripting.UML
             AssetDatabase.Refresh();
         }
     }
+
 }

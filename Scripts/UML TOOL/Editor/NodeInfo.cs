@@ -5,11 +5,12 @@ using UnityEditor;
 
 namespace UnityEngine.Scripting.UML
 {
-    public class NodeInfo : MonoBehaviour
+    public class NodeInfo
     {
         private Node node;
+        public AccesModifiers classAccesModifiers;
         public string ClassName;
-        public string Parent;
+        public string Parent = string.Empty;
 
         private List<ClassContent> methodeInfo = new List<ClassContent>();
         public List<ClassContent> MethodeInfo
@@ -43,18 +44,20 @@ namespace UnityEngine.Scripting.UML
         }
 
         /// <summary>
-        /// Updating the node info for inhieratance
-        /// </summary>
-        public void UpdateNode() { }
-
-        /// <summary>
         /// Drawing the node
         /// </summary>
         public void Draw()
         {
             GUILayout.BeginVertical();
             GUILayout.Label("Class Name");
+            GUILayout.BeginHorizontal();
+            classAccesModifiers = (AccesModifiers)EditorGUILayout.EnumPopup((AccesModifiers)classAccesModifiers, GUILayout.MaxWidth(70));
             ClassName = GUILayout.TextField(ClassName);
+            GUILayout.EndHorizontal();
+
+            GUILayout.Label("Inheritance");
+            Parent = GUILayout.TextField(Parent);
+            
             GUILayout.Space(15);
             //variables
             GUILayout.Label("Variables");
@@ -65,7 +68,7 @@ namespace UnityEngine.Scripting.UML
                 ClassContent variable = VariableInfo[i];
                 GUILayout.BeginHorizontal();
                 //AccessModifier Type Variable 
-                variable.AccesModifiers = (AccesModifiers)EditorGUILayout.EnumPopup((AccesModifiers)variable.AccesModifiers, GUILayout.MaxWidth(70));
+                variable.AccesModifiers = (AccesModifiers)EditorGUILayout.EnumPopup((AccesModifiers)variable.AccesModifiers, GUILayout.MaxWidth(70) );
                 variable.Type = GUILayout.TextField(variable.Type);
                 variable.Name = GUILayout.TextField(variable.Name);
                 
@@ -73,7 +76,7 @@ namespace UnityEngine.Scripting.UML
                 {
                     if (variableInfo.Count == 1)
                         VariableInfo = new List<ClassContent>();
-                    methodeInfo.Remove(variableInfo[i]);
+                    VariableInfo.Remove(variableInfo[i]);
                 }
                 GUILayout.EndHorizontal();
             }
@@ -111,6 +114,12 @@ namespace UnityEngine.Scripting.UML
             //adding methode to the list.
             if (GUILayout.Button("Add methode", GUILayout.MaxWidth(100)))
                 methodeInfo.Add(new ClassContent());
+
+            GUILayout.Space(15);
+
+            //GUILayout.Label("Inheritance parent");
+            //Parent = GUILayout.TextField(Parent);
+
             GUILayout.EndVertical();
         }
     }
@@ -118,26 +127,6 @@ namespace UnityEngine.Scripting.UML
     ///<summary>
     ///information of the classContent
     ///</summary>
-    public struct ClassContent
-    {
-        //You cant change struct variables in a list directly. you will get a "Cannot modify the return value"
-        
-        /// <summary>
-        /// Access modifiers of the methodes/variable.
-        /// </summary>
-        public AccesModifiers AccesModifiers;
-
-        /// <summary>
-        /// Type of the variable.
-        /// </summary>
-        public string Type;
-
-        /// <summary>
-        /// Name of the methodes/variable.
-        /// </summary>
-        public string Name;
-    }
-
     public enum AccesModifiers
     {
         PUBLIC,

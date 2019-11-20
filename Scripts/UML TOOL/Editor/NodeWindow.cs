@@ -9,7 +9,11 @@ namespace UnityEngine.Scripting.UML
     {
         private Grid grid;
         private List<Node> nodes = new List<Node>();
+        private Inheritance inheritance;
         int id = 0;
+        private delegate void DrawInheritance();
+        private event DrawInheritance drawInheritance;
+        private bool SetInheritance = false;
 
         [MenuItem("Custom Tools/UML Window #u")]
         private static void Init()
@@ -20,15 +24,20 @@ namespace UnityEngine.Scripting.UML
             umlWindow.titleContent.image = icon.image;
             umlWindow.Show();
             umlWindow.grid = new Grid(umlWindow);
+            umlWindow.inheritance = new Inheritance();
         }
 
         // Update is called once per frame
         private void OnGUI()
         {
+            Handles.BeginGUI();
             BeginWindows();
-            
+
             #region Drawing grid source: http://gram.gs/gramlog/creating-node-based-editor-unity/
+            if (grid != null)
                 grid.UpdateGrid();
+            else
+                grid = new Grid(this);
             #endregion
 
             //Show Nodes
@@ -36,15 +45,13 @@ namespace UnityEngine.Scripting.UML
                 nodes[i].OnGUI();
 
             Event e = Event.current;
-            if(e.type == EventType.ContextClick)
+            if (e.type == EventType.ContextClick)
                 CreateGenericMenu();
 
+            drawInheritance?.Invoke();
             EndWindows();
-
-
         }
 
-        
         private void AddNode()
         {
             id++;
@@ -56,10 +63,20 @@ namespace UnityEngine.Scripting.UML
         /// </summary>
         private void GenerateNodes()
         {
-            ClassWriter cw = new ClassWriter();
+            ICodeGenerator cw = new ClassWriter();
 
             for (int i = 0; i < nodes.Count; i++)
-                cw.GenerateClass(nodes[i].nodeInfo);
+            {
+                if (nodes[i].instance != null)
+                    cw.GenerateClass(nodes[i].nodeInfo);
+            }
+        }
+
+        private void BeginDrawingInheritance()
+        {
+            inheritance.SetInheritance(nodes);
+            drawInheritance += inheritance.DrawInheritances;
+
         }
 
         /// <summary>
@@ -68,8 +85,9 @@ namespace UnityEngine.Scripting.UML
         public void CreateGenericMenu()
         {
             GenericMenu menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Add node"), false, AddNode);
-            menu.AddItem(new GUIContent("Generate nodes"), false, GenerateNodes);
+            menu.AddItem(new GUIContent("Add class"), false, AddNode);
+            menu.AddItem(new GUIContent("Generate class"), false, GenerateNodes);
+            menu.AddItem(new GUIContent("Set Inheritance"), SetInheritance, BeginDrawingInheritance);
             menu.ShowAsContext();
         }
     }
