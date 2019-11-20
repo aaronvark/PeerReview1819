@@ -21,7 +21,11 @@ public class TextNodeEditor : NodeEditor {
         
         NodeEditorGUILayout.PropertyField(serializedObject.FindProperty("text"), GUIContent.none);
         
+        DrawProperties(node);
+
         serializedObject.ApplyModifiedProperties();
     }
+
+    protected virtual void DrawProperties(TextNode node) { }
 }
 }
