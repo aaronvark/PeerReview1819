@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 using System;
+using System.Linq;
 
 namespace EasyAI
 {
@@ -25,6 +26,8 @@ namespace EasyAI
         private List<System.Type> settingTypes = new List<Type>();
         //Preset so we know what to draw and not
         private PresetType presetType = PresetType.ScriptablePreset;
+
+        private readonly Dictionary<string, bool> checker = new Dictionary<string, bool>();
 
         // Add menu named "NPCEditor" to the Window menu
         [MenuItem("Window/NPCEditor")]
@@ -76,23 +79,39 @@ namespace EasyAI
                 {
                     DrawNPCSettings(scriptableObject as ScriptableNPC);
                 }
-                foreach(var type in settingTypes)
+                foreach (var type in settingTypes)
                 {
-                    var component = currentNPC.GetComponent(type);
-                    var settingEditor =  Editor.CreateEditor(component);
-                    if(settingEditor != null)
+                    if(!checker.ContainsKey(type.FullName))
                     {
-                        settingEditor.OnInspectorGUI();
+                        bool show = false;
+                        checker.Add(type.FullName,show);
                     }
-                    // create style for the line
-                    GUIStyle horizontalLine;
-                    horizontalLine = new GUIStyle();
-                    horizontalLine.normal.background = EditorGUIUtility.whiteTexture;
-                    horizontalLine.margin = new RectOffset(0, 0, 4, 4);
-                    horizontalLine.fixedHeight = 1;
+                    if(GUILayout.Button(type.FullName))
+                    {
+                        foreach (var key in checker.Keys.ToList())
+                        {
+                            checker[key] = false;
+                        }
+                        checker[type.FullName] = true;
+                    }
+                    if (checker[type.FullName])
+                    {
+                        var component = currentNPC.GetComponent(type);
+                        var settingEditor = Editor.CreateEditor(component);
+                        if (settingEditor != null)
+                        {
+                            settingEditor.OnInspectorGUI();
+                        }
+                        // create style for the line
+                        GUIStyle horizontalLine;
+                        horizontalLine = new GUIStyle();
+                        horizontalLine.normal.background = EditorGUIUtility.whiteTexture;
+                        horizontalLine.margin = new RectOffset(0, 0, 4, 4);
+                        horizontalLine.fixedHeight = 1;
 
-                    // draw the line
-                    HorizontalLine(Color.grey, horizontalLine);
+                        // draw the line
+                        HorizontalLine(Color.grey, horizontalLine);
+                    }
                 }
             }
         }
@@ -112,9 +131,7 @@ namespace EasyAI
             {
                 foreach (var setting in npc.settings)
                 {
-                    MonoScript monoScript = setting as MonoScript;
-                    System.Type settingType = monoScript.GetClass();
-                    settingTypes.Add(settingType);
+                    settingTypes.Add(setting.ObjectToClassType());
                 }
             }
             catch(Exception e)
@@ -128,13 +145,10 @@ namespace EasyAI
             settingTypes.Clear();
             GameObject newNpc = Instantiate(npc.Model, npc.SpawnPosition.position, Quaternion.identity);
 
-            MonoScript scriptHolder = npc.AISystem as MonoScript;
-            System.Type scriptHolderType = scriptHolder.GetClass();
-            Component script = newNpc.AddComponent(scriptHolderType);
+            Component script = newNpc.AddComponent(npc.AISystem.ObjectToClassType());
             foreach(var setting in npc.settings)
             {
-                MonoScript monoScript = setting as MonoScript;
-                System.Type settingType = monoScript.GetClass();
+                System.Type settingType = setting.ObjectToClassType();
                 newNpc.AddComponent(settingType);
                 settingTypes.Add(settingType);
             }
@@ -143,8 +157,9 @@ namespace EasyAI
             try
             {
                 var system = script as AISystem;
-                system.GiveNpcData(npc);
-                system.InitAI();
+                if (system == null) return;
+                newNpc.name = npc.NpcName;
+                newNpc.GetComponent<Animator>().runtimeAnimatorController = npc.AnimatorController;
             }
             catch(Exception e)
             {

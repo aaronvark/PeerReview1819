@@ -225,6 +225,12 @@ namespace EasyAI
             Component cmpnt = obj.AddComponent(type);
             return cmpnt;
         }
+
+    public static System.Type ObjectToClassType(this UnityEngine.Object myObject)
+        {
+            MonoScript tmpMonoHolder = myObject as MonoScript;
+            return tmpMonoHolder.GetClass();
+        }
     
 
     public static RectTransform ActivateCoroutineLerpRectTransformPositions(RectTransform rectTransform, MonoBehaviour owner, Vector3 targetPosition, float speed)
