@@ -98,7 +98,7 @@ namespace Placer.PlacerTools
             GameObject[] selectedGameObjects = Selection.gameObjects;
             if(selectedGameObjects.Length > 0)
             {
-                objectBounds = InternalEditorUtility.CalculateSelectionBounds(true, false, false);
+                objectBounds = InternalEditorUtility.CalculateSelectionBounds(true, false);
 
                 foreach(var point in from GameObject gameObject in selectedGameObjects
                                      from Transform transform in gameObject.GetComponentsInChildren<Transform>()
@@ -134,12 +134,10 @@ namespace Placer.PlacerTools
                 || Mathf.Approximately(objectBounds.size.z, 0))
                 return;
 
-            Selection.objects = targets.ToArray();
-
             Vector3 offset = new Vector3();
             for(offset.x = duplicationBounds.min.x; offset.x < duplicationBounds.max.x || Mathf.Approximately(offset.x, duplicationBounds.max.x); offset.x += objectBounds.size.x)
                 for(offset.y = duplicationBounds.min.y; offset.y < duplicationBounds.max.y || Mathf.Approximately(offset.y, duplicationBounds.max.y); offset.y += objectBounds.size.y)
-                    for(offset.z = duplicationBounds.min.z; offset.z < duplicationBounds.max.z || Mathf.Approximately(offset.z, duplicationBounds.max.z); offset.z += objectBounds.size.z )
+                    for(offset.z = duplicationBounds.min.z; offset.z < duplicationBounds.max.z || Mathf.Approximately(offset.z, duplicationBounds.max.z); offset.z += objectBounds.size.z)
                         if(offset != objectBounds.center)
                             InstantiateObjects(offset - objectBounds.center);
 
@@ -149,13 +147,16 @@ namespace Placer.PlacerTools
 
             void InstantiateObjects(Vector3 translation)
             {
-                SceneView.lastActiveSceneView.Focus();
-                EditorWindow.focusedWindow.SendEvent(EditorGUIUtility.CommandEvent("Duplicate"));
+                Selection.objects = targets.ToArray();
 
-                for(int i = 0; i < Selection.gameObjects.Length; ++i)
+                SceneView.lastActiveSceneView.Focus();
+                if(EditorWindow.focusedWindow.SendEvent(EditorGUIUtility.CommandEvent("Duplicate")))
                 {
-                    GameObject go = Selection.gameObjects[i];
-                    go.transform.Translate(translation, Space.World);
+                    for(int i = 0; i < Selection.gameObjects.Length; ++i)
+                    {
+                        GameObject go = Selection.gameObjects[i];
+                        go.transform.Translate(translation, Space.World);
+                    }
                 }
             }
         }
