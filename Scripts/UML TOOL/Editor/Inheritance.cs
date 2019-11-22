@@ -75,7 +75,6 @@ namespace UnityEngine.Scripting.UML
                     for (int j = 0; j < node.Count; j++)
                         if (node[i].nodeInfo.Parent == node[j].nodeInfo.ClassName)
                             lines.Add(new SetLines(node[j], node[i]));
-                                //inheritance.Add(node[j], node[i]);
 
         }
     }

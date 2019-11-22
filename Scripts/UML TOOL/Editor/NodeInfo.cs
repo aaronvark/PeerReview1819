@@ -89,7 +89,7 @@ namespace UnityEngine.Scripting.UML
             GUILayout.Space(15);
 
             //Methodes
-            GUILayout.Label("Methodes");
+            GUILayout.Label("Methods");
             for (int i = 0; i < methodeInfo.Count; i++)
             {
                 ClassContent methode = methodeInfo[i];
@@ -112,7 +112,7 @@ namespace UnityEngine.Scripting.UML
             }
 
             //adding methode to the list.
-            if (GUILayout.Button("Add methode", GUILayout.MaxWidth(100)))
+            if (GUILayout.Button("Add methods", GUILayout.MaxWidth(100)))
                 methodeInfo.Add(new ClassContent());
 
             GUILayout.Space(15);
@@ -129,8 +129,8 @@ namespace UnityEngine.Scripting.UML
     ///</summary>
     public enum AccesModifiers
     {
-        PUBLIC,
-        PRIVATE,
-        PROTECTED
+        Public,
+        Private,
+        Protected
     }
 }

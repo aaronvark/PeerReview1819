@@ -23,9 +23,10 @@ namespace UnityEngine.Scripting.UML
 
                 sw.WriteLine(""); //white space
 
-                sw.WriteLine("/// <Information>\n");
+                sw.WriteLine("/// <Information>");
                 sw.WriteLine("/// This class is generated with the UML tool from Geoffrey Hendrikx.\n");
-                sw.WriteLine("/// </Information>\n");
+                sw.WriteLine("/// </Information>");
+
                 if (nodeInfo.Parent != string.Empty)
                     sw.WriteLine(nodeInfo.classAccesModifiers.ToString().ToLower() + " class " + nodeInfo.ClassName + " : " + nodeInfo.Parent);
                 else
