@@ -11,78 +11,108 @@ namespace Common.SaveLoadSystem
     public class SaveLoadSystem
     {
         private static XmlDocument xmlDocument = new XmlDocument();
-        
+        private static XmlNode rootNode;
+        private static string saveFileName = "Save.xml";
+        private static string rootNodeName = "saveables";
+        private static string idPrefix = "id";
+
+
         static SaveLoadSystem()
         {
             try
             {
-                xmlDocument.Load("Save.xml");
+                xmlDocument.Load(saveFileName);
+                rootNode = xmlDocument.FirstChild;
             } catch (FileNotFoundException)
             {
                 CreateNewFile();
             }
-
-            string[] yeet = Directory.GetFiles(Application.dataPath, "SaveLoadSystem.cs", SearchOption.AllDirectories);
-            yeet[0] = yeet[0].Replace(Application.dataPath.Replace('\\', '/'), "");
         }
 
-        public static bool IsNodeExisting(string objectName)
+        public static int GetId()
         {
-            foreach (XmlNode node in xmlDocument.DocumentElement.ChildNodes)
-            {
-                if (node.Name == ConvertStringTo.XMLFormat(objectName))
-                {
-                    return true;
-                }
-            }
-            return false;
+            string id = rootNode.Attributes["id"].Value;
+            int newValue = int.Parse(id) + 1;
+            rootNode.Attributes["id"].Value = newValue.ToString();
+            xmlDocument.Save(saveFileName);
+            return newValue;
         }
 
-        public static XmlNode GetXMLNode(string name)
+        [RuntimeInitializeOnLoadMethod]
+        private static void ConvertAllObjectsToXML()
         {
-            foreach (XmlNode node in xmlDocument.DocumentElement.ChildNodes)
+            SaveableIdentifier[] objects = Object.FindObjectsOfType<SaveableIdentifier>();
+
+            for (int i = 0; i < objects.Length; i++)
             {
-                if (node.Name == ConvertStringTo.XMLFormat(name))
-                {
-                    return node;
-                }
+                AddToSave(objects[i].gameObject, objects[i].GetId());
             }
-            return null;
+
+            xmlDocument.Save(saveFileName);
         }
 
-        public static void AddToSave(Transform obj)
+        private static void AddToSave(GameObject obj, int id)
         {
-            XmlNode xmlNode = null;
-            if (IsNodeExisting(obj.name))
+            XmlNode idNode = GetNode(id);
+
+            foreach (Component component in obj.GetComponents<Component>())
             {
-                xmlNode = xmlDocument.CreateElement(ConvertStringTo.XMLFormat(obj.name));
-                xmlDocument.DocumentElement.AppendChild(xmlNode);
-            } else
+                MakeComponentNode(component, idNode);
+            }
+        }
+
+        private static void MakeComponentNode(Component component, XmlNode parentNode)
+        {
+            XmlElement componentNode = xmlDocument.CreateElement("component");
+            componentNode.SetAttribute("name", component.GetType().Name);
+            parentNode.AppendChild(componentNode);
+
+            List<string> componentFields = ScriptReflector.GetVariableNames(component);
+            for (int i = 0; i < componentFields.Count; i++)
             {
-                GetXMLNode(ConvertStringTo.XMLFormat(obj.name));
+                XmlElement fieldNode = xmlDocument.CreateElement(componentFields[i]);
+                componentNode.AppendChild(fieldNode);
+            }
+        }
+
+        private static XmlNode GetComponentNodeFrom(XmlNode xmlNode, string name)
+        {
+            //if(xmlNode.SelectSingleNode(NameToXMLComponent(name)) == null)
+            //{
+            //    xmlNode.AppendChild(make);
+            //    return newNode;
+            //}
+
+            return xmlNode.SelectSingleNode(NameToXMLComponent(name));
+        }
+
+        private static XmlNode GetNode(int id)
+        {
+            if (xmlDocument.SelectSingleNode("saveables/" + idPrefix + id.ToString() + "[1]") == null)
+            {
+                XmlNode idNode = xmlDocument.CreateElement(idPrefix + id.ToString());
+                rootNode.AppendChild(idNode);
+
+                return idNode;
             }
 
-            XmlNode positionNode = xmlDocument.CreateElement("position");
-            positionNode.InnerText = obj.position.ToString();
-            xmlNode.AppendChild(positionNode);
+            return xmlDocument.SelectSingleNode("saveables/" + idPrefix + id.ToString() + "[1]") ;
+        }
 
-            xmlDocument.Save("Save.xml");
+        private static string NameToXMLComponent(string componentName)
+        {
+            return "component[@name= " + "'" + componentName + "'" + "][1]";
         }
 
         private static void CreateNewFile()
         {
-            xmlDocument.AppendChild(xmlDocument.CreateElement("Transforms"));
-            xmlDocument.Save("Save.xml");
-        }
+            XmlElement rootElement = xmlDocument.CreateElement(rootNodeName);
+            rootElement.SetAttribute("id", Object.FindObjectsOfType<SaveableIdentifier>().Length.ToString());
+            xmlDocument.AppendChild(rootElement);
 
-        [RuntimeInitializeOnLoadMethod]
-        public static void LoadList()
-        {
-            foreach (XmlNode node in xmlDocument.DocumentElement.ChildNodes)
-            {
-                GameObject newObj = new GameObject(node.Name.Replace('_', ' '));
-                newObj.transform.position = ConvertStringTo.Vector3(node.SelectSingleNode("position").InnerText);
-            }
+            xmlDocument.Save(saveFileName);
+            xmlDocument.Load(saveFileName);
+            rootNode = xmlDocument.FirstChild;
         }
     }
 }

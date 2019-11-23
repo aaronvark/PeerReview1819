@@ -24,7 +24,7 @@ namespace Common.SaveLoadSystem
 
             if (go != null)
             {
-                if (SaveLoadSystem.IsNodeExisting(go.name))
+                if (go.GetComponent<SaveableIdentifier>())
                 {
                     // place the icon to the right of the list:
                     Rect r = new Rect(selectionRect);
@@ -37,8 +37,6 @@ namespace Common.SaveLoadSystem
             {
                 hierarchyWindowWidth = selectionRect.width;
             }
-
-
         }
     }
 
@@ -48,13 +46,15 @@ namespace Common.SaveLoadSystem
         static void Init(MenuCommand command)
         {
             GameObject go = (GameObject)command.context;
+            Iidentifier identifier = go.GetComponent<SaveableIdentifier>();
 
-            if (!SaveLoadSystem.IsNodeExisting(go.name))
+            if (identifier == null)
             {
-                SaveLoadSystem.AddToSave(go.transform);
+                identifier = go.AddComponent<SaveableIdentifier>();
+                identifier.SetId(SaveLoadSystem.GetId());
             } else
             {
-                //TODO delete save from XML
+                Object.DestroyImmediate((SaveableIdentifier)identifier);
             }
         }
     }
