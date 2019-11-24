@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 830d5d310de760d44919fde30905d566, type: 3}
+  m_Name: EasyWorldBuilder_Settings
+  m_EditorClassIdentifier: 
+  AssetList:
+  - {fileID: 5806024239925697157, guid: 9a235c81082805f4fb928fd2bb095fb4, type: 3}
+  - {fileID: 5806024239925697157, guid: b3cd358d20c425746b7e2133e95f6d4d, type: 3}
+  placeButton: 323
+  rotRight: 101
+  rotLeft: 113
+  ScaleAxis: Mouse ScrollWheel
+  flySpeed: 1
+  scaleSpeed: 1
+  rotationSpeed: 1

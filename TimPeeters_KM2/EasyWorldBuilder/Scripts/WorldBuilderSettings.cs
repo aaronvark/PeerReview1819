@@ -1,0 +1,32 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+namespace WorldBuilderTool
+{
+    //[CreateAssetMenu(fileName = "EasyWorldBuilder_Settings", menuName = "EasyWorldBuilder/Settings", order = 1)]
+    
+    public class WorldBuilderSettings : ScriptableObject {
+        
+        public List<GameObject> AssetList = new List<GameObject>();
+
+        #region Keybindings
+        public KeyCode placeButton = KeyCode.Mouse0;
+
+        public KeyCode rotRight = KeyCode.E;
+        public KeyCode rotLeft = KeyCode.Q;
+
+        [Tooltip("This field contains the name of the Input Axis that is used to scale object, " +
+        "by default this is set to the 'Mouse ScrollWheel' found in the Unity Input Manager (Legacy)")]
+        public string ScaleAxis = "Mouse ScrollWheel";
+
+        #endregion
+
+        #region Control Settings
+        public float flySpeed = 1f;
+        public float scaleSpeed = 1f;
+        public float rotationSpeed = 1f;
+        #endregion
+    }
+}
