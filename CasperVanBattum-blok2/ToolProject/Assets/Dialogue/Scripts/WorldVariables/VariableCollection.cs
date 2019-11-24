@@ -15,6 +15,13 @@ public class VariableCollection {
         get {
             if (instance == null) {
                 instance = new VariableCollection();
+                // FIXME TEST CODE PLEASE REMOVE
+                instance.AddVariable("Variable1", "Some text");
+                instance.AddVariable("A long", 40);
+                instance.AddVariable("Test bool" , true);
+                instance.AddVariable("Other test bool" , false);
+                instance.AddVariable("moar string" , "Value");
+                instance.AddVariable("lmoa" , 42.42);
             }
             return instance;
         }
@@ -44,6 +51,11 @@ public class VariableCollection {
     public double GetDoubleValue(string name) {
         doubleVariables.TryGetValue(name, out var value);
         return value;
+    }
+
+    public VariableType GetType(string name) {
+        names.TryGetValue(name, out var type);
+        return type;
     }
 
     public void AddVariable(string name, string value) {

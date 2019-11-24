@@ -1,11 +1,13 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace WorldVariables.Editor {
 public class WorldVariablesEditor : EditorWindow {
     private VisualElement variableContainer;
-    
+
     [MenuItem("Tools/World variable editor")]
     public static void ShowWindow() {
         var window = GetWindow<WorldVariablesEditor>();
@@ -29,21 +31,54 @@ public class WorldVariablesEditor : EditorWindow {
 
         // Load the container where the variables are going to sit
         variableContainer = root.Q<VisualElement>("vars-container");
+        
+        LoadInitialVariables();
+    }
+
+    private void LoadInitialVariables() {
+        // Alias for the world variable instance
+        var worldVars = VariableCollection.Instance;
+        
+        Debug.Log($"There are {worldVars.NameList().Count()} variables curerntly presetn");
+        
+        foreach (var name in worldVars.NameList()) {
+            var type = worldVars.GetType(name);
+
+            object value;
+            switch (type) {
+                case VariableType.String:
+                    value = worldVars.GetStringValue(name);
+                    break;
+                case VariableType.Bool:
+                    value = worldVars.GetBoolValue(name);
+                    break;
+                case VariableType.Long:
+                    value = worldVars.GetLongValue(name);
+                    break;
+                case VariableType.Double:
+                    value = worldVars.GetDoubleValue(name);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            AddVarField(name, type, value);
+        }
     }
 
     private void SetupNewVarButton(Button b) {
         switch (b.name) {
             case "add-str":
-                b.clickable.clicked += () => AddVarField("New String", VariableType.String);
+                b.clickable.clicked += () => AddVariable("New String", VariableType.String);
                 break;
             case "add-bool":
-                b.clickable.clicked += () => AddVarField("New Bool", VariableType.Bool);
+                b.clickable.clicked += () => AddVariable("New Bool", VariableType.Bool);
                 break;
             case "add-long":
-                b.clickable.clicked += () => AddVarField("New Long", VariableType.Long);
+                b.clickable.clicked += () => AddVariable("New Long", VariableType.Long);
                 break;
             case "add-dbl":
-                b.clickable.clicked += () => AddVarField("New Double", VariableType.Double);
+                b.clickable.clicked += () => AddVariable("New Double", VariableType.Double);
                 break;
             default:
                 Debug.LogError("Button name not recognized while initializing variable addition buttons");
@@ -51,8 +86,14 @@ public class WorldVariablesEditor : EditorWindow {
         }
     }
 
-    private void AddVarField(string varName, VariableType type) {
-        variableContainer.Add(new VariableField(varName, type));
+    private void AddVariable(string varName, VariableType type) {
+        AddVarField(varName, type);
+
+        // TODO save the new var
+    }
+
+    private void AddVarField(string varName, VariableType type, object value = null) {
+        variableContainer.Add(new VariableField(varName, type, value));
     }
 }
 }

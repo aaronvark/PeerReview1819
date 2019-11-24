@@ -11,7 +11,7 @@
     background-color: #0cb4cc;
     flex-direction: row;
     flex-wrap: nowrap;
-    padding: 2px 0;
+    padding: 3px;
 }
 
 .worldvar-value-container {
@@ -19,22 +19,26 @@
 }
 
 .worldvar-field .worldvar-type-dropdown {
-    width: 80px;
+    width: 70px;
     margin: 0 15px;
 }
 
+.worldvar-field Label {
+    width: 110px;
+}
+
 .worldvar-type-bool {
-    background-color: #ff0000;
+    background-color: #bed7e7;
 }
 
 .worldvar-type-string {
-    background-color: #fff000;
+    background-color: #c3e7bc;
 }
 
 .worldvar-type-long {
-    background-color: #0000ff;
+    background-color: #e7e0b4;
 }
 
 .worldvar-type-double {
-    background-color: #00f0ff;
+    background-color: #e7bebe;
 }

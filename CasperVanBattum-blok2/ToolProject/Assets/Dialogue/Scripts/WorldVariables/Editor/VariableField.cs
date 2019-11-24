@@ -9,25 +9,28 @@ public class VariableField : VisualElement {
 
     private VariableType varType;
     private string varName;
-    
+    private object value;
+
     private VisualElement fieldContainer;
 
-    public VariableField(string name, VariableType type) {
+    public VariableField(string name, VariableType type, object value = null) {
         varName = name;
         varType = type;
+        this.value = value;
 
         AddToClassList(ussClassName);
 
-        Add(new Label(name));
+        var label = new Label(name);
+        Add(label);
 
         // Create the type changer dropdown
         var choice = new EnumField(type);
         choice.AddToClassList("worldvar-type-dropdown");
         Add(choice);
-        
+
         // Register type update callback on dropdown value change
         choice.RegisterCallback<ChangeEvent<Enum>>(UpdateVariableType);
-        
+
         // Add a type-specific class based on the current type
         AddToClassList(typeClassNameTemplate + choice.text.ToLower());
 
@@ -40,25 +43,34 @@ public class VariableField : VisualElement {
 
     private void DrawValueField() {
         const string fieldName = "worldvar-value-field";
-        
+
         // TODO implement value carrying
         // Clear previous field
         fieldContainer.Clear();
+        value = null;
 
         // Create a type-specific field for each different variable type
         VisualElement field;
         switch (varType) {
             case VariableType.String:
-                field = new TextField();
+                field = new TextField() {
+                    value = value?.ToString()
+                };
                 break;
             case VariableType.Bool:
-                field = new Toggle();
+                field = new Toggle {
+                    value = value != null && bool.Parse(value?.ToString())
+                };
                 break;
             case VariableType.Long:
-                field = new LongField();
+                field = new LongField() {
+                    value = value != null ? long.Parse(value?.ToString()) : 0
+                };
                 break;
             case VariableType.Double:
-                field = new DoubleField();
+                field = new DoubleField {
+                    value = value != null ? double.Parse(value?.ToString()) : 0
+                };
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
