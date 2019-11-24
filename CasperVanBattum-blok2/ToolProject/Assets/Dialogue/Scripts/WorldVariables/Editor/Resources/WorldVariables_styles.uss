@@ -1,0 +1,40 @@
+#button-container {
+    flex-direction: row;
+}
+
+#button-container * {
+    flex-grow: 1;
+    margin: 0 2px;
+}
+
+.worldvar-field {
+    background-color: #0cb4cc;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 2px 0;
+}
+
+.worldvar-value-container {
+    flex-grow: 1;
+}
+
+.worldvar-field .worldvar-type-dropdown {
+    width: 80px;
+    margin: 0 15px;
+}
+
+.worldvar-type-bool {
+    background-color: #ff0000;
+}
+
+.worldvar-type-string {
+    background-color: #fff000;
+}
+
+.worldvar-type-long {
+    background-color: #0000ff;
+}
+
+.worldvar-type-double {
+    background-color: #00f0ff;
+}

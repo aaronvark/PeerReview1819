@@ -10,6 +10,16 @@ public enum VariableType {
 }
 
 public class VariableCollection {
+    private static VariableCollection instance;
+    public static VariableCollection Instance {
+        get {
+            if (instance == null) {
+                instance = new VariableCollection();
+            }
+            return instance;
+        }
+    }
+    
     private readonly Dictionary<string, VariableType> names = new Dictionary<string, VariableType>();
     private readonly Dictionary<string, string> stringVariables = new Dictionary<string, string>();
     private readonly Dictionary<string, bool> boolVariables = new Dictionary<string, bool>();
@@ -127,6 +137,10 @@ public class VariableCollection {
         names.Remove(name);
     }
 
+    public IEnumerable<string> NameList() {
+        return names.Keys;
+    }
+    
     private bool NameExists(string name) {
         return names.ContainsKey(name);
     }
