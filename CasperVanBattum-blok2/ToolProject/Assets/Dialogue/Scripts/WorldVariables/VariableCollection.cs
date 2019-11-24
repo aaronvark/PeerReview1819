@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 namespace WorldVariables {
 public enum VariableType {
@@ -58,20 +60,40 @@ public class VariableCollection {
         return type;
     }
 
-    public void AddVariable(string name, string value) {
-        if (AddName(name, VariableType.String)) stringVariables.Add(name, value);
+    public bool AddVariable(string name, string value) {
+        if (AddName(name, VariableType.String)) {
+            stringVariables.Add(name, value);
+            return true;
+        }
+
+        return false;
     }
 
-    public void AddVariable(string name, bool value) {
-        if (AddName(name, VariableType.Bool)) boolVariables.Add(name, value);
+    public bool AddVariable(string name, bool value) {
+        if (AddName(name, VariableType.Bool)) {
+            boolVariables.Add(name, value);
+            return true;
+        }
+
+        return false;
     }
 
-    public void AddVariable(string name, long value) {
-        if (AddName(name, VariableType.Long)) longVariables.Add(name, value);
+    public bool AddVariable(string name, long value) {
+        if (AddName(name, VariableType.Long)) {
+            longVariables.Add(name, value);
+            return true;
+        }
+
+        return false;
     }
 
-    public void AddVariable(string name, double value) {
-        if (AddName(name, VariableType.Double)) doubleVariables.Add(name, value);
+    public bool AddVariable(string name, double value) {
+        if (AddName(name, VariableType.Double)) {
+            doubleVariables.Add(name, value);
+            return true;
+        }
+
+        return false;
     }
 
     public void RenameVariable(string oldName, string newName) {
@@ -151,6 +173,10 @@ public class VariableCollection {
 
     public IEnumerable<string> NameList() {
         return names.Keys;
+    }
+
+    public void DebugStats() {
+        Debug.Log($"Contains {names.Count} variables");
     }
     
     private bool NameExists(string name) {

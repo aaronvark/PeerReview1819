@@ -27,6 +27,12 @@
     width: 110px;
 }
 
+.worldvar-remove-button {
+    width: 20px;
+    margin: 0;
+    margin-left: 10px;
+}
+
 .worldvar-type-bool {
     background-color: #bed7e7;
 }

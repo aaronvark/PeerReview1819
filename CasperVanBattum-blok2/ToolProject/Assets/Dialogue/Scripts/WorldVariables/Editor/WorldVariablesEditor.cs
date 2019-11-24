@@ -31,16 +31,16 @@ public class WorldVariablesEditor : EditorWindow {
 
         // Load the container where the variables are going to sit
         variableContainer = root.Q<VisualElement>("vars-container");
-        
+
         LoadInitialVariables();
     }
 
     private void LoadInitialVariables() {
         // Alias for the world variable instance
         var worldVars = VariableCollection.Instance;
-        
+
         Debug.Log($"There are {worldVars.NameList().Count()} variables curerntly presetn");
-        
+
         foreach (var name in worldVars.NameList()) {
             var type = worldVars.GetType(name);
 
@@ -61,7 +61,7 @@ public class WorldVariablesEditor : EditorWindow {
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             AddVarField(name, type, value);
         }
     }
@@ -87,9 +87,38 @@ public class WorldVariablesEditor : EditorWindow {
     }
 
     private void AddVariable(string varName, VariableType type) {
-        AddVarField(varName, type);
+        // Alias
+        var worldVars = VariableCollection.Instance;
 
-        // TODO save the new var
+        // Try to add number to the standard name until a name is found that has not yet been taken
+        var success = false;
+        var count = 0;
+        var name = varName;
+        while (!success) {
+            name = count == 0 ? varName : $"{varName} {count}";
+            switch (type) {
+                case VariableType.String:
+                    success = worldVars.AddVariable(name, "");
+                    break;
+                case VariableType.Bool:
+                    success = worldVars.AddVariable(name, false);
+                    break;
+                case VariableType.Long:
+                    success = worldVars.AddVariable(name, 0);
+                    break;
+                case VariableType.Double:
+                    success = worldVars.AddVariable(name, 0f);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+
+            count++;
+        }
+
+        AddVarField(name, type);
+
+        worldVars.DebugStats();
     }
 
     private void AddVarField(string varName, VariableType type, object value = null) {

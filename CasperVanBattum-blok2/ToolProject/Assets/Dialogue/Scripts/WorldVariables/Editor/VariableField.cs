@@ -39,6 +39,15 @@ public class VariableField : VisualElement {
         fieldContainer.AddToClassList("worldvar-value-container");
         Add(fieldContainer);
         DrawValueField();
+        
+        // Create a button at the end to remove the var
+        var button = new Button() {
+            text = "-",
+            name = $"remove-{varName}"
+        };
+        button.AddToClassList("worldvar-remove-button");
+        button.clickable.clicked += Remove;
+        Add(button);
     }
 
     private void DrawValueField() {
@@ -88,6 +97,14 @@ public class VariableField : VisualElement {
         // Update style classes to the new type. The enum variable string is simply appended to the 
         RemoveFromClassList($"{typeClassNameTemplate}{evt.previousValue.ToString().ToLower()}");
         AddToClassList($"{typeClassNameTemplate}{evt.newValue.ToString().ToLower()}");
+    }
+
+    private void Remove() {
+        VariableCollection.Instance.RemoveVariable(varName);
+        RemoveFromHierarchy();
+        
+        VariableCollection.Instance.DebugStats();
+        
     }
 }
 }
