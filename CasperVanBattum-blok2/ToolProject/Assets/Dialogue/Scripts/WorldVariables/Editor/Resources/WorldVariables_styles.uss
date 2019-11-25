@@ -16,6 +16,7 @@
 
 .worldvar-value-container {
     flex-grow: 1;
+    min-width: 30px;
 }
 
 .worldvar-field .worldvar-type-dropdown {
@@ -29,8 +30,7 @@
 
 .worldvar-remove-button {
     width: 20px;
-    margin: 0;
-    margin-left: 10px;
+    margin: 0 0 0 10px;
 }
 
 .worldvar-type-bool {

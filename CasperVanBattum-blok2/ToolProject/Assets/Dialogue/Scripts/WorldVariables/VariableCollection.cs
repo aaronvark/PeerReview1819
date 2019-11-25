@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 
 namespace WorldVariables {
@@ -13,6 +12,7 @@ public enum VariableType {
 
 public class VariableCollection {
     private static VariableCollection instance;
+
     public static VariableCollection Instance {
         get {
             if (instance == null) {
@@ -20,15 +20,16 @@ public class VariableCollection {
                 // FIXME TEST CODE PLEASE REMOVE
                 instance.AddVariable("Variable1", "Some text");
                 instance.AddVariable("A long", 40);
-                instance.AddVariable("Test bool" , true);
-                instance.AddVariable("Other test bool" , false);
-                instance.AddVariable("moar string" , "Value");
-                instance.AddVariable("lmoa" , 42.42);
+                instance.AddVariable("Test bool", true);
+                instance.AddVariable("Other test bool", false);
+                instance.AddVariable("moar string", "Value");
+                instance.AddVariable("lmoa", 42.42);
             }
+
             return instance;
         }
     }
-    
+
     private readonly Dictionary<string, VariableType> names = new Dictionary<string, VariableType>();
     private readonly Dictionary<string, string> stringVariables = new Dictionary<string, string>();
     private readonly Dictionary<string, bool> boolVariables = new Dictionary<string, bool>();
@@ -53,6 +54,21 @@ public class VariableCollection {
     public double GetDoubleValue(string name) {
         doubleVariables.TryGetValue(name, out var value);
         return value;
+    }
+
+    public object GetValueRaw(string name) {
+        switch (names[name]) {
+            case VariableType.Bool:
+                return boolVariables[name];
+            case VariableType.Double:
+                return doubleVariables[name];
+            case VariableType.Long:
+                return longVariables[name];
+            case VariableType.String:
+                return stringVariables[name];
+        }
+
+        return null;
     }
 
     public VariableType GetType(string name) {
@@ -171,14 +187,57 @@ public class VariableCollection {
         names.Remove(name);
     }
 
+    // TODO change type
+    public void ChangeType(string name, VariableType newType) {
+        // Remove the old variable, save the value for carrying
+        
+        
+        // Try to convert the value to the new type
+        
+        // Add the same variable with the updated type
+    }
+
+    public void SetValue(string name, string newValue) {
+        if (!stringVariables.ContainsKey(name))
+            throw new InvalidOperationException($"Unknown name for type string: {name}");
+
+        stringVariables[name] = newValue;
+    }
+
+    public void SetValue(string name, bool newValue) {
+        if (!boolVariables.ContainsKey(name))
+            throw new InvalidOperationException($"Unknown name for type bool: {name}");
+
+        boolVariables[name] = newValue;
+    }
+
+    public void SetValue(string name, long newValue) {
+        if (!longVariables.ContainsKey(name))
+            throw new InvalidOperationException($"Unknown name for type long: {name}");
+
+        longVariables[name] = newValue;
+    }
+
+    public void SetValue(string name, double newValue) {
+        if (!doubleVariables.ContainsKey(name))
+            throw new InvalidOperationException($"Unknown name for type double: {name}");
+
+        doubleVariables[name] = newValue;
+    }
+
     public IEnumerable<string> NameList() {
         return names.Keys;
     }
 
-    public void DebugStats() {
-        Debug.Log($"Contains {names.Count} variables");
+    public void DebugDump() {
+        var msg = $"Contains {names.Count} variables\n";
+        foreach (var varName in names) {
+            msg = $"{msg}{varName.Key} | {varName.Value} | {GetValueRaw(varName.Key)}\n";
+        }
+
+        Debug.Log(msg);
     }
-    
+
     private bool NameExists(string name) {
         return names.ContainsKey(name);
     }

@@ -39,8 +39,6 @@ public class WorldVariablesEditor : EditorWindow {
         // Alias for the world variable instance
         var worldVars = VariableCollection.Instance;
 
-        Debug.Log($"There are {worldVars.NameList().Count()} variables curerntly presetn");
-
         foreach (var name in worldVars.NameList()) {
             var type = worldVars.GetType(name);
 
@@ -90,11 +88,11 @@ public class WorldVariablesEditor : EditorWindow {
         // Alias
         var worldVars = VariableCollection.Instance;
 
-        // Try to add number to the standard name until a name is found that has not yet been taken
         var success = false;
         var count = 0;
         var name = varName;
         while (!success) {
+            // Try to add number to the standard name until a name is found that has not yet been taken
             name = count == 0 ? varName : $"{varName} {count}";
             switch (type) {
                 case VariableType.String:
@@ -118,11 +116,19 @@ public class WorldVariablesEditor : EditorWindow {
 
         AddVarField(name, type);
 
-        worldVars.DebugStats();
+        worldVars.DebugDump();
     }
 
     private void AddVarField(string varName, VariableType type, object value = null) {
         variableContainer.Add(new VariableField(varName, type, value));
+    }
+
+    private void OnDisable() {
+        Debug.Log("Editor window was disabled");
+    }
+
+    private void OnLostFocus() {
+        Debug.Log("Focus lost");
     }
 }
 }
