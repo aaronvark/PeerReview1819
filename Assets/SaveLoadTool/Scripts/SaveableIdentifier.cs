@@ -1,19 +1,25 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Common.SaveLoadSystem
 {
     public class SaveableIdentifier : MonoBehaviour, Iidentifier
     {
-        public int id;
-
-        public int GetId()
+        public int _id;
+        public int id 
         {
-            return id;
+            get { return _id; }
+            set 
+            { 
+                _id = (_id != 0) ? _id : value; 
+            }
         }
 
-        public void SetId(int id)
-        {
-            this.id = (this.id != 0) ? this.id : id;
+        public List<ComponentSave> _componentSave;
+        public List<ComponentSave> componentSaves 
+        { 
+            get { return _componentSave; } 
+            set { _componentSave = value; }
         }
     }
 }

@@ -2,37 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
+using System.Linq;
+using UnityEngine.Assertions;
 
 namespace Common.SaveLoadSystem
 {
     public class ScriptReflector
     {
-        public static List<string> GetVariableNames(Component component)
+        /// <summary>
+        /// returns Name, AssemblyName, Value
+        /// </summary>
+        /// <param name="component"></param>
+        /// <returns></returns>
+        public static List<System.Tuple<string, string, string>> GetVariableNames(Component component)
         {
-            if (component.GetType() != typeof(SaveableIdentifier))
+            List<System.Tuple<string, string, string>> variableNamesValues = new List<System.Tuple<string, string, string>>();
+
+            System.Type componentType = component.GetType();
+            FieldInfo[] fields = componentType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            PropertyInfo[] properties = componentType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+            if (properties.Length > 0)
             {
-                List<string> variableNames = new List<string>(); ;
-
-                System.Type componentType = component.GetType();
-                if (componentType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Length == 0 )
-                {
-                    PropertyInfo[] properties = componentType.GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public);
-                    for (int i = 0; i < properties.Length; i++)
-                    {
-                        variableNames.Add(properties[i].Name);
-                    }
-                } else
-                {
-                    FieldInfo[] fields = componentType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    for (int i = 0; i < fields.Length; i++)
-                    {
-                        variableNames.Add(fields[i].Name);
-                    }
-                }
-
-                return variableNames;
+                variableNamesValues.AddRange(from property in properties
+                                        where property.CanRead && property.CanWrite && property.GetValue(component) != null
+                                        select System.Tuple.Create(property.Name, property.PropertyType.AssemblyQualifiedName, property.GetValue(component).ToString()));
             }
-            return null;
+
+            if (fields.Length > 0)
+            {
+                variableNamesValues.AddRange(from field in fields
+                                        where field.GetValue(component) != null && !(field.FieldType is object)
+                                        select System.Tuple.Create(field.Name, field.FieldType.AssemblyQualifiedName, field.GetValue(component).ToString()));;
+            }
+
+            return variableNamesValues;
+        }
+
+
+
+        public static void SetComponentVarTo(Component currentComponent, string varName, object value)
+        {
+            //Assert.IsNotNull(value);
+            if (currentComponent.GetType().GetProperty(varName) != null)
+            {
+                currentComponent.GetType().GetProperty(varName).SetValue(currentComponent, value);
+            }
+
+            if (currentComponent.GetType().GetField(varName) != null)
+            {
+                currentComponent.GetType().GetField(varName).SetValue(currentComponent, value);
+            }
         }
     }
 }

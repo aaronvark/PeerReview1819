@@ -43,19 +43,26 @@ namespace Common.SaveLoadSystem
     static class SaveCommand
     {
         [MenuItem("GameObject/Saveable", false, 17)]
-        static void Init(MenuCommand command)
+        static void MakeSaveable(MenuCommand command)
         {
-            GameObject go = (GameObject)command.context;
-            Iidentifier identifier = go.GetComponent<SaveableIdentifier>();
+            GameObject obj = (GameObject)command.context;
+            Iidentifier identifier = obj.GetComponent<SaveableIdentifier>();
 
             if (identifier == null)
             {
-                identifier = go.AddComponent<SaveableIdentifier>();
-                identifier.SetId(SaveLoadSystem.GetId());
+                identifier = obj.AddComponent<SaveableIdentifier>();
+                identifier.id = SaveLoadSystem.GetId();
             } else
             {
                 Object.DestroyImmediate((SaveableIdentifier)identifier);
             }
+        }
+
+        [MenuItem("GameObject/Save specific", false, 17)]
+        static void SaveSpecific(MenuCommand command)
+        {
+            GameObject obj = (GameObject)command.context;
+            SaveSpecificEditor.ShowWindow(obj);
         }
     }
 }

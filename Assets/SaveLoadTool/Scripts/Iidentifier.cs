@@ -1,8 +1,10 @@
-﻿namespace Common.SaveLoadSystem
+﻿using System.Collections.Generic;
+namespace Common.SaveLoadSystem
 {
     public interface Iidentifier
     {
-        int GetId();
-        void SetId(int id);
+        int id { get; set; }
+        List<ComponentSave> componentSaves { get; set; }
+        
     }
 }
