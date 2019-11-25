@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEditor;
 
 namespace UnityEngine.Scripting.UML
@@ -11,6 +12,9 @@ namespace UnityEngine.Scripting.UML
     {
         public void GenerateClass(NodeInfo nodeInfo)
         {
+            //Checking if object is not null
+            Assert.IsNotNull(nodeInfo);
+
             string directoryPath = Environment.CurrentDirectory + "/Assets";
 
             using (StreamWriter sw = new StreamWriter(Path.Combine(directoryPath, nodeInfo.ClassName + ".cs")))
@@ -28,16 +32,16 @@ namespace UnityEngine.Scripting.UML
                 sw.WriteLine("/// </Information>");
 
                 if (nodeInfo.Parent != string.Empty)
-                    sw.WriteLine(nodeInfo.classAccesModifiers.ToString().ToLower() + " class " + nodeInfo.ClassName + " : " + nodeInfo.Parent);
+                    sw.WriteLine(nodeInfo.ClassAccessModifiers.ToString().ToLower() + " class " + nodeInfo.ClassName + " : " + nodeInfo.Parent);
                 else
-                    sw.WriteLine(nodeInfo.classAccesModifiers.ToString().ToLower() + " class " + nodeInfo.ClassName);
+                    sw.WriteLine(nodeInfo.ClassAccessModifiers.ToString().ToLower() + " class " + nodeInfo.ClassName);
 
                 sw.WriteLine("{");
                 //adding variables
                 for (int i = 0; i < nodeInfo.VariableInfo.Count; i++)
                 {
                     ClassContent variable = nodeInfo.VariableInfo[i];
-                    sw.WriteLine("\t" + variable.AccesModifiers.ToString().ToLower() + " " + variable.Type + " " + variable.Name + ";");
+                    sw.WriteLine("\t" + variable.AccessModifiers.ToString().ToLower() + " " + variable.Type + " " + variable.Name + ";");
                 }
 
                 sw.WriteLine(" "); // whitespace
@@ -46,9 +50,9 @@ namespace UnityEngine.Scripting.UML
                 {
                     ClassContent methode = nodeInfo.MethodeInfo[i];
                     if (methode.Name.EndsWith(")"))
-                        sw.WriteLine("\t" + methode.AccesModifiers.ToString().ToLower() + " " + methode.Type + " " + methode.Name + "{ }");
+                        sw.WriteLine("\t" + methode.AccessModifiers.ToString().ToLower() + " " + methode.Type + " " + methode.Name + "{ }");
                     else
-                        sw.WriteLine("\t" + methode.AccesModifiers.ToString().ToLower() + " " + methode.Type + " " + methode.Name + "() { }");
+                        sw.WriteLine("\t" + methode.AccessModifiers.ToString().ToLower() + " " + methode.Type + " " + methode.Name + "() { }");
                 }
 
                 sw.WriteLine("}");

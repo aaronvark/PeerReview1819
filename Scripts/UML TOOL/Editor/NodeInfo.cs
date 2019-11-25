@@ -8,7 +8,7 @@ namespace UnityEngine.Scripting.UML
     public class NodeInfo
     {
         private Node node;
-        public AccesModifiers classAccesModifiers;
+        public AccessModifiers ClassAccessModifiers;
         public string ClassName;
         public string Parent = string.Empty;
 
@@ -51,7 +51,7 @@ namespace UnityEngine.Scripting.UML
             GUILayout.BeginVertical();
             GUILayout.Label("Class Name");
             GUILayout.BeginHorizontal();
-            classAccesModifiers = (AccesModifiers)EditorGUILayout.EnumPopup((AccesModifiers)classAccesModifiers, GUILayout.MaxWidth(70));
+            ClassAccessModifiers = (AccessModifiers)EditorGUILayout.EnumPopup((AccessModifiers)ClassAccessModifiers, GUILayout.MaxWidth(70));
             ClassName = GUILayout.TextField(ClassName);
             GUILayout.EndHorizontal();
 
@@ -68,7 +68,7 @@ namespace UnityEngine.Scripting.UML
                 ClassContent variable = VariableInfo[i];
                 GUILayout.BeginHorizontal();
                 //AccessModifier Type Variable 
-                variable.AccesModifiers = (AccesModifiers)EditorGUILayout.EnumPopup((AccesModifiers)variable.AccesModifiers, GUILayout.MaxWidth(70) );
+                variable.AccessModifiers = (AccessModifiers)EditorGUILayout.EnumPopup((AccessModifiers)variable.AccessModifiers, GUILayout.MaxWidth(70) );
                 variable.Type = GUILayout.TextField(variable.Type);
                 variable.Name = GUILayout.TextField(variable.Name);
                 
@@ -95,7 +95,7 @@ namespace UnityEngine.Scripting.UML
                 ClassContent methode = methodeInfo[i];
                 GUILayout.BeginHorizontal();
                 //AccessModifier Type Methode 
-                methode.AccesModifiers = (AccesModifiers)EditorGUILayout.EnumPopup((AccesModifiers)methode.AccesModifiers, GUILayout.MaxWidth(70));
+                methode.AccessModifiers = (AccessModifiers)EditorGUILayout.EnumPopup((AccessModifiers)methode.AccessModifiers, GUILayout.MaxWidth(70));
                 methode.Type = GUILayout.TextField(methode.Type);
                 methode.Name = GUILayout.TextField(methode.Name);
 
@@ -117,9 +117,6 @@ namespace UnityEngine.Scripting.UML
 
             GUILayout.Space(15);
 
-            //GUILayout.Label("Inheritance parent");
-            //Parent = GUILayout.TextField(Parent);
-
             GUILayout.EndVertical();
         }
     }
@@ -127,7 +124,7 @@ namespace UnityEngine.Scripting.UML
     ///<summary>
     ///information of the classContent
     ///</summary>
-    public enum AccesModifiers
+    public enum AccessModifiers
     {
         Public,
         Private,

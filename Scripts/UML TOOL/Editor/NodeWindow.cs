@@ -2,29 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
 
 namespace UnityEngine.Scripting.UML
 {
     public class NodeWindow : EditorWindow
     {
         private Grid grid;
-        private List<Node> nodes = new List<Node>();
+        private List<Node> nodes;
         private Inheritance inheritance;
-        int id = 0;
+        private int id = 0;
         private delegate void DrawInheritance();
         private event DrawInheritance drawInheritance;
-        private bool SetInheritance = false;
+        private bool setInheritance = false;
+        private SaveNodes saveNode;
 
-        [MenuItem("Custom Tools/UML Window #u")]
+        [MenuItem("Custom Tools/UML Window #u ")]
         private static void Init()
         {
             NodeWindow umlWindow = new NodeWindow();
+
+            try
+            {
+                umlWindow.saveNode = (SaveNodes)AssetDatabase.LoadAssetAtPath("Assets/SaveNode.asset", typeof(SaveNodes));
+                umlWindow.nodes = umlWindow.saveNode.Nodes;
+                umlWindow.inheritance = umlWindow.saveNode.Inheritance;
+
+                if (umlWindow.setInheritance)
+                    umlWindow.drawInheritance();
+            } 
+            catch
+            {
+                umlWindow.saveNode = ScriptableObject.CreateInstance(typeof(SaveNodes)) as SaveNodes;
+                AssetDatabase.CreateAsset(umlWindow.saveNode, "Assets/SaveNode.asset");
+                umlWindow.inheritance = new Inheritance();
+                umlWindow.nodes = new List<Node>();
+            }
+
             umlWindow.titleContent = new GUIContent("UML Creator");
             GUIContent icon = EditorGUIUtility.IconContent("animationdopesheetkeyframe");
             umlWindow.titleContent.image = icon.image;
+
             umlWindow.Show();
             umlWindow.grid = new Grid(umlWindow);
-            umlWindow.inheritance = new Inheritance();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
 
         // Update is called once per frame
@@ -40,13 +62,15 @@ namespace UnityEngine.Scripting.UML
                 grid = new Grid(this);
             #endregion
 
-            //Show Nodes
-            for (int i = 0; i < nodes.Count; i++)
-                nodes[i].OnGUI();
-
             Event e = Event.current;
             if (e.type == EventType.ContextClick)
                 CreateGenericMenu();
+
+            //Show Nodes
+            if (nodes.Count > 0)
+                for (int i = 0; i < nodes.Count; i++)
+                    nodes[i].OnGUI();
+
 
             drawInheritance?.Invoke();
             EndWindows();
@@ -74,6 +98,9 @@ namespace UnityEngine.Scripting.UML
 
         private void BeginDrawingInheritance()
         {
+            if (nodes.Count < 2)
+                return;
+
             inheritance.SetInheritance(nodes);
             drawInheritance += inheritance.DrawInheritances;
 
@@ -87,8 +114,17 @@ namespace UnityEngine.Scripting.UML
             GenericMenu menu = new GenericMenu();
             menu.AddItem(new GUIContent("Add class"), false, AddNode);
             menu.AddItem(new GUIContent("Generate class"), false, GenerateNodes);
-            menu.AddItem(new GUIContent("Set Inheritance"), SetInheritance, BeginDrawingInheritance);
+            menu.AddItem(new GUIContent("Set Inheritance"), setInheritance, BeginDrawingInheritance);
             menu.ShowAsContext();
+        }
+
+        public void OnDestroy()
+        {
+            drawInheritance -= inheritance.DrawInheritances;
+            saveNode.Inheritance = inheritance;
+            saveNode.Nodes = nodes;
+            saveNode.SetInheritance = setInheritance;
+            AssetDatabase.SaveAssets();
         }
     }
 }

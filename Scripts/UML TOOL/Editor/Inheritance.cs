@@ -14,7 +14,6 @@ namespace UnityEngine.Scripting.UML
 
         public void DrawInheritances()
         {
-
             Handles.color = Color.black;
             for (int i = 0; i < lines.Count; i++)
             {
@@ -39,9 +38,8 @@ namespace UnityEngine.Scripting.UML
                 float angle = Mathf.Rad2Deg * Mathf.Acos(delta.x);
                 if (beginPosition.y < endPosition.y)
                     angle *= -1;
-                //Vector2 arrowPosition = new Vector3(dictionary.Key.maxNodeSize.x + (dictionary.Key.maxNodeSize.width), dictionary.Key.maxNodeSize.y + (dictionary.Key.maxNodeSize.height));
 
-
+                //Calculate Arrow
                 Vector2 newPos = CalculateArrow(angle, false);
                 Handles.DrawLine(arrowPosition + -newPos, arrowPosition);
                 Vector2 newPos2 = CalculateArrow(angle, true);

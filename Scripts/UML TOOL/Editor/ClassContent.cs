@@ -7,7 +7,7 @@
         /// <summary>
         /// Access modifiers of the methodes/variable.
         /// </summary>
-        public AccesModifiers AccesModifiers;
+        public AccessModifiers AccessModifiers;
 
         /// <summary>
         /// Type of the variable.
