@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEditor;
-using System.Linq;
+using UnityEngine;
 
 namespace EasyAI
 {
@@ -12,19 +10,26 @@ namespace EasyAI
         [SerializeField]
         public WanderType WanderType;
         [SerializeField]
-        public List<Transform> WayPoints;
+        public List<Vector3> WayPoints;
         [SerializeField]
         public int WayPointIndex = 0;
+        [SerializeField]
+        public BezierSpline spline;
+        [SerializeField]
+        public float duration;
+        [SerializeField]
+        public bool lookForward;
+        [SerializeField]
+        public SplineWalkerMode mode;
 
-        private void Start()
-        {
-            foreach(Transform point in WayPoints)
-            {
-                point.parent = null;
-            }
-            //EventManager<MonoBehaviour>.BroadCast(EVENT.setBehaviour, this);
-
-        }
+        public Vector3 NewWayPointPosition { get { return TargetPosition; } set { TargetPosition = value; } }
+        [SerializeField]
+        private Vector3 TargetPosition = new Vector3(1f, 0f, 2f);
+        public int GetWayPointCount { get { return WayPoints.Count; } }
+        public Vector3 GetWayPointPoint(int index) { return WayPoints[index]; }
+        public void SetWayPoint(int index, Vector3 point) { WayPoints[index] = point; }
+        
+        public void 
 
         public void RenderUI(SerializedProperty property)
         {
@@ -44,14 +49,14 @@ namespace EasyAI
         {
             // Draw a yellow sphere at the transform's position
             Gizmos.color = Color.yellow;
-            if(WayPoints != null)
+            if (WayPoints != null && WayPoints.Count > 1)
             {
-                foreach (Transform point in WayPoints)
+                foreach (Vector3 point in WayPoints)
                 {
-                    Gizmos.DrawSphere(point.position, 0.2f);
+                    Gizmos.DrawSphere(point, 0.2f);
                 }
             }
-            
+
         }
     }
 }

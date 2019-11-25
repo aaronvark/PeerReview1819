@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System;
 using System.Linq;
-
+using UnityEngine.Assertions;
 namespace EasyAI
 {
     public enum PresetType
@@ -30,7 +30,7 @@ namespace EasyAI
         private readonly Dictionary<string, bool> checker = new Dictionary<string, bool>();
 
         // Add menu named "NPCEditor" to the Window menu
-        [MenuItem("Window/NPCEditor")]
+        [MenuItem("Window/NPCEditor #n")]
         static void Init()
         {
             // Get existing open window or if none, make a new one:
@@ -57,6 +57,9 @@ namespace EasyAI
             EditorGUILayout.LabelField("NPC:", EditorStyles.boldLabel);
 
            
+            //TODO
+            //Use assert to make system better 
+            //Istead of item != null we should do if(item==null) assert
             if (scriptableObject != null)
             {
                 var editor = Editor.CreateEditor(scriptableObject);
@@ -165,6 +168,19 @@ namespace EasyAI
             {
                 Debug.Log("It's not an AiSystem created with the reguired methods");
             }
+        }
+
+        public int DebugNPCCreation()
+        {
+            Assert.IsNotNull(scriptableObject);
+            ScriptableNPC newNPC = new ScriptableNPC();
+            newNPC = scriptableObject as ScriptableNPC;
+            newNPC.AnimatorController = null;
+            
+            CreateNPC(newNPC);
+
+            Assert.AreEqual(scriptableObject, newNPC);
+            return 0;
         }
 
         private void SetCurrentNPC(GameObject setter)

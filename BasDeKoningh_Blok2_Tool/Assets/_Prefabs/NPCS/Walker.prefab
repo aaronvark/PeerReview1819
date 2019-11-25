@@ -1222,7 +1222,7 @@ Animator:
   m_GameObject: {fileID: 8542069779155709729}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 41827ddb2b608844ea96d065f4e8f6f5, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6a306060b37205f46b775c735ce3a74d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1272,16 +1272,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 105de12ed793c5144996afbc223534fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisNpc: {fileID: 0}
-  temperamentData: {fileID: 0}
-  aiSettingData: {fileID: 0}
-  animationData: {fileID: 0}
-  wayPointData: {fileID: 0}
-  settings:
-  - {fileID: 6688531091954664148}
-  - {fileID: 4005221994089614147}
-  - {fileID: 1381032280506811033}
-  - {fileID: 6538125437349470070}
 --- !u!114 &6688531091954664148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1312,8 +1302,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Damage: 0
   Health: 0
-  Range: 10
-  Speed: 5
+  Range: 0
+  Speed: 0
   AiType: 0
 --- !u!114 &1381032280506811033
 MonoBehaviour:
@@ -1347,6 +1337,7 @@ MonoBehaviour:
   WanderType: 0
   WayPoints: []
   WayPointIndex: 0
+  m_TargetPosition: {x: 1, y: 0, z: 2}
 --- !u!1 &8728240508090080562
 GameObject:
   m_ObjectHideFlags: 0

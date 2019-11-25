@@ -64,6 +64,10 @@
   <ItemGroup>
     <Compile Include="Assets\_Scripts\Editor\ExtendedScriptableObjectDrawer.cs" />
     <Compile Include="Assets\_Scripts\Editor\NPCEditorWindow.cs" />
+    <Compile Include="Assets\_Scripts\Editor\WayPointPropertyDrawer.cs" />
+    <Compile Include="Assets\Editor\BezierCurveInspector.cs" />
+    <Compile Include="Assets\Editor\BezierSplineInspector.cs" />
+    <Compile Include="Assets\Editor\LineInspector.cs" />
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>D:/School/Jaar2/KernModuleGameTools/BasDeKoningh_Blok2_Tool/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>

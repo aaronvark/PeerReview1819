@@ -6,6 +6,7 @@ namespace EasyAI
 {
     public class WayPointManager : ManagerBase
     {
+        /*
         public List<WayPointData> wayPointDatas;
         public float speed = 1f;
         private int wayPointIndex = 0;
@@ -28,7 +29,7 @@ namespace EasyAI
         {
             yield return new WaitForEndOfFrame();
             float step = speed * Time.deltaTime;
-            Vector3 newPosition = wayPointData.WayPoints[wayPointIndex].position;
+            Vector3 newPosition = wayPointData.WayPoints[wayPointIndex];
             while(Vector3.Distance(wayPointData.gameObject.transform.position.ToZeroY(), newPosition.ToZeroY()) > 0.1f)
             {
                 GameObject target = wayPointData.gameObject;
@@ -40,6 +41,10 @@ namespace EasyAI
             else
                 wayPointIndex = 0;
             StartCoroutine(Move(wayPointData));
+        }*/
+        public override void Run(MonoBehaviour reference)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

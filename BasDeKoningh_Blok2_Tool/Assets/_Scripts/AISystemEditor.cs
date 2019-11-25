@@ -78,6 +78,7 @@ namespace EasyAI
             //TODO
             //We hebben instances van alle classes nodig om de objectReference op te halen
 
+            /*
             switch ((int)currenOpenSetting)
             {
                 case 0:

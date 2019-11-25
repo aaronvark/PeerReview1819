@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1073693818295170799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1073693818295170793}
+  - component: {fileID: 1073693818295170792}
+  m_Layer: 0
+  m_Name: Spline Loop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1073693818295170793
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073693818295170799}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.33486128, y: 0, z: 2.12}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1073693818295170792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073693818295170799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b154883273c2845f39445c8015d81639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  points:
+  - {x: -1.9130914, y: 1.6014183, z: 0}
+  - {x: -3.7891235, y: 1.6014183, z: 0}
+  - {x: 0.5649221, y: 1.6659584, z: 1.7221425}
+  - {x: 1.444495, y: 0, z: 1.955483}
+  - {x: 2.3240678, y: -1.6659584, z: 2.1888235}
+  - {x: 3.9590755, y: 0, z: 0.20355654}
+  - {x: 4.262518, y: 2.0019712, z: -0.08881843}
+  - {x: 5.231944, y: 2.0019712, z: -0.9651917}
+  - {x: 4.8512726, y: 0.47749573, z: -1.8713498}
+  - {x: 1.62801, y: 0.1776123, z: -2.5217142}
+  - {x: 0.18963408, y: 0.04378979, z: -2.8119383}
+  - {x: -2.0527844, y: 0.3476522, z: -5.652235}
+  - {x: -1.9130914, y: 1.6014183, z: 0}
+  - {x: -1.8889703, y: 1.8179094, z: 0.97598624}
+  - {x: -1.1367009, y: 1.1098914, z: -4.600949}
+  - {x: -1.9130914, y: 1.6014183, z: 0}
+  - {x: -2.653811, y: 2.070362, z: 4.38956}
+  - {x: 0.08690858, y: 1.6014183, z: 0}
+  - {x: 1.0869086, y: 1.6014183, z: 0}
+  modes: 01000000020000000000000001000000010000000100000001000000
+  loop: 0

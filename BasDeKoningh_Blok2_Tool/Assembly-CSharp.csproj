@@ -89,7 +89,15 @@
     <Compile Include="Assets\Animations\RunState.cs" />
     <Compile Include="Assets\Animations\StateMachineBase.cs" />
     <Compile Include="Assets\Animations\WalkState.cs" />
+    <Compile Include="Assets\Bezier.cs" />
+    <Compile Include="Assets\BezierControlPointMode.cs" />
+    <Compile Include="Assets\BezierCurve.cs" />
+    <Compile Include="Assets\BezierSpline.cs" />
+    <Compile Include="Assets\Line.cs" />
     <Compile Include="Assets\Resources\Settings\TemperamentSetting.cs" />
+    <Compile Include="Assets\SplineDecorator.cs" />
+    <Compile Include="Assets\SplineWalker.cs" />
+    <Compile Include="Assets\SplineWalkerMode.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/School/Jaar2/KernModuleGameTools/BasDeKoningh_Blok2_Tool/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
