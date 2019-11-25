@@ -5,14 +5,14 @@ using UnityEditor;
 
 public class ToolWindow : EditorWindow
 {
-    public Object addObject;
+    public Object[] addObject;
     public List<Object> sceneRequirements = new List<Object>();
 
     public Object addItem;
     public List<ManagementObject> managementObjects = new List<ManagementObject>();
 
     int toolbarInt = 0;
-    string[] toolbarStrings = { "Scene Requirements", "Project Management", "Audio Manager" };
+    string[] toolbarStrings = { "Scene Requirements", "Project Management" };
 
    
 
@@ -44,10 +44,6 @@ public class ToolWindow : EditorWindow
 
             case 1:
                 ManagementTool.ShowManagementTab(this);
-                break;
-
-            case 2:
-
                 break;
 
             default:
@@ -95,6 +91,7 @@ public class ToolWindow : EditorWindow
     {
         RequirementTool.Save();
         ManagementTool.Save();
+        AssetDatabase.SaveAssets();
         // We get the Json data
         var data = JsonUtility.ToJson(this, false);
         // And we save it

@@ -21,7 +21,8 @@ public class ProjectManagementTool
     private string tempItemDescription;
     private ManagementType tempItemManagementtype;
 
-  
+    private ManagementObject editObject;
+
     public void ShowManagementTab(ScriptableObject _target)
     {
 
@@ -29,13 +30,12 @@ public class ProjectManagementTool
         SerializedObject so = new SerializedObject(target);
         SerializedProperty gameObjectsProperty = so.FindProperty("managementObjects");
 
-        EditorGUILayout.PropertyField(gameObjectsProperty, true); // True means show children
+     //   EditorGUILayout.PropertyField(gameObjectsProperty, true); // True means show children
 
 
-        GUILayout.Label("Trello Tool", EditorStyles.boldLabel);
         //thisWindow.addItem = EditorGUILayout.ObjectField(thisWindow.addItem, typeof(ManagementObject), true);
 
-        GUILayout.Space(10);
+        GUILayout.Space(20);
         managementbarInt = GUILayout.Toolbar(managementbarInt, managementbarStrings);
 
        
@@ -99,9 +99,9 @@ public class ProjectManagementTool
 
             case 2:
                 // hier komt t deel waar je een nieuw object aan kan maken en toevoegen
-                tempItemName = EditorGUILayout.TextField("Name", tempItemName);
-                tempItemManagementtype = (ManagementType)EditorGUILayout.EnumPopup("Type", tempItemManagementtype);
-                tempItemDescription = EditorGUILayout.TextField("Description", tempItemDescription);
+                tempItemName = EditorGUILayout.TextField("Task Name", tempItemName);
+                tempItemManagementtype = (ManagementType)EditorGUILayout.EnumPopup("Task Type", tempItemManagementtype);
+                tempItemDescription = EditorGUILayout.TextField("Task Description", tempItemDescription);
                 if (GUILayout.Button("ADD"))
                 {
 
@@ -114,6 +114,34 @@ public class ProjectManagementTool
                     tempItemDescription = "";
                     so.ApplyModifiedProperties();
                 }
+
+                break;
+            case 3:
+                
+                GUILayout.Label("Edit Object", EditorStyles.boldLabel);
+
+
+                editObject.itemName = EditorGUILayout.TextField("Task Name", editObject.itemName);
+
+                editObject.itemType = (ManagementType)EditorGUILayout.EnumPopup("Task Type", editObject.itemType);
+
+                editObject.itemDescription = EditorGUILayout.TextField("Task Description", editObject.itemDescription);
+
+
+                GUI.skin.button.fontSize = 14;
+                GUI.skin.button.fontStyle = FontStyle.Bold;
+                GUI.color = thisWindow.RGBColor(127f, 191f, 63f);
+                if (GUILayout.Button("Complete Edit"))
+                {
+                    managementbarInt = 0;
+                    EditorUtility.SetDirty(editObject);
+                    AssetDatabase.SaveAssets();
+                }
+
+
+                GUI.skin.button.fontSize = 12;
+                GUI.skin.button.fontStyle = FontStyle.Normal;
+                GUI.color = Color.white;
 
                 break;
             default:
@@ -129,22 +157,36 @@ public class ProjectManagementTool
 
         GUILayout.BeginVertical(GUILayout.Height(100));
 
+
+        EditorGUILayout.BeginHorizontal();
+
         GUILayout.Label(_obj.itemName, EditorStyles.boldLabel);
+        EditorGUILayout.EndHorizontal();
+
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Task Type", EditorStyles.boldLabel);
         GUI.color = thisWindow.RGBColor(63, 127, 191);
-        
         GUILayout.TextField(_obj.itemType.ToString(), EditorStyles.helpBox, GUILayout.Width(120));
         GUI.color = Color.white;
-        GUILayout.Label(_obj.itemDescription, EditorStyles.textArea, GUILayout.ExpandWidth(false), GUILayout.Width(thisWindow.position.width - 230));
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Task Description", EditorStyles.boldLabel);        
+        //GUILayout.Label(_obj.itemDescription, EditorStyles.textArea, GUILayout.ExpandWidth(false), GUILayout.Width(thisWindow.position.width - 370));
+        GUILayout.TextField(_obj.itemDescription, EditorStyles.textArea, GUILayout.ExpandWidth(false), GUILayout.Width(thisWindow.position.width - 380));
+        EditorGUILayout.EndHorizontal();
+
 
         GUILayout.EndVertical();
         if (_showButtons)
         {
             GUILayout.BeginVertical(GUILayout.Height(100));
 
-            GUI.skin.button.fontSize = 24   ;
+            GUI.skin.button.fontSize = 14   ;
             GUI.skin.button.fontStyle = FontStyle.Bold;
 
-            GUI.color = thisWindow.RGBColor(163, 44, 44); 
+            GUI.color = thisWindow.RGBColor(191f, 63f, 63f); 
             if (GUILayout.Button("Remove", GUILayout.ExpandHeight(true), GUILayout.Width(200)))
             {
                 string _temp = AssetDatabase.GetAssetPath(_obj);
@@ -153,11 +195,21 @@ public class ProjectManagementTool
 
             }
 
-            GUI.color = thisWindow.RGBColor(67, 164, 67);
+            GUI.color = thisWindow.RGBColor(127f, 191f, 63f);
             if (GUILayout.Button("Complete",  GUILayout.ExpandHeight(true),  GUILayout.Width(200)))
             {
+                
                 _obj.itemStatus = ManagementStatus.Completed;
+                EditorUtility.SetDirty(_obj);
                 AssetDatabase.SaveAssets();
+            }
+
+            GUI.color = thisWindow.RGBColor(47f, 165f, 255f);
+            if (GUILayout.Button("Edit", GUILayout.ExpandHeight(true), GUILayout.Width(200)))
+            {
+                // als je heir op klikt dan wordt editable object dit object
+                managementbarInt = 3;
+                editObject = _obj;
             }
 
             GUI.skin.button.fontSize = 12;

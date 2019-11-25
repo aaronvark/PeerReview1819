@@ -10,6 +10,7 @@ public class SceneRequirementsTool
 
     public void ShowSceneRequirementsTab(ScriptableObject _target)
     {
+        GUILayout.Space(20);
         ScriptableObject target = _target;
         SerializedObject so = new SerializedObject(target);
         SerializedProperty gameObjectsProperty = so.FindProperty("sceneRequirements");
@@ -17,12 +18,20 @@ public class SceneRequirementsTool
   //      EditorGUILayout.PropertyField(gameObjectsProperty, true); // True means show children
 
         GUILayout.Label("Add an Object", EditorStyles.boldLabel);
-        thisWindow.addObject = EditorGUILayout.ObjectField(thisWindow.addObject, typeof(GameObject), true);
+        SerializedObject so2 = new SerializedObject(target);
+        SerializedProperty AddObjects = so.FindProperty("addObject");
+
+        EditorGUILayout.PropertyField(AddObjects, new GUIContent("Drag objects here"), false); // True means show children
+      //  thisWindow.addObject = EditorGUILayout.ObjectField(thisWindow, true);
 
 
         if (thisWindow.addObject != null)
         {
-            thisWindow.sceneRequirements.Add(thisWindow.addObject);
+          //  thisWindow.sceneRequirements.Add(thisWindow.addObject);
+            foreach(GameObject obj in thisWindow.addObject)
+            {
+                thisWindow.sceneRequirements.Add(obj);
+            }
             thisWindow.addObject = null;
         }
 

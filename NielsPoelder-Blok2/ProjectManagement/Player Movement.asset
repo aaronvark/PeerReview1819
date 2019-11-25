@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97fd65d451d07a84399e9c148b4f8256, type: 3}
-  m_Name: FIX SHORTCUTS
+  m_Name: Player Movement
   m_EditorClassIdentifier: 
-  itemName: FIX SHORTCUTS
+  itemName: Player Movement
   itemStatus: 0
-  itemType: 3
-  itemDescription: FIX SHORTCUTS
+  itemType: 2
+  itemDescription: Add Jumping to player movement
