@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Emit;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace WorldVariables {
@@ -30,82 +33,36 @@ public class VariableCollection {
         }
     }
 
-    private readonly Dictionary<string, VariableType> names = new Dictionary<string, VariableType>();
-    private readonly Dictionary<string, string> stringVariables = new Dictionary<string, string>();
-    private readonly Dictionary<string, bool> boolVariables = new Dictionary<string, bool>();
-    private readonly Dictionary<string, long> longVariables = new Dictionary<string, long>();
-    private readonly Dictionary<string, double> doubleVariables = new Dictionary<string, double>();
+    private readonly Dictionary<string, (VariableType varType, object value)> variables =
+        new Dictionary<string, (VariableType, object)>();
 
-    public string GetStringValue(string name) {
-        stringVariables.TryGetValue(name, out var value);
-        return value;
-    }
-
-    public bool GetBoolValue(string name) {
-        boolVariables.TryGetValue(name, out var value);
-        return value;
-    }
-
-    public long GetLongValue(string name) {
-        longVariables.TryGetValue(name, out var value);
-        return value;
-    }
-
-    public double GetDoubleValue(string name) {
-        doubleVariables.TryGetValue(name, out var value);
-        return value;
-    }
-
-    public object GetValueRaw(string name) {
-        switch (names[name]) {
-            case VariableType.Bool:
-                return boolVariables[name];
-            case VariableType.Double:
-                return doubleVariables[name];
-            case VariableType.Long:
-                return longVariables[name];
-            case VariableType.String:
-                return stringVariables[name];
-        }
-
-        return null;
+    public object GetValue(string name) {
+        return variables[name].value;
     }
 
     public VariableType GetType(string name) {
-        names.TryGetValue(name, out var type);
-        return type;
+        return variables[name].varType;
     }
 
     public bool AddVariable(string name, string value) {
-        if (AddName(name, VariableType.String)) {
-            stringVariables.Add(name, value);
-            return true;
-        }
-
-        return false;
+        return AddVariable(name, value, VariableType.String);
     }
 
     public bool AddVariable(string name, bool value) {
-        if (AddName(name, VariableType.Bool)) {
-            boolVariables.Add(name, value);
-            return true;
-        }
-
-        return false;
+        return AddVariable(name, value, VariableType.Bool);
     }
 
     public bool AddVariable(string name, long value) {
-        if (AddName(name, VariableType.Long)) {
-            longVariables.Add(name, value);
-            return true;
-        }
-
-        return false;
+        return AddVariable(name, value, VariableType.Long);
     }
 
     public bool AddVariable(string name, double value) {
-        if (AddName(name, VariableType.Double)) {
-            doubleVariables.Add(name, value);
+        return AddVariable(name, value, VariableType.Double);
+    }
+
+    private bool AddVariable(string name, object value, VariableType type) {
+        if (!NameExists(name)) {
+            variables.Add(name, (type, value));
             return true;
         }
 
@@ -113,141 +70,157 @@ public class VariableCollection {
     }
 
     public void RenameVariable(string oldName, string newName) {
-        if (!NameExists(oldName)) throw new InvalidOperationException("Tried to rename a non-existant variable");
-
-        var type = names[oldName];
-        names.Remove(oldName);
-        names.Add(newName, type);
-
-        // Change value list
-        switch (type) {
-            case VariableType.String:
-            {
-                var val = stringVariables[oldName];
-                stringVariables.Remove(oldName);
-                stringVariables.Add(newName, val);
-                break;
-            }
-            case VariableType.Bool:
-            {
-                var val = boolVariables[oldName];
-                boolVariables.Remove(oldName);
-                boolVariables.Add(newName, val);
-                break;
-            }
-            case VariableType.Long:
-            {
-                var val = longVariables[oldName];
-                longVariables.Remove(oldName);
-                longVariables.Add(newName, val);
-                break;
-            }
-            case VariableType.Double:
-            {
-                var val = doubleVariables[oldName];
-                doubleVariables.Remove(oldName);
-                doubleVariables.Add(newName, val);
-                break;
-            }
-            default:
-                throw new ArgumentOutOfRangeException();
+        if (!NameExists(oldName)) {
+            throw new InvalidOperationException("Tried to rename a non-existant variable");
         }
+
+        var (varType, value) = variables[oldName];
+        AddVariable(newName, value, varType);
     }
 
     public void RemoveVariable(string name) {
-        if (!NameExists(name)) throw new InvalidOperationException("Tried to remove a non-existant variable");
-
-        // Check which type the variable is of and remove it from that list
-        switch (names[name]) {
-            case VariableType.String:
-            {
-                stringVariables.Remove(name);
-                break;
-            }
-            case VariableType.Bool:
-            {
-                boolVariables.Remove(name);
-                break;
-            }
-            case VariableType.Long:
-            {
-                longVariables.Remove(name);
-                break;
-            }
-            case VariableType.Double:
-            {
-                doubleVariables.Remove(name);
-                break;
-            }
-            default:
-                throw new ArgumentOutOfRangeException();
+        if (!NameExists(name)) {
+            throw new InvalidOperationException("Tried to remove a non-existant variable");
         }
 
-        // Remove the name registry
-        names.Remove(name);
+        variables.Remove(name);
     }
 
-    // TODO change type
     public void ChangeType(string name, VariableType newType) {
-        // Remove the old variable, save the value for carrying
-        
-        
+        if (!NameExists(name)) {
+            throw new InvalidOperationException("Tried to change type of a non-existant variable");
+        }
+
+        // Remove the old variable, save the original value and type for carrying
+        var oldValue = GetValue(name);
+        var oldType = GetType(name);
+        RemoveVariable(name);
+
         // Try to convert the value to the new type
-        
+        var newValue = ConvertValue(oldValue, oldType, newType);
+
         // Add the same variable with the updated type
+        AddVariable(name, newValue, newType);
     }
 
-    public void SetValue(string name, string newValue) {
-        if (!stringVariables.ContainsKey(name))
-            throw new InvalidOperationException($"Unknown name for type string: {name}");
+    public void SetValue(string name, object newValue) {
+        // Check if a variable with the given name exists
+        if (!NameExists(name)) {
+            throw new InvalidOperationException($"Unknown variable name: {name}");
+        }
 
-        stringVariables[name] = newValue;
-    }
+        // Check if type of the new value matches original type registered in the collection
+        var originalType = variables[name].varType;
+        switch (newValue) {
+            case string val:
+                if (originalType != VariableType.String) {
+                    throw new InvalidOperationException(
+                        $"{name} is a string, but the new value was of type {newValue.GetType()}");
+                }
 
-    public void SetValue(string name, bool newValue) {
-        if (!boolVariables.ContainsKey(name))
-            throw new InvalidOperationException($"Unknown name for type bool: {name}");
+                break;
+            case bool val:
+                if (originalType != VariableType.Bool) {
+                    throw new InvalidOperationException(
+                        $"{name} is a bool, but the new value was of type {newValue.GetType()}");
+                }
 
-        boolVariables[name] = newValue;
-    }
+                break;
+            case long val:
+                if (originalType != VariableType.Long) {
+                    throw new InvalidOperationException(
+                        $"{name} is a long, but the new value was of type {newValue.GetType()}");
+                }
 
-    public void SetValue(string name, long newValue) {
-        if (!longVariables.ContainsKey(name))
-            throw new InvalidOperationException($"Unknown name for type long: {name}");
+                break;
+            case double val:
+                if (originalType != VariableType.Double) {
+                    throw new InvalidOperationException(
+                        $"{name} is a double, but the new value was of type {newValue.GetType()}");
+                }
 
-        longVariables[name] = newValue;
-    }
+                break;
+            default:
+                throw new InvalidOperationException(
+                    $"Tried to assign value of type {newValue.GetType()} to variable of type {variables[name].varType}");
+        }
 
-    public void SetValue(string name, double newValue) {
-        if (!doubleVariables.ContainsKey(name))
-            throw new InvalidOperationException($"Unknown name for type double: {name}");
-
-        doubleVariables[name] = newValue;
+        var data = variables[name];
+        data.value = newValue;
+        variables[name] = data;
     }
 
     public IEnumerable<string> NameList() {
-        return names.Keys;
+        return variables.Keys;
     }
 
     public void DebugDump() {
-        var msg = $"Contains {names.Count} variables\n";
-        foreach (var varName in names) {
-            msg = $"{msg}{varName.Key} | {varName.Value} | {GetValueRaw(varName.Key)}\n";
-        }
+        var msg = $"Contains {variables.Count} variables\n";
+        msg = variables.Aggregate(msg,
+            (current, varName) => {
+                return $"{current}{varName.Key} | {varName.Value.varType} | {varName.Value.value}\n";
+            });
 
         Debug.Log(msg);
     }
 
     private bool NameExists(string name) {
-        return names.ContainsKey(name);
+        return variables.ContainsKey(name);
     }
 
-    private bool AddName(string name, VariableType type) {
-        if (NameExists(name))
-            return false;
+    private static object ConvertValue(object value, VariableType oldType, VariableType newType) {
+        // Any type to string -> value.tostring()
+        if (newType == VariableType.String) {
+            return value.ToString();
+        }
 
-        names.Add(name, type);
-        return true;
+        try {
+            switch (oldType) {
+                //### String to any type
+                // string to bool -> parse to bool
+                case VariableType.String when newType == VariableType.Bool:
+                {
+                    // Simplified boolean expression for "TryParse(value, out res) ? res : false"
+                    return bool.TryParse((string) value, out var res) && res;
+                }
+                // string to long -> parse to long 
+                case VariableType.String when newType == VariableType.Long:
+                {
+                    return long.TryParse((string) value, out var res) ? res : 0L;
+                }
+                // string to double -> parse to double 
+                case VariableType.String when newType == VariableType.Double:
+                {
+                    return double.TryParse((string) value, out var res) ? res : 0d;
+                }
+                //### Numeric to numeric
+                // long to double -> cast to double
+                case VariableType.Long when newType == VariableType.Double:
+                    return Convert.ToDouble((long) value);
+                // double to long -> round and convert to long
+                case VariableType.Double when newType == VariableType.Long:
+                    return (long) Math.Round((double) value);
+                //### Numeric to bool
+                // long/double to bool -> check if larger than 0
+                case VariableType.Long when newType == VariableType.Bool:
+                    return (long) value > 0;
+                case VariableType.Double when newType == VariableType.Bool:
+                    return (double) value > 0;
+                // bool to long -> interpret the bool as a long so that false becomes 0 and true becomes 1
+                case VariableType.Bool when newType == VariableType.Long:
+                    return (bool) value ? 1L : 0L;
+                // bool to double -> false becomes 0 and true becomes 1
+                case VariableType.Bool when newType == VariableType.Double:
+                    return (bool) value ? 1d : 0d;
+
+                default:
+                    return null;
+            }
+        }
+        catch (InvalidCastException e) {
+            throw new InvalidCastException(
+                $"Failed to convert from {oldType} to {newType}. Value was {value} ({value.GetType()})", e);
+        }
     }
 }
 }

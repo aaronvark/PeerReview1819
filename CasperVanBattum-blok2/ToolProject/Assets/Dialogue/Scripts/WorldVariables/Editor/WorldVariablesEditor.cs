@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -41,24 +40,7 @@ public class WorldVariablesEditor : EditorWindow {
 
         foreach (var name in worldVars.NameList()) {
             var type = worldVars.GetType(name);
-
-            object value;
-            switch (type) {
-                case VariableType.String:
-                    value = worldVars.GetStringValue(name);
-                    break;
-                case VariableType.Bool:
-                    value = worldVars.GetBoolValue(name);
-                    break;
-                case VariableType.Long:
-                    value = worldVars.GetLongValue(name);
-                    break;
-                case VariableType.Double:
-                    value = worldVars.GetDoubleValue(name);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var value = worldVars.GetValue(name);
 
             AddVarField(name, type, value);
         }
@@ -90,22 +72,22 @@ public class WorldVariablesEditor : EditorWindow {
 
         var success = false;
         var count = 0;
-        var name = varName;
+        var nameCopy = varName;
         while (!success) {
             // Try to add number to the standard name until a name is found that has not yet been taken
-            name = count == 0 ? varName : $"{varName} {count}";
+            nameCopy = count == 0 ? varName : $"{varName} {count}";
             switch (type) {
                 case VariableType.String:
-                    success = worldVars.AddVariable(name, "");
+                    success = worldVars.AddVariable(nameCopy, "");
                     break;
                 case VariableType.Bool:
-                    success = worldVars.AddVariable(name, false);
+                    success = worldVars.AddVariable(nameCopy, false);
                     break;
                 case VariableType.Long:
-                    success = worldVars.AddVariable(name, 0);
+                    success = worldVars.AddVariable(nameCopy, 0L);
                     break;
                 case VariableType.Double:
-                    success = worldVars.AddVariable(name, 0f);
+                    success = worldVars.AddVariable(nameCopy, 0d);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -114,7 +96,7 @@ public class WorldVariablesEditor : EditorWindow {
             count++;
         }
 
-        AddVarField(name, type);
+        AddVarField(nameCopy, type);
 
         worldVars.DebugDump();
     }
@@ -123,12 +105,12 @@ public class WorldVariablesEditor : EditorWindow {
         variableContainer.Add(new VariableField(varName, type, value));
     }
 
-    private void OnDisable() {
-        Debug.Log("Editor window was disabled");
-    }
-
-    private void OnLostFocus() {
-        Debug.Log("Focus lost");
-    }
+//    private void OnDisable() {
+//        Debug.Log("Editor window was disabled");
+//    }
+//
+//    private void OnLostFocus() {
+//        Debug.Log("Focus lost");
+//    }
 }
 }
