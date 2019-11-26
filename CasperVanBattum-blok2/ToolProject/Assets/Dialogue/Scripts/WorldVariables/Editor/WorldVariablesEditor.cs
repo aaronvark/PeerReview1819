@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -70,47 +69,32 @@ public class WorldVariablesEditor : EditorWindow {
         // Alias
         var worldVars = VariableCollection.Instance;
 
-        var success = false;
+        var varAdded = false;
         var count = 0;
         var nameCopy = varName;
-        while (!success) {
+        while (!varAdded) {
             // Try to add number to the standard name until a name is found that has not yet been taken
             nameCopy = count == 0 ? varName : $"{varName} {count}";
-            switch (type) {
-                case VariableType.String:
-                    success = worldVars.AddVariable(nameCopy, "");
-                    break;
-                case VariableType.Bool:
-                    success = worldVars.AddVariable(nameCopy, false);
-                    break;
-                case VariableType.Long:
-                    success = worldVars.AddVariable(nameCopy, 0L);
-                    break;
-                case VariableType.Double:
-                    success = worldVars.AddVariable(nameCopy, 0d);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-
             count++;
+
+            varAdded = worldVars.AddEmptyVariable(nameCopy, type);
         }
 
         AddVarField(nameCopy, type);
 
-        worldVars.DebugDump();
+//        worldVars.DebugDump();
     }
 
     private void AddVarField(string varName, VariableType type, object value = null) {
         variableContainer.Add(new VariableField(varName, type, value));
     }
 
-//    private void OnDisable() {
-//        Debug.Log("Editor window was disabled");
-//    }
-//
-//    private void OnLostFocus() {
-//        Debug.Log("Focus lost");
-//    }
+    private void OnDisable() {
+        VariableCollection.Instance.Save();
+    }
+
+    private void OnLostFocus() {
+        VariableCollection.Instance.Save();
+    }
 }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -13,28 +14,52 @@ public enum VariableType {
     Double
 }
 
+[Serializable]
 public class VariableCollection {
-    private static VariableCollection instance;
-
-    public static VariableCollection Instance {
-        get {
-            if (instance == null) {
-                instance = new VariableCollection();
-                // FIXME TEST CODE PLEASE REMOVE
-                instance.AddVariable("Variable1", "Some text");
-                instance.AddVariable("A long", 40);
-                instance.AddVariable("Test bool", true);
-                instance.AddVariable("Other test bool", false);
-                instance.AddVariable("moar string", "Value");
-                instance.AddVariable("lmoa", 42.42);
-            }
-
-            return instance;
-        }
-    }
+    private const string FILENAME = "worldvariables.dat";
 
     private readonly Dictionary<string, (VariableType varType, object value)> variables =
         new Dictionary<string, (VariableType, object)>();
+
+    private bool autosave;
+
+    private static VariableCollection instance;
+    public static VariableCollection Instance => instance ?? (instance = Load());
+
+    /// <summary>
+    /// When set to true, the collection will be saved to a file every time a change is made.
+    /// See <see cref="CollectionChanged"/>.
+    /// </summary>
+    public bool Autosave {
+        get => autosave;
+        set {
+            autosave = value;
+
+            // The save method should be invoked every time the collection is changed while autosave is on.
+            if (value) {
+                CollectionChanged += Save;
+            }
+            else {
+                CollectionChanged -= Save;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Is invoked each time a change is made to the data in this collection. The definition of change includes but
+    /// isn't limited to variable addition or removal or data mutation.
+    /// </summary>
+    public event Action CollectionChanged;
+
+    public override string ToString() {
+        var msg = $"Contains {variables.Count} variables\n";
+        msg = variables.Aggregate(msg,
+            (current, varName) => {
+                return $"{current}{varName.Key} | {varName.Value.varType} | {varName.Value.value}\n";
+            });
+
+        return msg;
+    }
 
     public object GetValue(string name) {
         return variables[name].value;
@@ -60,9 +85,33 @@ public class VariableCollection {
         return AddVariable(name, value, VariableType.Double);
     }
 
+    public bool AddEmptyVariable(string name, VariableType type) {
+        object val;
+        switch (type) {
+            case VariableType.String:
+                val = "";
+                break;
+            case VariableType.Bool:
+                val = false;
+                break;
+            case VariableType.Long:
+                val = 0L;
+                break;
+            case VariableType.Double:
+                val = 0d;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
+
+        return AddVariable(name, val, type);
+    }
+
     private bool AddVariable(string name, object value, VariableType type) {
         if (!NameExists(name)) {
             variables.Add(name, (type, value));
+            CollectionChanged?.Invoke();
+
             return true;
         }
 
@@ -76,6 +125,8 @@ public class VariableCollection {
 
         var (varType, value) = variables[oldName];
         AddVariable(newName, value, varType);
+
+        CollectionChanged?.Invoke();
     }
 
     public void RemoveVariable(string name) {
@@ -84,6 +135,7 @@ public class VariableCollection {
         }
 
         variables.Remove(name);
+        CollectionChanged?.Invoke();
     }
 
     public void ChangeType(string name, VariableType newType) {
@@ -101,6 +153,9 @@ public class VariableCollection {
 
         // Add the same variable with the updated type
         AddVariable(name, newValue, newType);
+
+        // Invoke change event
+        CollectionChanged?.Invoke();
     }
 
     public void SetValue(string name, object newValue) {
@@ -112,28 +167,28 @@ public class VariableCollection {
         // Check if type of the new value matches original type registered in the collection
         var originalType = variables[name].varType;
         switch (newValue) {
-            case string val:
+            case string _:
                 if (originalType != VariableType.String) {
                     throw new InvalidOperationException(
                         $"{name} is a string, but the new value was of type {newValue.GetType()}");
                 }
 
                 break;
-            case bool val:
+            case bool _:
                 if (originalType != VariableType.Bool) {
                     throw new InvalidOperationException(
                         $"{name} is a bool, but the new value was of type {newValue.GetType()}");
                 }
 
                 break;
-            case long val:
+            case long _:
                 if (originalType != VariableType.Long) {
                     throw new InvalidOperationException(
                         $"{name} is a long, but the new value was of type {newValue.GetType()}");
                 }
 
                 break;
-            case double val:
+            case double _:
                 if (originalType != VariableType.Double) {
                     throw new InvalidOperationException(
                         $"{name} is a double, but the new value was of type {newValue.GetType()}");
@@ -148,20 +203,12 @@ public class VariableCollection {
         var data = variables[name];
         data.value = newValue;
         variables[name] = data;
+
+        CollectionChanged?.Invoke();
     }
 
     public IEnumerable<string> NameList() {
         return variables.Keys;
-    }
-
-    public void DebugDump() {
-        var msg = $"Contains {variables.Count} variables\n";
-        msg = variables.Aggregate(msg,
-            (current, varName) => {
-                return $"{current}{varName.Key} | {varName.Value.varType} | {varName.Value.value}\n";
-            });
-
-        Debug.Log(msg);
     }
 
     private bool NameExists(string name) {
@@ -212,7 +259,6 @@ public class VariableCollection {
                 // bool to double -> false becomes 0 and true becomes 1
                 case VariableType.Bool when newType == VariableType.Double:
                     return (bool) value ? 1d : 0d;
-
                 default:
                     return null;
             }
@@ -222,5 +268,43 @@ public class VariableCollection {
                 $"Failed to convert from {oldType} to {newType}. Value was {value} ({value.GetType()})", e);
         }
     }
+
+    #region SAVING
+
+    /// <summary>
+    /// Save this collection to the StreamingAssets
+    /// </summary>
+    public void Save() {
+        var formatter = new BinaryFormatter();
+        var path = Path.Combine(Application.streamingAssetsPath, FILENAME);
+
+        using (var stream = new FileStream(path, FileMode.Create)) {
+            formatter.Serialize(stream, this);
+        }
+    }
+
+    /// <summary>
+    /// Load the collection from the StreamingAssets folder. If no file exists, a new instance is returned.
+    /// </summary>
+    private static VariableCollection Load() {
+        var formatter = new BinaryFormatter();
+        var path = Path.Combine(Application.streamingAssetsPath, FILENAME);
+
+        // If the file doesn't exist yet, a new collection should be started. Save this to the path immediately.
+        if (!File.Exists(path)) {
+            var newCollection = new VariableCollection();
+            newCollection.Save();
+            return newCollection;
+        }
+
+        VariableCollection collection = null;
+        using (var stream = new FileStream(path, FileMode.Open)) {
+            collection = (VariableCollection) formatter.Deserialize(stream);
+        }
+
+        return collection;
+    }
+
+    #endregion
 }
 }

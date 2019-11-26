@@ -105,7 +105,7 @@ public class VariableField : VisualElement {
 
     private void UpdateWorldvarValue<T>(ChangeEvent<T> evt) {
         VariableCollection.Instance.SetValue(varName, evt.newValue);
-        VariableCollection.Instance.DebugDump();
+//        VariableCollection.Instance.DebugDump();
     }
 
     private void UpdateWorldvarType(ChangeEvent<Enum> evt) {
@@ -124,7 +124,7 @@ public class VariableField : VisualElement {
         VariableCollection.Instance.RemoveVariable(varName);
         RemoveFromHierarchy();
 
-        VariableCollection.Instance.DebugDump();
+//        VariableCollection.Instance.DebugDump();
     }
 }
 }
