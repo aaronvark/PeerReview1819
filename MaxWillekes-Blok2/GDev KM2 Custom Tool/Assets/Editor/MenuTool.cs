@@ -8,7 +8,7 @@ using System.Linq;
 public class MenuTool : EditorWindow
 {
     const string nameString = "Menu Maker";
-    const string versionString = "V0.1.1";
+    const string versionString = "V0.2.1";
 
     string titelString = "Titel Placeholder";
 
@@ -18,8 +18,10 @@ public class MenuTool : EditorWindow
 
     List<string> buttonStringList = new List<string>();
 
-    public Object buttonSprite;
-    public Object backgroundSprite;
+    [SerializeField]
+    Object buttonSprite;
+    [SerializeField]
+    Object backgroundSprite;
 
     GameObject canvas;
     GameObject eventSystem;
@@ -31,7 +33,7 @@ public class MenuTool : EditorWindow
     //string[] _choicesForFontStyle = new[] { "Normal", "Bold", "Italic", "Bold And Italic" };
     //int fontStyleString = ;
 
-    [MenuItem ("Window/" + nameString + " " + versionString)]
+    [MenuItem("Window/" + nameString + " " + versionString)]
 
     public static void ShowWindow()
     {
@@ -40,8 +42,8 @@ public class MenuTool : EditorWindow
 
     void OnGUI()
     {
-        GUILayout.Label ("Base Settings", EditorStyles.boldLabel);
-        titelString = EditorGUILayout.TextField ("Titel", titelString);
+        GUILayout.Label("Base Settings", EditorStyles.boldLabel);
+        titelString = EditorGUILayout.TextField("Titel", titelString);
 
         //fontStyleString = EditorGUILayout.Popup(fontStyleString, _choicesForFontStyle);
 
@@ -49,7 +51,6 @@ public class MenuTool : EditorWindow
 
         GUILayout.Label("Button Settings", EditorStyles.boldLabel);
         buttonAmountInt = EditorGUILayout.Popup(buttonAmountInt, _choicesForButtons);
-        Debug.Log("Hoeveelheid buttons: " + buttonAmountInt);
 
         buttonStartString = EditorGUILayout.TextField("Start button", buttonStartString);
         buttonQuitString = EditorGUILayout.TextField("Quit button", buttonQuitString);
@@ -59,7 +60,7 @@ public class MenuTool : EditorWindow
         while (i < buttonAmountInt)
         {
             //Todo : Fix entering the text for the button via a list or array
-            if ( buttonStringList.ElementAtOrDefault(i) == null)
+            if (buttonStringList.ElementAtOrDefault(i) == null)
             {
                 buttonStringList.Add(EditorGUILayout.TextField("button" + i, buttonString));
             }
@@ -83,29 +84,34 @@ public class MenuTool : EditorWindow
 
     void GenerateMenu()
     {
+        // Todo : Look into why this works.
+        // Also his is stupid
+        canvas = new GameObject();
+        layoutGroupGameObject = new GameObject();
+
         //Canvas and Event system.
-        GenerateCore();
+        CustomCore Core = new CustomCore(canvas, eventSystem);
 
         //Background and titel
-        GenerateStatic();
+        CustomStatic Static = new CustomStatic(canvas, backgroundSprite, titelString, layoutGroupGameObject);
 
         //Buttons
-
-        GenerateButton("StartButton", buttonStartString);
+        CustomButton StartCustomButton = new CustomButton("StartButton", buttonStartString, buttonSprite, layoutGroupGameObject);
 
         foreach (string str in buttonStringList)
         {
-            GenerateButton(str, str);
+            CustomButton CustomButton = new CustomButton(str, str, buttonSprite, layoutGroupGameObject);
         }
 
-        GenerateButton("QuitButton", buttonQuitString);
-
+        CustomButton QuitCustomButton = new CustomButton("QuitButton", buttonQuitString, buttonSprite, layoutGroupGameObject);
     }
+}
 
-    void GenerateCore()
+public class CustomCore
+{
+    public CustomCore(GameObject canvas, GameObject eventSystem)
     {
         //Setup of canvas
-        canvas = new GameObject();
         canvas.name = "Canvas";
         canvas.AddComponent<RectTransform>();
         canvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
@@ -118,8 +124,11 @@ public class MenuTool : EditorWindow
         eventSystem.AddComponent<EventSystem>();
         eventSystem.AddComponent<StandaloneInputModule>();
     }
+}
 
-    void GenerateStatic()
+public class CustomStatic
+{
+    public CustomStatic(GameObject canvas, Object backgroundSprite, string titelString, GameObject layoutGroupGameObject)
     {
         //Setup of the background
         GameObject background = new GameObject();
@@ -134,7 +143,7 @@ public class MenuTool : EditorWindow
         //Setup of Titel
         GameObject titel = new GameObject();
         titel.transform.parent = canvas.transform;
-        titel.transform.localPosition = new Vector3(0, Screen.height/4, 0); //Todo : set localposition properly.
+        titel.transform.localPosition = new Vector3(0, Screen.height / 4, 0); //Todo : set localposition properly.
         titel.name = "Titel";
         titel.AddComponent<RectTransform>().anchorMax = new Vector2(1, 1);
         titel.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
@@ -146,7 +155,6 @@ public class MenuTool : EditorWindow
         titel.GetComponent<Text>().color = new Color(0, 0, 0);
 
         //Setup for the layout of the buttons
-        layoutGroupGameObject = new GameObject();
         layoutGroupGameObject.name = "ButtonLayoutGroup";
         layoutGroupGameObject.transform.parent = canvas.transform;
         layoutGroupGameObject.transform.localPosition = new Vector2(0, 0);
@@ -154,58 +162,14 @@ public class MenuTool : EditorWindow
         layoutGroupGameObject.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
         layoutGroupGameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
         layoutGroupGameObject.AddComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.MiddleCenter;
-        layoutGroupGameObject.GetComponent<VerticalLayoutGroup>().padding.top = Screen.height / 2;
+        layoutGroupGameObject.GetComponent<VerticalLayoutGroup>().padding.top = Screen.height - Screen.height / 4; //Todo : Look into making this better.
         layoutGroupGameObject.GetComponent<VerticalLayoutGroup>().padding.bottom = Screen.height / 16;
-    }
-
-    void GenerateButton(string buttonName, string buttonText)
-    {
-        //Setup for button
-        GameObject button = new GameObject();
-        button.name = buttonName;
-        button.transform.parent = layoutGroupGameObject.transform;
-        button.AddComponent<RectTransform>().sizeDelta = new Vector2(150, 50);
-        button.AddComponent<CanvasRenderer>();
-        button.AddComponent<Image>().sprite = buttonSprite as Sprite;
-        button.GetComponent<Image>().type = Image.Type.Sliced;
-        button.AddComponent<Button>();
-
-        //Create and add the background image to the button
-        GameObject buttonTextObject = new GameObject();
-        buttonTextObject.name = buttonName + "Text";
-        buttonTextObject.transform.parent = button.transform;
-        buttonTextObject.transform.localPosition = new Vector3(0, 0, 0);
-        buttonTextObject.AddComponent<RectTransform>().anchorMax = new Vector2(1, 1);
-        buttonTextObject.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
-        buttonTextObject.GetComponent<RectTransform>().sizeDelta = new Vector3(0, 0, 0);
-        buttonTextObject.AddComponent<Text>().text = buttonText;
-        buttonTextObject.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
-        buttonTextObject.GetComponent<Text>().resizeTextForBestFit = true;
-        buttonTextObject.GetComponent<Text>().color = new Color(0, 0, 0);
     }
 }
 
 public class CustomButton
 {
-    public GameObject buttonGameobject;
-    public RectTransform buttonRectTransform;
-    public Image buttonImage;
-    public Text buttonText;
-    public Button buttonButton;
-
-    public CustomButton()
-    {
-
-    }
-
-    void GenerateButton()
-    {
-
-    }
-}
-
-/*
-    void GenerateButton(string buttonName, string buttonText)
+    public CustomButton(string buttonName, string buttonText, Object buttonSprite, GameObject layoutGroupGameObject)
     {
         //Setup for button
         GameObject button = new GameObject();
@@ -230,4 +194,4 @@ public class CustomButton
         buttonTextObject.GetComponent<Text>().resizeTextForBestFit = true;
         buttonTextObject.GetComponent<Text>().color = new Color(0, 0, 0);
     }
-*/
+}
