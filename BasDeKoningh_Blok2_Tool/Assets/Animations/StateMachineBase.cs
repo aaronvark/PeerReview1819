@@ -6,25 +6,25 @@ namespace EasyAI
 {
     public abstract class StateMachineBase : StateMachineBehaviour
     {
-        public TemperamentData temperamentData;
-        public WayPointData wayPointData;
-        public AiSettingData aiSettingData;
-        public Transform playerPos;
-        public float attackRange = 0;
-        public float moodRange = 0;
+        public TemperamentData TemperamentData;
+        public WayPointData WayPointData;
+        public AiSettingData AiSettingData;
+        public Transform PlayerPos;
+        public float AttackRange = 0;
+        public float MoodRange = 0;
+
         protected AnimationData animationData;
         protected AnimatorOverrideController animatorOverrideController;
-
         protected AnimationClipOverrides clipOverrides;
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            playerPos = GameObject.FindGameObjectWithTag("Player").transform;
-            temperamentData = animator.GetComponent<TemperamentData>();
+            PlayerPos = GameObject.FindGameObjectWithTag("Player").transform;
+            TemperamentData = animator.GetComponent<TemperamentData>();
             animationData = animator.GetComponent<AnimationData>();
-            aiSettingData = animator.GetComponent<AiSettingData>();
-            wayPointData = animator.GetComponent<WayPointData>();
-            attackRange = TemperamentManager.CombatTriggerRange(temperamentData.CombatStyle);
-            moodRange = TemperamentManager.MoodTriggerRange(temperamentData.Mood);
+            AiSettingData = animator.GetComponent<AiSettingData>();
+            WayPointData = animator.GetComponent<WayPointData>();
+            AttackRange = TemperamentManager.CombatTriggerRange(TemperamentData.CombatStyle);
+            MoodRange = TemperamentManager.MoodTriggerRange(TemperamentData.Mood);
             animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
 
             //animatorOverrideController["Walking"] = animationData.AttackAnimation;

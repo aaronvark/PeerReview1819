@@ -13,23 +13,10 @@ namespace EasyAI
         public List<Vector3> WayPoints;
         [SerializeField]
         public int WayPointIndex = 0;
-        [SerializeField]
-        public BezierSpline spline;
-        [SerializeField]
-        public float duration;
-        [SerializeField]
-        public bool lookForward;
-        [SerializeField]
-        public SplineWalkerMode mode;
 
-        public Vector3 NewWayPointPosition { get { return TargetPosition; } set { TargetPosition = value; } }
-        [SerializeField]
-        private Vector3 TargetPosition = new Vector3(1f, 0f, 2f);
         public int GetWayPointCount { get { return WayPoints.Count; } }
         public Vector3 GetWayPointPoint(int index) { return WayPoints[index]; }
         public void SetWayPoint(int index, Vector3 point) { WayPoints[index] = point; }
-        
-        public void 
 
         public void RenderUI(SerializedProperty property)
         {
@@ -38,7 +25,6 @@ namespace EasyAI
             EditorGUILayout.PropertyField(wanderType);
             EditorGUILayout.PropertyField(wayPoints);
         }
-
 
         public System.Type GetChildType()
         {

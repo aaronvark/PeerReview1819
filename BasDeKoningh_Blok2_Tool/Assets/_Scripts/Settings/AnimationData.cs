@@ -36,13 +36,6 @@ namespace EasyAI
             EditorGUILayout.PropertyField(deathAnimation);
         }
 
-        private Animator animator;
-        private AnimatorControllerParameter animatorController;
-        private void Start()
-        {
-            animator = GetComponent<Animator>();
-            animatorController = new AnimatorControllerParameter();
-        }
         public System.Type GetChildType()
         {
             return this.GetType();

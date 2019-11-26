@@ -13,9 +13,9 @@ namespace EasyAI
 
         public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            var playerDistance = playerPos.position - animator.transform.position;
+            var playerDistance = PlayerPos.position - animator.transform.position;
 
-            if (playerDistance.sqrMagnitude > attackRange * attackRange)
+            if (playerDistance.sqrMagnitude > AttackRange * AttackRange)
             {
                 //Player is out of range.
                 animator.SetBool("Attacking", false);

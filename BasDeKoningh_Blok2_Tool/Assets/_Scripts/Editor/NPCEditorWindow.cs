@@ -17,9 +17,7 @@ namespace EasyAI
     public class NPCEditorWindow : EditorWindow
     {
         //Input scriptable object
-        public ScriptableObject scriptableObject;
-        //The serializedObject of our npc
-        private SerializedObject serializedNpc;
+        public ScriptableObject InputScriptableObject;
         //Input current npc prefab
         private GameObject currentNPC;
         //List of the types we want to use
@@ -45,7 +43,7 @@ namespace EasyAI
             {
                 case PresetType.ScriptablePreset:
                     Repaint();
-                    scriptableObject = EditorGUILayout.ObjectField(scriptableObject, typeof(ScriptableObject), true) as ScriptableObject;
+                    InputScriptableObject = EditorGUILayout.ObjectField(InputScriptableObject, typeof(ScriptableObject), true) as ScriptableObject;
                     break;
                 case PresetType.Prefab:
                     Repaint();
@@ -60,9 +58,9 @@ namespace EasyAI
             //TODO
             //Use assert to make system better 
             //Istead of item != null we should do if(item==null) assert
-            if (scriptableObject != null)
+            if (InputScriptableObject != null)
             {
-                var editor = Editor.CreateEditor(scriptableObject);
+                var editor = Editor.CreateEditor(InputScriptableObject);
                 if (editor != null)
                 {
                     editor.OnInspectorGUI();
@@ -72,7 +70,7 @@ namespace EasyAI
                 {
                     //Create the npc with the selected settings
                     //We need to save the selected settings to maby some json file and we need to load the settings on the prefab. 
-                    CreateNPC(scriptableObject as ScriptableNPC);
+                    CreateNPC(InputScriptableObject as ScriptableNPC);
                 }
             }
 
@@ -80,7 +78,7 @@ namespace EasyAI
             {
                 if (settingTypes == null || settingTypes.Count < 1)
                 {
-                    DrawNPCSettings(scriptableObject as ScriptableNPC);
+                    DrawNPCSettings(InputScriptableObject as ScriptableNPC);
                 }
                 foreach (var type in settingTypes)
                 {
@@ -120,7 +118,7 @@ namespace EasyAI
         }
 
         // utility method to create a line
-        private static void HorizontalLine(Color color, GUIStyle line)
+        private void HorizontalLine(Color color, GUIStyle line)
         {
             var c = GUI.color;
             GUI.color = color;
@@ -132,6 +130,7 @@ namespace EasyAI
         {
             try
             {
+                UnityEngine.Assertions.Assert.IsNull(npc.settings);
                 foreach (var setting in npc.settings)
                 {
                     settingTypes.Add(setting.ObjectToClassType());
@@ -148,7 +147,7 @@ namespace EasyAI
             settingTypes.Clear();
             GameObject newNpc = Instantiate(npc.Model, npc.SpawnPosition.position, Quaternion.identity);
 
-            Component script = newNpc.AddComponent(npc.AISystem.ObjectToClassType());
+            //Component script = newNpc.AddComponent(npc.AISystem.ObjectToClassType());
             foreach(var setting in npc.settings)
             {
                 System.Type settingType = setting.ObjectToClassType();
@@ -159,8 +158,6 @@ namespace EasyAI
             //Let's see if the aisystem component is my AISystem
             try
             {
-                var system = script as AISystem;
-                if (system == null) return;
                 newNpc.name = npc.NpcName;
                 newNpc.GetComponent<Animator>().runtimeAnimatorController = npc.AnimatorController;
             }
@@ -172,14 +169,14 @@ namespace EasyAI
 
         public int DebugNPCCreation()
         {
-            Assert.IsNotNull(scriptableObject);
+            Assert.IsNotNull(InputScriptableObject);
             ScriptableNPC newNPC = new ScriptableNPC();
-            newNPC = scriptableObject as ScriptableNPC;
+            newNPC = InputScriptableObject as ScriptableNPC;
             newNPC.AnimatorController = null;
             
             CreateNPC(newNPC);
 
-            Assert.AreEqual(scriptableObject, newNPC);
+            Assert.AreEqual(InputScriptableObject, newNPC);
             return 0;
         }
 
