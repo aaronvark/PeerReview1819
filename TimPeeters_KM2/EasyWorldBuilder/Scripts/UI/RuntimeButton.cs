@@ -25,7 +25,7 @@ namespace WorldBuilderTool
 
         void ChooseAsset()
         {
-            FindObjectOfType<EasyWorldBuilder>().selectedAsset = Asset;
+            FindObjectOfType<EasyWorldBuilder>().SelectedAsset = Asset;
         }
 
     }

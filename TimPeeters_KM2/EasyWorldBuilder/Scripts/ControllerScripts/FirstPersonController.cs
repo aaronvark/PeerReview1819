@@ -56,7 +56,7 @@ namespace WorldBuilderTool
             m_Camera.transform.eulerAngles = Vector3.zero;
             m_Camera.transform.localPosition = new Vector3(0f, m_CharacterController.bounds.extents.y, 0f);
 
-            FindObjectOfType<RuntimePlacement>()._fpsCam = m_Camera;
+            FindObjectOfType<RuntimePlacement>().FpsCam = m_Camera;
 
             //m_FovKick.Setup(m_Camera);
             //m_HeadBob.Setup(m_Camera, m_StepInterval);

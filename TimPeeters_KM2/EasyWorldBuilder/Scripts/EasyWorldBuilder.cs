@@ -3,84 +3,96 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-
 namespace WorldBuilderTool
 {
+    [RequireComponent(typeof(RuntimeSaving))]
     public class EasyWorldBuilder : MonoBehaviour
     {
-        public RuntimePlacement controller;
+        #region Singleton
+        private static EasyWorldBuilder _instance;
+
+        public static EasyWorldBuilder Instance { get { return _instance; } }
+
+        private void Awake()
+        {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
+        }
+        #endregion
+
+        public RuntimePlacement Controller;
 
         public List<GameObject> PlaceableAssets = new List<GameObject>(); //List of assets that can be placed in the scene
+        public GameObject SelectedAsset;
 
-        public List<GameObject> PlacedAssets = new List<GameObject>(); //List of assets that have been placed at runtime.
-
-        public GameObject selectedAsset;
-
-        public RuntimeUI controllerUI;
-
-        public WorldBuilderSettings settings;
+        public RuntimeUI ControllerUI;
+        public RuntimeSaving SaveSys;
+        public WorldBuilderSettings Settings;
 
         private void OnDestroy()
         {
-            Destroy(controller.gameObject);
+            Destroy(Controller.gameObject);
         }
 
         public void SpawnController(PlacementMode mode)
         {
+            PlaceableAssets = Settings.AssetList;
+            SaveSys = GetComponent<RuntimeSaving>();
 
-            controller = new GameObject().AddComponent<RuntimePlacement>();
+            Controller = new GameObject().AddComponent<RuntimePlacement>();
+            Controller.name = "WorldBuilder Controller";
+            Controller.transform.position = SceneView.lastActiveSceneView.camera.transform.position;
 
-            controller.name = "WorldBuilder Controller";
-
-            controller.transform.position = SceneView.lastActiveSceneView.camera.transform.position;
-
-            controllerUI = Instantiate(Resources.Load<GameObject>("EasyWorldBuilder/WorldBuilder_RuntimeUI")).GetComponent<RuntimeUI>();
+            ControllerUI = Instantiate(Resources.Load<GameObject>("EasyWorldBuilder/WorldBuilder_RuntimeUI")).GetComponent<RuntimeUI>();
 
             if (mode == PlacementMode.Flying)
             {
-                controller.transform.rotation = SceneView.lastActiveSceneView.camera.transform.rotation;
+                Controller.transform.rotation = SceneView.lastActiveSceneView.camera.transform.rotation;
             }
-
-            PlaceableAssets = settings.AssetList;
-
         }
 
         private void Update()
         {
             //Assets can change at runtime.
-            PlaceableAssets = settings.AssetList;
+            PlaceableAssets = Settings.AssetList;
 
-            if (selectedAsset != null)
+            if (SelectedAsset != null)
             {
                 //Input handling
-                if (Input.GetKeyDown(settings.placeButton))
+                if (Input.GetKeyDown(Settings.PlaceButton))
                 {
-                    controller.PlaceAsset();
+                    Controller.PlaceAsset();
                 }
 
-                if (Input.GetKey(settings.rotLeft))
+                if (Input.GetKey(Settings.RotLeft))
                 {
-                    controller.RotateLeft();
-                    controller.isRotating = true;
+                    Controller.RotateLeft();
+                    Controller.IsRotating = true;
                 }
                 else
                 {
-                    controller.isRotating = false;
+                    Controller.IsRotating = false;
                 }
 
-                if (Input.GetKey(settings.rotRight))
+                if (Input.GetKey(Settings.RotRight))
                 {
-                    controller.RotateRight();
-                    controller.isRotating = true;
+                    Controller.RotateRight();
+                    Controller.IsRotating = true;
                 }
                 else
                 {
-                    controller.isRotating = false;
+                    Controller.IsRotating = false;
                 }
 
                 if (Input.GetAxis("Mouse ScrollWheel") != 0)
                 {
-                    controller.DoScale(Input.GetAxis("Mouse ScrollWheel") * settings.scaleSpeed);
+                    Controller.DoScale(Input.GetAxis("Mouse ScrollWheel") * Settings.ScaleSpeed);
                 }
             }
         }

@@ -12,10 +12,10 @@ namespace WorldBuilderTool
         public List<GameObject> AssetList = new List<GameObject>();
 
         #region Keybindings
-        public KeyCode placeButton = KeyCode.Mouse0;
+        public KeyCode PlaceButton = KeyCode.Mouse0;
 
-        public KeyCode rotRight = KeyCode.E;
-        public KeyCode rotLeft = KeyCode.Q;
+        public KeyCode RotRight = KeyCode.E;
+        public KeyCode RotLeft = KeyCode.Q;
 
         [Tooltip("This field contains the name of the Input Axis that is used to scale object, " +
         "by default this is set to the 'Mouse ScrollWheel' found in the Unity Input Manager (Legacy)")]
@@ -24,9 +24,9 @@ namespace WorldBuilderTool
         #endregion
 
         #region Control Settings
-        public float flySpeed = 1f;
-        public float scaleSpeed = 1f;
-        public float rotationSpeed = 1f;
+        public float FlySpeed = 1f;
+        public float ScaleSpeed = 1f;
+        public float RotationSpeed = 1f;
         #endregion
     }
 }

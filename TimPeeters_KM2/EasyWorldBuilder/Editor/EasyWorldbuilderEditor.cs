@@ -4,49 +4,35 @@ using System.Collections.Generic;
 
 namespace WorldBuilderTool
 {
-    [System.Serializable]
-    public class EasyWorldBuilderEditor : EditorWindow, UnityEngine.ISerializationCallbackReceiver
+    public class EasyWorldBuilderEditor : EditorWindow
     {
-        WorldBuilderSettings settings; //Scriptable SaveFile loaded from Resources/EasyWorldBuilder
-
-        #region AssetList Serelization
-        [SerializeField] public List<GameObject> AssetListCopy = new List<GameObject>();
-
-        public void OnBeforeSerialize()
-        {
-            AssetListCopy = settings.AssetList;
-        }
-
-        public void OnAfterDeserialize()
-        {
-            settings.AssetList = AssetListCopy;
-        }
-        #endregion
+        private WorldBuilderSettings settings; //Scriptable SaveFile loaded from Resources/EasyWorldBuilder
 
         //UI
-        Texture2D backgroundTexture;
-        Texture2D assetBackground;
-        Rect backgroundSection;
-        Rect assetSection;
+        private Texture2D backgroundTexture;
+        private Texture2D assetBackground;
+        private Rect backgroundSection;
+        private Rect assetSection;
+        private Vector2 scrollPos;
 
-        static EasyWorldBuilder runtimeEditor;
-
-        PlacementMode placementMode;
-
+        private static EasyWorldBuilder runtimeEditor;
+        private PlacementMode placementMode;
+        
         [MenuItem("EasyWorldBuilder/EasyWorldBuilder Editor")]
         public static void DrawWindow()
         {
             EasyWorldBuilderEditor window = GetWindow<EasyWorldBuilderEditor>("Easy WorldBuilder");
-            window.minSize = new Vector2(300, 300);
+            window.minSize = new Vector2(400, 450);
             window.Show();
             EditorUtility.SetDirty(window);
         }
 
         private void OnEnable()
         {
-            if (Resources.Load<WorldBuilderSettings>("EasyWorldBuilder/EasyWorldBuilder_Settings") == null)
+            settings = Resources.Load<WorldBuilderSettings>("EasyWorldBuilder/EasyWorldBuilder_Settings");
+            if (settings == null)
             {
-                WorldBuilderSettings settings = ScriptableObject.CreateInstance<WorldBuilderSettings>();
+                settings = ScriptableObject.CreateInstance<WorldBuilderSettings>();
 
                 string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath("Assets/Resources/EasyWorldBuilder/EasyWorldBuilder_Settings.asset");
 
@@ -54,7 +40,6 @@ namespace WorldBuilderTool
                 AssetDatabase.SaveAssets();
             }
 
-            settings = Resources.Load<WorldBuilderSettings>("EasyWorldBuilder/EasyWorldBuilder_Settings");
             EditorUtility.SetDirty(settings);
 
             InitTextures();
@@ -76,15 +61,22 @@ namespace WorldBuilderTool
                         runtimeEditor.hideFlags = HideFlags.HideInHierarchy;
                     }
 
-                    runtimeEditor.settings = settings;
+                    runtimeEditor.Settings = settings;
                     runtimeEditor.SpawnController(placementMode);
                     break;
 
                 case PlayModeStateChange.ExitingPlayMode:
+                    //Save Assets on playmode exit
+                    runtimeEditor.SaveSys.SavePlacedAssets();
+
                     if (FindObjectOfType<EasyWorldBuilder>() != null)
                     {
                         Destroy(runtimeEditor.gameObject);
                     }
+                    break;
+                case PlayModeStateChange.EnteredEditMode:
+                    //Load Assets on editmode enter
+                    new LoadFromFile().LoadData();
                     break;
             }
         }
@@ -113,7 +105,8 @@ namespace WorldBuilderTool
             GUI.DrawTexture(backgroundSection, backgroundTexture);
 
             GUILayout.BeginArea(backgroundSection);
-            GUILayout.Label("\nPlacement Settings \n", EditorStyles.boldLabel);
+            GUIStyle style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontSize = 36, fontStyle = FontStyle.Bold, fixedHeight = 60f };
+            GUILayout.Label("Easy Worldbuilder ", style);
 
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
@@ -134,7 +127,7 @@ namespace WorldBuilderTool
             {
                 try
                 {
-                    runtimeEditor.controller.curMode = placementMode;
+                    runtimeEditor.Controller.CurrentMode = placementMode;
                 }
                 catch
                 {
@@ -160,6 +153,8 @@ namespace WorldBuilderTool
             }
             EditorGUILayout.EndHorizontal();
 
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(Screen.width - 10f), GUILayout.Height(100));
             if (settings.AssetList.Count > 0)
             {
                 for (int i = 0; i < settings.AssetList.Count; i++)
@@ -168,6 +163,8 @@ namespace WorldBuilderTool
                     settings.AssetList[i] = (GameObject)EditorGUILayout.ObjectField(settings.AssetList[i], typeof(GameObject), false);
                 }
             }
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
 
             //Extra whitespace
             GUILayout.Label("");
@@ -179,20 +176,20 @@ namespace WorldBuilderTool
             GUILayout.Label("Keybindings", EditorStyles.boldLabel);
 
             GUILayout.Label("Placement", EditorStyles.miniBoldLabel);
-            settings.placeButton = (KeyCode)EditorGUILayout.EnumPopup("Confirm Placement", settings.placeButton);
+            settings.PlaceButton = (KeyCode)EditorGUILayout.EnumPopup("Confirm Placement", settings.PlaceButton);
 
 
             GUILayout.Label("Rotation", EditorStyles.miniBoldLabel);
-            settings.rotLeft = (KeyCode)EditorGUILayout.EnumPopup("Rotate Asset Left", settings.rotLeft);
+            settings.RotLeft = (KeyCode)EditorGUILayout.EnumPopup("Rotate Asset Left", settings.RotLeft);
 
-            settings.rotRight = (KeyCode)EditorGUILayout.EnumPopup("Rotate Asset Right", settings.rotRight);
+            settings.RotRight = (KeyCode)EditorGUILayout.EnumPopup("Rotate Asset Right", settings.RotRight);
 
-            settings.rotationSpeed = EditorGUILayout.FloatField("Rotation Speed", settings.rotationSpeed);
+            settings.RotationSpeed = EditorGUILayout.FloatField("Rotation Speed", settings.RotationSpeed);
 
            
             GUILayout.Label("Scaling", EditorStyles.miniBoldLabel);
             settings.ScaleAxis = EditorGUILayout.TextField("Scaling Axis", settings.ScaleAxis);
-            settings.scaleSpeed = EditorGUILayout.FloatField("Scaling Speed", settings.scaleSpeed);
+            settings.ScaleSpeed = EditorGUILayout.FloatField("Scaling Speed", settings.ScaleSpeed);
 
             EditorGUILayout.EndVertical();
 
@@ -213,11 +210,11 @@ namespace WorldBuilderTool
 
         void AddToList()
         {
-            settings.AssetList.Add(null);
+            settings.AssetList.Add(null);   
 
             if(EditorApplication.isPlaying == true)
             {
-                runtimeEditor.controllerUI.addButton(null);
+                runtimeEditor.ControllerUI.addButton(null);
             }
         }    
 
@@ -225,7 +222,7 @@ namespace WorldBuilderTool
         {
             if (EditorApplication.isPlaying == true)
             {
-                runtimeEditor.controllerUI.removeButton();
+                runtimeEditor.ControllerUI.removeButton();
             }
 
             settings.AssetList.RemoveAt(settings.AssetList.Count - 1);

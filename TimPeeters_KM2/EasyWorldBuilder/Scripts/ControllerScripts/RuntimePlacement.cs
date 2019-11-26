@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace WorldBuilderTool
 {
@@ -12,67 +13,59 @@ namespace WorldBuilderTool
 
     public class RuntimePlacement : MonoBehaviour
     {
-        EasyWorldBuilder mgr;
+        [HideInInspector] public PlacementMode CurrentMode;
+        [HideInInspector] public Camera FlyCam;
+        [HideInInspector] public Camera FpsCam;
+        public Camera CurrentCam;
+        public bool IsRotating;
 
-        [HideInInspector] public PlacementMode curMode;
-
+        EasyWorldBuilder _manager;
+        RuntimeSaving _saveSys;
         SimpleCameraController flyControl;
         FirstPersonController fpsControl;
-
-        [HideInInspector] public Camera _cam;
-        [HideInInspector] public Camera _fpsCam;
-        public Camera currentCam;
-
         CharacterController _charControl;
+        GameObject _currentAsset; //The object to be placed
+        GameObject _placementParent; //The parent object of the current asset to be placed.
+        RaycastHit _hit;
 
-        [SerializeField] GameObject currentAsset;
-        GameObject placementParent; //The parent object of the current asset that handles normal snapping
-
-        RaycastHit hit;
-
-        public bool isRotating;
 
         private void Awake()
         {
-            mgr = FindObjectOfType<EasyWorldBuilder>();
+            _manager = FindObjectOfType<EasyWorldBuilder>();
+            _saveSys = FindObjectOfType<RuntimeSaving>();
 
-            _cam = gameObject.AddComponent<Camera>();
+            FlyCam = gameObject.AddComponent<Camera>();
             _charControl = gameObject.AddComponent<CharacterController>();
             gameObject.AddComponent<AudioListener>();
 
             fpsControl = gameObject.AddComponent<FirstPersonController>();
-            _fpsCam = fpsControl.m_Camera;
+            FpsCam = fpsControl.m_Camera;
 
             flyControl = gameObject.AddComponent<SimpleCameraController>();
         }
 
         private void Update()
         {
-            switch (curMode)
+            switch (CurrentMode)
             {
                 case PlacementMode.Flying:
-                    currentCam = _cam;
+                    CurrentCam = FlyCam;
                     fpsControl.m_Camera.gameObject.SetActive(false);
-                    _cam.enabled = true;
-
-
+                    FlyCam.enabled = true;
                     fpsControl.enabled = false;
                     flyControl.enabled = true;
-
                     break;
                 case PlacementMode.FirstPerson:
                     fpsControl.m_Camera.gameObject.SetActive(true);
-                    currentCam = _fpsCam;
-                    _cam.enabled = false;
-
-
+                    CurrentCam = FpsCam;
+                    FlyCam.enabled = false;
                     flyControl.enabled = false;
                     fpsControl.enabled = true;
                     break;
 
             }
 
-            if (mgr.selectedAsset != null)
+            if (_manager.SelectedAsset != null)
             {
                 DeterminePlacementLocation();
             }
@@ -80,76 +73,74 @@ namespace WorldBuilderTool
 
         void DeterminePlacementLocation()
         {
-            Ray ray = currentCam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+            Ray ray = CurrentCam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
             Debug.DrawRay(ray.origin, ray.direction * 10f, Color.green);
 
-
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out _hit))
             {
-                if (placementParent == null)
+                if (_placementParent == null)
                 {
-                    placementParent = new GameObject();
-                    placementParent.transform.position = hit.point;
-                    placementParent.name = "Asset Placer";
+                    _placementParent = new GameObject();
+                    _placementParent.transform.position = _hit.point;
+                    _placementParent.name = "Asset Placer";
                     //placementParent.hideFlags = HideFlags.HideInHierarchy;
                 }
 
-                if (currentAsset == null)
+                if (_currentAsset == null)
                 {
-                    currentAsset = Instantiate(mgr.selectedAsset, placementParent.transform);
+                    _currentAsset = Instantiate(_manager.SelectedAsset, _placementParent.transform);
                     //currentAsset.transform.parent = placementParent.transform;
-                    foreach (Collider col in currentAsset.GetComponentsInChildren<Collider>())
+                    foreach (Collider col in _currentAsset.GetComponentsInChildren<Collider>())
                     {
                         col.enabled = false;
                     }
-
-                    currentAsset.transform.localPosition = Vector3.zero;
-
+                    _currentAsset.transform.localPosition = Vector3.zero;
                 }
 
-                Debug.DrawRay(currentAsset.transform.position, currentAsset.transform.up * 2f, Color.magenta);
-
-                placementParent.transform.up = hit.normal;
-                placementParent.transform.position = hit.point;
-
+                Debug.DrawRay(_currentAsset.transform.position, _currentAsset.transform.up * 2f, Color.magenta);
+                _placementParent.transform.up = _hit.normal;
+                _placementParent.transform.position = _hit.point;
             }
         }
 
         public void RotateRight()
         {
-            currentAsset.transform.localEulerAngles += new Vector3(0, mgr.settings.rotationSpeed, 0);
+            if (_currentAsset != null)
+            {
+                _currentAsset.transform.localEulerAngles += new Vector3(0, _manager.Settings.RotationSpeed, 0);
+            }
         }
 
         public void RotateLeft()
         {
-            currentAsset.transform.localEulerAngles -= new Vector3(0, mgr.settings.rotationSpeed, 0);
+            if (_currentAsset != null)
+            {
+                _currentAsset.transform.localEulerAngles -= new Vector3(0, _manager.Settings.RotationSpeed, 0);
+            }
         }
 
         public void DoScale(float axis)
         {
-            currentAsset.transform.localScale += new Vector3(axis, axis, axis);
+            _currentAsset.transform.localScale += new Vector3(axis, axis, axis);
 
             Vector3 newScale = new Vector3();
-            newScale.x = Mathf.Clamp(currentAsset.transform.localScale.x, 0, Mathf.Infinity);
-            newScale.y = Mathf.Clamp(currentAsset.transform.localScale.y, 0, Mathf.Infinity);
-            newScale.z = Mathf.Clamp(currentAsset.transform.localScale.z, 0, Mathf.Infinity);
-            currentAsset.transform.localScale = newScale;
+            newScale.x = Mathf.Clamp(_currentAsset.transform.localScale.x, 0, Mathf.Infinity);
+            newScale.y = Mathf.Clamp(_currentAsset.transform.localScale.y, 0, Mathf.Infinity);
+            newScale.z = Mathf.Clamp(_currentAsset.transform.localScale.z, 0, Mathf.Infinity);
+            _currentAsset.transform.localScale = newScale;
         }
 
         public void PlaceAsset()
         {
-            mgr.PlacedAssets.Add(currentAsset);
-
-            placementParent.transform.DetachChildren();
-
-            currentAsset.transform.position = hit.point;
-
-            foreach (Collider col in currentAsset.GetComponentsInChildren<Collider>())
+            Assert.IsNotNull(_currentAsset);
+            _saveSys.AddPrefabForSaving(_currentAsset); //Prepare prefab for saving
+            _placementParent.transform.DetachChildren();
+            _currentAsset.transform.position = _hit.point;
+            foreach (Collider col in _currentAsset.GetComponentsInChildren<Collider>())
             {
                 col.enabled = true;
             }
-
-            currentAsset = null;
+            _currentAsset = null;
         }
 
     }
