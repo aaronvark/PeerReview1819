@@ -2,19 +2,21 @@
 using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using System.Linq;
 
 public class MenuTool : EditorWindow
 {
     const string nameString = "Menu Maker";
-    const string versionString = "V0.0.31";
+    const string versionString = "V0.1.1";
 
     string titelString = "Titel Placeholder";
 
     string buttonStartString = "Start Name Placeholder";
     string buttonQuitString = "Quit Name Placeholder";
-    string button1String = "Button Name Placeholder";
-    string button2String = "Button Name Placeholder";
-    string button3String = "Button Name Placeholder";
+    string buttonString = "Button Name Placeholder";
+
+    List<string> buttonStringList = new List<string>();
 
     public Object buttonSprite;
     public Object backgroundSprite;
@@ -47,17 +49,24 @@ public class MenuTool : EditorWindow
 
         GUILayout.Label("Button Settings", EditorStyles.boldLabel);
         buttonAmountInt = EditorGUILayout.Popup(buttonAmountInt, _choicesForButtons);
-        Debug.Log(buttonAmountInt);
+        Debug.Log("Hoeveelheid buttons: " + buttonAmountInt);
 
         buttonStartString = EditorGUILayout.TextField("Start button", buttonStartString);
         buttonQuitString = EditorGUILayout.TextField("Quit button", buttonQuitString);
 
-        int i = 1;
+        int i = 0;
 
-        while (i <= buttonAmountInt)
+        while (i < buttonAmountInt)
         {
             //Todo : Fix entering the text for the button via a list or array
-            button1String = EditorGUILayout.TextField("button" + i, button1String);
+            if ( buttonStringList.ElementAtOrDefault(i) == null)
+            {
+                buttonStringList.Add(EditorGUILayout.TextField("button" + i, buttonString));
+            }
+            else
+            {
+                buttonStringList[i] = EditorGUILayout.TextField("button" + i, buttonStringList[i]);
+            }
             i++;
         }
 
@@ -65,13 +74,14 @@ public class MenuTool : EditorWindow
 
         if (GUILayout.Button("Generate"))
         {
-            GenerateMenu(buttonAmountInt);
+            GenerateMenu();
+            buttonStringList.ForEach(Debug.Log);
         }
     }
 
     //This is where the magic happens.------------------------------------------------------------------------------------------
 
-    void GenerateMenu(int buttonAmountToGenerateInt)
+    void GenerateMenu()
     {
         //Canvas and Event system.
         GenerateCore();
@@ -81,33 +91,15 @@ public class MenuTool : EditorWindow
 
         //Buttons
 
-        //Add 2 for the quit and start buttons
-        buttonAmountToGenerateInt += 2;
- 
-        int j = 1;
-        while (j <= buttonAmountToGenerateInt)
+        GenerateButton("StartButton", buttonStartString);
+
+        foreach (string str in buttonStringList)
         {
-            string buttonNameToGiveString;
-            string buttonTextToGiveString;
-
-            if ( j == 1)
-            {
-                buttonNameToGiveString = "StartButton";
-                buttonTextToGiveString = buttonStartString;
-            }
-            else if ( j == buttonAmountToGenerateInt)
-            {
-                buttonNameToGiveString = "QuitButton";
-                buttonTextToGiveString = buttonQuitString;
-            }
-            else {
-                buttonNameToGiveString = "buttonNameToGiveString" + j;
-                buttonTextToGiveString = "buttonTextToGiveString" + j;
-            }
-
-            GenerateButtons(buttonNameToGiveString, buttonTextToGiveString);
-            j++;
+            GenerateButton(str, str);
         }
+
+        GenerateButton("QuitButton", buttonQuitString);
+
     }
 
     void GenerateCore()
@@ -166,13 +158,13 @@ public class MenuTool : EditorWindow
         layoutGroupGameObject.GetComponent<VerticalLayoutGroup>().padding.bottom = Screen.height / 16;
     }
 
-    void GenerateButtons(string buttonName, string buttonText)
+    void GenerateButton(string buttonName, string buttonText)
     {
         //Setup for button
         GameObject button = new GameObject();
         button.name = buttonName;
         button.transform.parent = layoutGroupGameObject.transform;
-        button.AddComponent<RectTransform>().sizeDelta = new Vector2 (150,50);
+        button.AddComponent<RectTransform>().sizeDelta = new Vector2(150, 50);
         button.AddComponent<CanvasRenderer>();
         button.AddComponent<Image>().sprite = buttonSprite as Sprite;
         button.GetComponent<Image>().type = Image.Type.Sliced;
@@ -191,4 +183,51 @@ public class MenuTool : EditorWindow
         buttonTextObject.GetComponent<Text>().resizeTextForBestFit = true;
         buttonTextObject.GetComponent<Text>().color = new Color(0, 0, 0);
     }
-}   
+}
+
+public class CustomButton
+{
+    public GameObject buttonGameobject;
+    public RectTransform buttonRectTransform;
+    public Image buttonImage;
+    public Text buttonText;
+    public Button buttonButton;
+
+    public CustomButton()
+    {
+
+    }
+
+    void GenerateButton()
+    {
+
+    }
+}
+
+/*
+    void GenerateButton(string buttonName, string buttonText)
+    {
+        //Setup for button
+        GameObject button = new GameObject();
+        button.name = buttonName;
+        button.transform.parent = layoutGroupGameObject.transform;
+        button.AddComponent<RectTransform>().sizeDelta = new Vector2(150, 50);
+        button.AddComponent<CanvasRenderer>();
+        button.AddComponent<Image>().sprite = buttonSprite as Sprite;
+        button.GetComponent<Image>().type = Image.Type.Sliced;
+        button.AddComponent<Button>();
+
+        //Create and add the background image to the button
+        GameObject buttonTextObject = new GameObject();
+        buttonTextObject.name = buttonName + "Text";
+        buttonTextObject.transform.parent = button.transform;
+        buttonTextObject.transform.localPosition = new Vector3(0, 0, 0);
+        buttonTextObject.AddComponent<RectTransform>().anchorMax = new Vector2(1, 1);
+        buttonTextObject.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
+        buttonTextObject.GetComponent<RectTransform>().sizeDelta = new Vector3(0, 0, 0);
+        buttonTextObject.AddComponent<Text>().text = buttonText;
+        buttonTextObject.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
+        buttonTextObject.GetComponent<Text>().resizeTextForBestFit = true;
+        buttonTextObject.GetComponent<Text>().color = new Color(0, 0, 0);
+    }
+*/
