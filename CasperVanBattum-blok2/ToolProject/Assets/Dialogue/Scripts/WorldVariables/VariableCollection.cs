@@ -16,12 +16,12 @@ public enum VariableType {
 
 [Serializable]
 public class VariableCollection {
-    private const string FILENAME = "worldvariables.dat";
+    [NonSerialized] private const string FILENAME = "worldvariables.dat";
 
     private readonly Dictionary<string, (VariableType varType, object value)> variables =
         new Dictionary<string, (VariableType, object)>();
 
-    private bool autosave;
+    [NonSerialized] private bool autosave;
 
     private static VariableCollection instance;
     public static VariableCollection Instance => instance ?? (instance = Load());
@@ -49,7 +49,7 @@ public class VariableCollection {
     /// Is invoked each time a change is made to the data in this collection. The definition of change includes but
     /// isn't limited to variable addition or removal or data mutation.
     /// </summary>
-    public event Action CollectionChanged;
+    [field: NonSerialized] public event Action CollectionChanged;
 
     public override string ToString() {
         var msg = $"Contains {variables.Count} variables\n";
