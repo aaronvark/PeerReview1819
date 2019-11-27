@@ -1,0 +1,9 @@
+{
+    "Items": [
+        "{\"npcId\":\"4\",\"npcName\":\"Walker\",\"npcType\":0,\"model\":{\"instanceID\":12098},\"animatorController\":{\"instanceID\":11546},\"spawnPosition\":{\"instanceID\":12452},\"aiSystem\":{\"instanceID\":11280},\"settings\":[{\"instanceID\":9818},{\"instanceID\":11106},{\"instanceID\":10432},{\"instanceID\":11424}]}",
+        "{\"Mood\":1,\"Confidence\":0,\"WanderType\":0,\"CombatStyle\":0}",
+        "{\"Damage\":0.0,\"Health\":0.0,\"Range\":0.0,\"Speed\":0.0,\"AiType\":0}",
+        "{\"IdleAnimation\":{\"instanceID\":0},\"WalkAnimation\":{\"instanceID\":0},\"RunAnimation\":{\"instanceID\":0},\"AttackAnimation\":{\"instanceID\":0},\"DeathAnimation\":{\"instanceID\":0}}",
+        "{\"WanderType\":0,\"WayPoints\":[{\"x\":1.0,\"y\":-0.08000004291534424,\"z\":1.0}],\"WayPointIndex\":0}"
+    ]
+}

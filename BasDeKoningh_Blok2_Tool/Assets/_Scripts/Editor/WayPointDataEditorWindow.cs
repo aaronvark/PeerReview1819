@@ -16,7 +16,7 @@ namespace EasyAI
             base.OnInspectorGUI();
 
             wayPointData = (WayPointData)target;
-            if (wayPointData.WayPoints.Count< 1)
+            if (wayPointData.WayPoints == null || wayPointData.WayPoints.Count< 1)
             {
                 InitPath(wayPointData);
             }
@@ -33,6 +33,7 @@ namespace EasyAI
 
         private void InitPath(WayPointData wayPointData)
         {
+            if (wayPointData.WayPoints == null) wayPointData.WayPoints = new List<Vector3>();
             var position = wayPointData.transform.position;
             wayPointData.WayPoints.Add(new Vector3(position.x + 1, position.y + 1, position.z + 1));
         }

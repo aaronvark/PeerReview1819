@@ -23,6 +23,13 @@ public static class JsonHelper
         return JsonUtility.ToJson(wrapper);
     }
 
+    public static string ToJson(System.Type[] type)
+    {
+        Wrapper<System.Type> wrapper = new Wrapper<System.Type>();
+        wrapper.Items = type;
+        return JsonUtility.ToJson(wrapper);
+    }
+
     public static string ToJson<T>(T[] array, bool prettyPrint)
     {
         Wrapper<T> wrapper = new Wrapper<T>();

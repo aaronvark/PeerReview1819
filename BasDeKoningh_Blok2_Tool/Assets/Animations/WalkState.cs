@@ -28,7 +28,7 @@ namespace EasyAI
             }
             else
             {
-                WayPointData.WayPointIndex = Random.Range(0, WayPointData.WayPoints.Count);
+                WayPointData.WayPointIndex = TemperamentManager.WanderTypeGiver(WayPointData.WanderType, WayPointData, nextPoint);
             }
             
             if (playerDistance.sqrMagnitude < MoodRange * MoodRange)

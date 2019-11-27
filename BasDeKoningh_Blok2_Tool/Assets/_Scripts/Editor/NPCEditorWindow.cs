@@ -27,6 +27,8 @@ namespace EasyAI
 
         private readonly Dictionary<string, bool> checker = new Dictionary<string, bool>();
 
+        private string jsonInput = string.Empty;
+
         // Add menu named "NPCEditor" to the Window menu
         [MenuItem("Window/NPCEditor #n")]
         static void Init()
@@ -38,8 +40,17 @@ namespace EasyAI
 
         void OnGUI()
         {
+            EditorGUILayout.LabelField("Json Input: ", EditorStyles.boldLabel);
+            jsonInput = EditorGUILayout.TextField(jsonInput);
+            if(GUILayout.Button("Load Json File"))
+            {
+                if (jsonInput == null) return;
+                string scriptableObjectArea = string.Empty;
+                string[] inputs = jsonInput.Split(',');
+
+            }
             presetType = (PresetType)EditorGUILayout.EnumPopup("Preset Type:", presetType);
-            switch(presetType)
+            switch (presetType)
             {
                 case PresetType.ScriptablePreset:
                     Repaint();
@@ -54,7 +65,7 @@ namespace EasyAI
             }
             EditorGUILayout.LabelField("NPC:", EditorStyles.boldLabel);
 
-           
+
             //TODO
             //Use assert to make system better 
             //Istead of item != null we should do if(item==null) assert
@@ -72,6 +83,11 @@ namespace EasyAI
                     //We need to save the selected settings to maby some json file and we need to load the settings on the prefab. 
                     CreateNPC(InputScriptableObject as ScriptableNPC);
                 }
+
+                if (GUILayout.Button("Save Settings to Json"))
+                {
+                    SaveNPCSettings(InputScriptableObject as ScriptableNPC);
+                }
             }
 
             if (currentNPC != null)
@@ -82,12 +98,12 @@ namespace EasyAI
                 }
                 foreach (var type in settingTypes)
                 {
-                    if(!checker.ContainsKey(type.FullName))
+                    if (!checker.ContainsKey(type.FullName))
                     {
                         bool show = false;
-                        checker.Add(type.FullName,show);
+                        checker.Add(type.FullName, show);
                     }
-                    if(GUILayout.Button(type.FullName))
+                    if (GUILayout.Button(type.FullName))
                     {
                         foreach (var key in checker.Keys.ToList())
                         {
@@ -126,6 +142,26 @@ namespace EasyAI
             GUI.color = c;
         }
 
+        private void SaveNPCSettings(ScriptableNPC npc)
+        {
+            string jsonString = "";
+            List<string> settings = new List<string>();
+            string scriptableNpc = string.Empty;
+            scriptableNpc = JsonUtility.ToJson(npc);
+            settings.Add(scriptableNpc);
+            foreach (var setting in npc.settings)
+            {
+                System.Type settingType = setting.ObjectToClassType();
+                string settingJson = string.Empty;
+                settingJson = JsonUtility.ToJson(currentNPC.GetComponent(settingType));
+                settings.Add(settingJson);
+
+            }
+            if (settings.Count < 1 || settings == null) return;
+            jsonString = JsonConverter<string>.SerializeToJson(settings, jsonString, "/_Scripts/Json/SaveData.json");
+            Debug.Log(jsonString);
+        }
+
         private void DrawNPCSettings(ScriptableNPC npc)
         {
             try
@@ -138,7 +174,7 @@ namespace EasyAI
             }
             catch(Exception e)
             {
-                Debug.Log(settingTypes);
+                //Debug.Log(settingTypes);
             }
         }
 

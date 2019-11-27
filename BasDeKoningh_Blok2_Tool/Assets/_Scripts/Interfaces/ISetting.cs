@@ -7,8 +7,8 @@ namespace EasyAI
 {
     public interface ISetting
     {
-        void RenderUI(SerializedProperty property);
-        System.Type GetChildType();
+       // void RenderUI(SerializedProperty property);
+        //System.Type GetChildType();
 
     }
 }

@@ -21,9 +21,9 @@ namespace EasyAI
 
     public enum WanderType
     {
-        Dynamic = 0,
-        Static = 1,
-        Fixed = 2
+        Random = 0,
+        Loop = 1,
+        Once = 2
     }
 
     public enum CombatStyle
