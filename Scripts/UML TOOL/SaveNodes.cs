@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace UnityEngine.Scripting.UML
 {
@@ -8,7 +6,5 @@ namespace UnityEngine.Scripting.UML
     {
         public List<Node> Nodes;
         public Inheritance Inheritance;
-        [HideInInspector]
-        public bool SetInheritance;
     }
 }

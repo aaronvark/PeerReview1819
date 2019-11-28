@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System;
 
 namespace UnityEngine.Scripting.UML
 {
@@ -21,15 +20,15 @@ namespace UnityEngine.Scripting.UML
                 Vector2 endPosition;
 
                 //Checking if the childnode is minalized
-                if (!lines[i].ChildNode.minalized)
-                    beginPosition = new Vector3(lines[i].ChildNode.maxNodeSize.x + (lines[i].ChildNode.maxNodeSize.width * .5f), (lines[i].ChildNode.maxNodeSize.y + lines[i].ChildNode.maxNodeSize.height * .5f));
+                if (!lines[i].ChildNode.Minalized)
+                    beginPosition = new Vector3(lines[i].ChildNode.MaxNodeSize.x + (lines[i].ChildNode.MaxNodeSize.width * .5f), (lines[i].ChildNode.MaxNodeSize.y + lines[i].ChildNode.MaxNodeSize.height * .5f));
                 else
-                    beginPosition = new Vector3(lines[i].ChildNode.minNodeSize.x + (lines[i].ChildNode.minNodeSize.width * .5f), (lines[i].ChildNode.minNodeSize.y + lines[i].ChildNode.minNodeSize.height * .5f));
+                    beginPosition = new Vector3(lines[i].ChildNode.MinNodeSize.x + (lines[i].ChildNode.MinNodeSize.width * .5f), (lines[i].ChildNode.MinNodeSize.y + lines[i].ChildNode.MinNodeSize.height * .5f));
                 //check if the parentnode is minalized
-                if (!lines[i].parentNode.minalized)
-                    endPosition = new Vector3(lines[i].parentNode.maxNodeSize.x + (lines[i].parentNode.maxNodeSize.width * .5f), lines[i].parentNode.maxNodeSize.y + (lines[i].parentNode.maxNodeSize.height * .5f));
+                if (!lines[i].ParentNode.Minalized)
+                    endPosition = new Vector3(lines[i].ParentNode.MaxNodeSize.x + (lines[i].ParentNode.MaxNodeSize.width * .5f), lines[i].ParentNode.MaxNodeSize.y + (lines[i].ParentNode.MaxNodeSize.height * .5f));
                 else
-                    endPosition = new Vector3(lines[i].parentNode.minNodeSize.x + (lines[i].parentNode.minNodeSize.width * .5f), lines[i].parentNode.minNodeSize.y + (lines[i].parentNode.minNodeSize.height * .5f));
+                    endPosition = new Vector3(lines[i].ParentNode.MinNodeSize.x + (lines[i].ParentNode.MinNodeSize.width * .5f), lines[i].ParentNode.MinNodeSize.y + (lines[i].ParentNode.MinNodeSize.height * .5f));
 
                 //drawing angle of the 2 vectors
                 Vector2 delta = beginPosition - endPosition;
@@ -67,11 +66,15 @@ namespace UnityEngine.Scripting.UML
 
         public void SetInheritance(List<Node> node)
         {
+            for (int i = 0; i < node.Count; i++)
+                if (node[i].Instance == null)
+                    node.RemoveAt(i);
+
             lines = new List<SetLines>();
             for (int i = 0; i < node.Count; i++)
-                if (node[i].nodeInfo.Parent != string.Empty)
+                if (node[i].NodeInfo.Parent != string.Empty)
                     for (int j = 0; j < node.Count; j++)
-                        if (node[i].nodeInfo.Parent == node[j].nodeInfo.ClassName)
+                        if (node[i].NodeInfo.Parent == node[j].NodeInfo.ClassName)
                             lines.Add(new SetLines(node[j], node[i]));
 
         }
@@ -79,11 +82,11 @@ namespace UnityEngine.Scripting.UML
     public struct SetLines
     {
         public Node ChildNode;
-        public Node parentNode;
-        public SetLines(Node child,Node Parent)
+        public Node ParentNode;
+        public SetLines(Node childNode,Node parentNode)
         {
-            ChildNode = child;
-            parentNode = Parent;
+            ChildNode = childNode;
+            ParentNode = parentNode;
         }
     }
 }

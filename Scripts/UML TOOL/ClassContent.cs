@@ -2,7 +2,10 @@
 {
     public class ClassContent
     {
-        //You cant change struct variables in a list directly. you will get a "Cannot modify the return value"
+        //<Attention>
+        // You can't change struct variables in a list directly thats why I didn't use struct for this. 
+        // You will get a "Cannot modify the return value".
+        //</Attention>
 
         /// <summary>
         /// Access modifiers of the methodes/variable.

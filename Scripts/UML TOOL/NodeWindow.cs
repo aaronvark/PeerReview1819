@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEditor;
-using System.IO;
 
 namespace UnityEngine.Scripting.UML
 {
@@ -12,15 +9,16 @@ namespace UnityEngine.Scripting.UML
         private List<Node> nodes;
         private Inheritance inheritance;
         private int id = 0;
-        private delegate void DrawInheritance();
+        public delegate void DrawInheritance();
         private event DrawInheritance drawInheritance;
-        private bool setInheritance = false;
         private SaveNodes saveNode;
+        private Vector2 mousePosition;
 
         [MenuItem("Custom Tools/UML Window #u ")]
         private static void Init()
         {
             NodeWindow umlWindow = new NodeWindow();
+            //umlWindow.nodes = new List<Node>();
 
             try
             {
@@ -28,10 +26,9 @@ namespace UnityEngine.Scripting.UML
                 umlWindow.nodes = umlWindow.saveNode.Nodes;
                 umlWindow.inheritance = umlWindow.saveNode.Inheritance;
 
-                if (umlWindow.setInheritance)
+                if (umlWindow.inheritance != null)
                     umlWindow.drawInheritance();
-            } 
-            catch
+            } catch
             {
                 umlWindow.saveNode = ScriptableObject.CreateInstance(typeof(SaveNodes)) as SaveNodes;
                 AssetDatabase.CreateAsset(umlWindow.saveNode, "Assets/SaveNode.asset");
@@ -49,7 +46,9 @@ namespace UnityEngine.Scripting.UML
             AssetDatabase.Refresh();
         }
 
-        // Update is called once per frame
+        /// <summary>
+        /// One call per event
+        /// </summary>
         private void OnGUI()
         {
             Handles.BeginGUI();
@@ -65,21 +64,36 @@ namespace UnityEngine.Scripting.UML
             Event e = Event.current;
             if (e.type == EventType.ContextClick)
                 CreateGenericMenu();
+            if (nodes == null)
+                nodes = new List<Node>();
 
-            //Show Nodes
-            if (nodes.Count > 0)
+            if (nodes.Count >= 1)
+            {
                 for (int i = 0; i < nodes.Count; i++)
                     nodes[i].OnGUI();
+            }
 
 
             drawInheritance?.Invoke();
             EndWindows();
         }
 
+        /// <summary>
+        /// Adding node
+        /// </summary>
         private void AddNode()
         {
             id++;
-            nodes.Add(new Node(id));
+            nodes.Add(new Node(id, this, mousePosition));
+        }
+
+        /// <summary>
+        /// Delete node of the nodes list
+        /// </summary>
+        /// <param name="node"></param>
+        public void DeleteNode(Node node)
+        {
+            nodes.Remove(node);
         }
 
         /// <summary>
@@ -91,17 +105,40 @@ namespace UnityEngine.Scripting.UML
 
             for (int i = 0; i < nodes.Count; i++)
             {
-                if (nodes[i].instance != null)
-                    cw.GenerateClass(nodes[i].nodeInfo);
+                if (nodes[i].Instance != null)
+                    cw.GenerateClass(nodes[i].NodeInfo);
             }
         }
 
+        /// <summary>
+        /// Updating the inheritance
+        /// </summary>
+        public void UpdateInheritance()
+        {
+            BeginDrawingInheritance();
+        }
+
+
+        /// <summary>
+        /// Drawt the inheritance lines
+        /// </summary>
         private void BeginDrawingInheritance()
         {
             if (nodes.Count < 2)
                 return;
 
-            inheritance.SetInheritance(nodes);
+            List<Node> inheritanceNodes = new List<Node>();
+
+            for (int i = 0; i < nodes.Count; i++)
+                if (nodes[i].NodeInfo.Parent != string.Empty)
+                    inheritanceNodes.Add(nodes[i]);
+
+            if (inheritance == null)
+                inheritance = new Inheritance();
+
+            if (nodes.Count > 1)
+                inheritance.SetInheritance(nodes);
+
             drawInheritance += inheritance.DrawInheritances;
 
         }
@@ -111,19 +148,37 @@ namespace UnityEngine.Scripting.UML
         /// </summary>
         public void CreateGenericMenu()
         {
+            Event e = Event.current;
+            mousePosition = e.mousePosition;
+
             GenericMenu menu = new GenericMenu();
             menu.AddItem(new GUIContent("Add class"), false, AddNode);
-            menu.AddItem(new GUIContent("Generate class"), false, GenerateNodes);
-            menu.AddItem(new GUIContent("Set Inheritance"), setInheritance, BeginDrawingInheritance);
+
+            if (nodes.Count > 1)
+                menu.AddItem(new GUIContent("Set Inheritance"), false, BeginDrawingInheritance);
+            else
+                menu.AddDisabledItem(new GUIContent("Set Inheritance"));
+
+            if (nodes.Count > 0)
+                menu.AddItem(new GUIContent("Generate class"), false, GenerateNodes);
+            else
+                menu.AddDisabledItem(new GUIContent("Generate class"));
+
             menu.ShowAsContext();
         }
 
-        public void OnDestroy()
+        /// <summary>
+        /// When the Window closes
+        /// </summary>
+        public void OnDisable()
         {
-            drawInheritance -= inheritance.DrawInheritances;
-            saveNode.Inheritance = inheritance;
-            saveNode.Nodes = nodes;
-            saveNode.SetInheritance = setInheritance;
+            if (drawInheritance != null)
+                drawInheritance -= inheritance.DrawInheritances;
+
+                saveNode.Inheritance = inheritance;
+            if (nodes.Count > 0)
+                saveNode.Nodes = nodes;
+
             AssetDatabase.SaveAssets();
         }
     }

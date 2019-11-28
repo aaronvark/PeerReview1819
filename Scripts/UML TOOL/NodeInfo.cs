@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEditor;
 
 namespace UnityEngine.Scripting.UML
 {
     public class NodeInfo
     {
-        private Node node;
         public AccessModifiers ClassAccessModifiers;
         public string ClassName;
         public string Parent = string.Empty;
@@ -38,20 +35,16 @@ namespace UnityEngine.Scripting.UML
             }
         }
 
-        public NodeInfo(Node node)
-        {
-            this.node = node;
-        }
-
         /// <summary>
         /// Drawing the node
         /// </summary>
         public void Draw()
         {
             GUILayout.BeginVertical();
-            GUILayout.Label("Class Name");
+            GUILayout.Label("Class name");
             GUILayout.BeginHorizontal();
-            ClassAccessModifiers = (AccessModifiers)EditorGUILayout.EnumPopup((AccessModifiers)ClassAccessModifiers, GUILayout.MaxWidth(70));
+            ClassAccessModifiers = 
+                (AccessModifiers)EditorGUILayout.EnumPopup((AccessModifiers)ClassAccessModifiers, GUILayout.MaxWidth(70));
             ClassName = GUILayout.TextField(ClassName);
             GUILayout.EndHorizontal();
 
@@ -60,7 +53,7 @@ namespace UnityEngine.Scripting.UML
             
             GUILayout.Space(15);
             //variables
-            GUILayout.Label("Variables");
+            GUILayout.Label("Variables \t Type \t Name");
 
             //Variable
             for (int i = 0; i < variableInfo.Count; i++)
@@ -89,7 +82,7 @@ namespace UnityEngine.Scripting.UML
             GUILayout.Space(15);
 
             //Methodes
-            GUILayout.Label("Methods");
+            GUILayout.Label("Methods \t Type \t Name");
             for (int i = 0; i < methodeInfo.Count; i++)
             {
                 ClassContent methode = methodeInfo[i];
