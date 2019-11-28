@@ -13,3 +13,4 @@
 
 # but not these subdirectories
 #!/Files/*
+/Assets/VariablesTester.cs

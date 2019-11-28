@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -37,11 +38,8 @@ public class WorldVariablesEditor : EditorWindow {
         // Alias for the world variable instance
         var worldVars = VariableCollection.Instance;
 
-        foreach (var name in worldVars.NameList()) {
-            var type = worldVars.GetType(name);
-            var value = worldVars.GetValue(name);
-
-            AddVarField(name, type, value);
+        foreach (var id in worldVars.VariableList()) {
+            AddVarField(id);
         }
     }
 
@@ -71,22 +69,20 @@ public class WorldVariablesEditor : EditorWindow {
 
         var varAdded = false;
         var count = 0;
-        var nameCopy = varName;
+        Guid id;
         while (!varAdded) {
             // Try to add number to the standard name until a name is found that has not yet been taken
-            nameCopy = count == 0 ? varName : $"{varName} {count}";
+            var nameCopy = count == 0 ? varName : $"{varName} {count}";
             count++;
 
-            varAdded = worldVars.AddEmptyVariable(nameCopy, type);
+            varAdded = worldVars.AddEmptyVariable(nameCopy, type, out id);
         }
 
-        AddVarField(nameCopy, type);
-
-//        worldVars.DebugDump();
+        AddVarField(id);
     }
 
-    private void AddVarField(string varName, VariableType type, object value = null) {
-        variableContainer.Add(new VariableField(varName, type, value));
+    private void AddVarField(Guid id) {
+        variableContainer.Add(new VariableField(id));
     }
 
     private void OnDisable() {

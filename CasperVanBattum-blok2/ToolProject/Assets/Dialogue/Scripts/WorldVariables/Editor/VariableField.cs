@@ -6,27 +6,27 @@ using Debug = UnityEngine.Debug;
 
 namespace WorldVariables.Editor {
 public class VariableField : VisualElement {
-    private const string ussClassName = "worldvar-field";
-    private const string typeClassNameTemplate = "worldvar-type-";
+    private const string USS_CLASS_NAME = "worldvar-field";
+    private const string TYPE_CLASS_NAME_TEMPLATE = "worldvar-type-";
 
-    private VariableType varType;
-    private string varName;
-    private object value;
+//    private VariableType varType;
+//    private string varName;
+    private Guid guid;
+//    private object value;
 
     private readonly VisualElement fieldContainer;
+    private readonly VariableCollection worldVars = VariableCollection.Instance;
 
-    public VariableField(string name, VariableType type, object value = null) {
-        varName = name;
-        varType = type;
-        this.value = value;
+    public VariableField(Guid id) {
+        guid = id;
 
-        AddToClassList(ussClassName);
+        AddToClassList(USS_CLASS_NAME);
 
-        var label = new Label(name);
+        var label = new Label(worldVars.GetName(guid));
         Add(label);
 
         // Create the type changer dropdown
-        var choice = new EnumField(type);
+        var choice = new EnumField(worldVars.GetType(guid));
         choice.AddToClassList("worldvar-type-dropdown");
         Add(choice);
 
@@ -34,7 +34,7 @@ public class VariableField : VisualElement {
         choice.RegisterCallback<ChangeEvent<Enum>>(UpdateWorldvarType);
 
         // Add a type-specific class based on the current type
-        AddToClassList(typeClassNameTemplate + choice.text.ToLower());
+        AddToClassList(TYPE_CLASS_NAME_TEMPLATE + choice.text.ToLower());
 
         // Create a simple container to hold the value field
         fieldContainer = new VisualElement();
@@ -42,18 +42,19 @@ public class VariableField : VisualElement {
         Add(fieldContainer);
         DrawValueField();
 
-        // Create a button at the end to remove the var
+        // Create a button at the end to remove the variable
         var button = new Button() {
             text = "-",
-            name = $"remove-{varName}"
+            name = $"remove-{worldVars.GetName(guid)}"
         };
         button.AddToClassList("worldvar-remove-button");
+        // Method to actually remove it is the Remove() method
         button.clickable.clicked += Remove;
         Add(button);
     }
 
     private void DrawValueField() {
-        var fieldName = $"worldvar-value-field-{varName}";
+        var fieldName = $"worldvar-value-field-{worldVars.GetName(guid)}";
 
         // Clear previous field
         if (fieldContainer.Children().Any()) {
@@ -61,12 +62,12 @@ public class VariableField : VisualElement {
         }
 
         // Update value to match world variable
-        value = VariableCollection.Instance.GetValue(varName);
-        
+        var value = worldVars.GetValue(guid);
+
         // Create a type-specific field for each different variable type, set the right value (mainly null handling),
         // and register the type-specific callback
         VisualElement field;
-        switch (varType) {
+        switch (worldVars.GetType(guid)) {
             case VariableType.String:
                 field = new TextField() {
                     // Set the contents of the field to the world var, or to an empty string if the world var is null
@@ -104,27 +105,22 @@ public class VariableField : VisualElement {
     }
 
     private void UpdateWorldvarValue<T>(ChangeEvent<T> evt) {
-        VariableCollection.Instance.SetValue(varName, evt.newValue);
-//        VariableCollection.Instance.DebugDump();
+        VariableCollection.Instance.SetValue(guid, evt.newValue);
     }
 
     private void UpdateWorldvarType(ChangeEvent<Enum> evt) {
         // Update the type to the new value and redraw the value field
-        varType = (VariableType) evt.newValue;
-        VariableCollection.Instance.ChangeType(varName, (VariableType) evt.newValue);
-        value = VariableCollection.Instance.GetValue(varName);
+        VariableCollection.Instance.ChangeType(guid, (VariableType) evt.newValue);
         DrawValueField();
 
         // Update style classes to the new type. The enum variable string is simply appended to the 
-        RemoveFromClassList($"{typeClassNameTemplate}{evt.previousValue.ToString().ToLower()}");
-        AddToClassList($"{typeClassNameTemplate}{evt.newValue.ToString().ToLower()}");
+        RemoveFromClassList($"{TYPE_CLASS_NAME_TEMPLATE}{evt.previousValue.ToString().ToLower()}");
+        AddToClassList($"{TYPE_CLASS_NAME_TEMPLATE}{evt.newValue.ToString().ToLower()}");
     }
 
     private void Remove() {
-        VariableCollection.Instance.RemoveVariable(varName);
+        VariableCollection.Instance.RemoveVariable(guid);
         RemoveFromHierarchy();
-
-//        VariableCollection.Instance.DebugDump();
     }
 }
 }

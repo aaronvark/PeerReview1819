@@ -18,8 +18,7 @@ public enum VariableType {
 public class VariableCollection {
     [NonSerialized] private const string FILENAME = "worldvariables.dat";
 
-    private readonly Dictionary<string, (VariableType varType, object value)> variables =
-        new Dictionary<string, (VariableType, object)>();
+    private readonly Dictionary<Guid, WorldVariable> variables = new Dictionary<Guid, WorldVariable>();
 
     [NonSerialized] private bool autosave;
 
@@ -55,37 +54,57 @@ public class VariableCollection {
         var msg = $"Contains {variables.Count} variables\n";
         msg = variables.Aggregate(msg,
             (current, varName) => {
-                return $"{current}{varName.Key} | {varName.Value.varType} | {varName.Value.value}\n";
+                return $"{current}{varName.Key}: {varName.Value.Name} | {varName.Value.Type} | {varName.Value.Value}\n";
             });
 
         return msg;
     }
 
-    public object GetValue(string name) {
-        return variables[name].value;
+    public object GetValue(Guid id) {
+        return variables[id].Value;
     }
 
-    public VariableType GetType(string name) {
-        return variables[name].varType;
+    public VariableType GetType(Guid id) {
+        return variables[id].Type;
+    }
+
+    public string GetName(Guid id) {
+        return variables[id].Name;
+    }
+
+    public bool AddVariable(string name, string value, out Guid id) {
+        return AddVariable(name, value, VariableType.String, out id);
+    }
+
+    public bool AddVariable(string name, bool value, out Guid id) {
+        return AddVariable(name, value, VariableType.Bool, out id);
+    }
+
+    public bool AddVariable(string name, long value, out Guid id) {
+        return AddVariable(name, value, VariableType.Long, out id);
+    }
+
+    public bool AddVariable(string name, double value, out Guid id) {
+        return AddVariable(name, value, VariableType.Double, out id);
     }
 
     public bool AddVariable(string name, string value) {
-        return AddVariable(name, value, VariableType.String);
+        return AddVariable(name, value, VariableType.String, out _);
     }
 
     public bool AddVariable(string name, bool value) {
-        return AddVariable(name, value, VariableType.Bool);
+        return AddVariable(name, value, VariableType.Bool, out _);
     }
 
     public bool AddVariable(string name, long value) {
-        return AddVariable(name, value, VariableType.Long);
+        return AddVariable(name, value, VariableType.Long, out _);
     }
 
     public bool AddVariable(string name, double value) {
-        return AddVariable(name, value, VariableType.Double);
+        return AddVariable(name, value, VariableType.Double, out _);
     }
 
-    public bool AddEmptyVariable(string name, VariableType type) {
+    public bool AddEmptyVariable(string name, VariableType type, out Guid id) {
         object val;
         switch (type) {
             case VariableType.String:
@@ -104,12 +123,14 @@ public class VariableCollection {
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
 
-        return AddVariable(name, val, type);
+        return AddVariable(name, val, type, out id);
     }
 
-    private bool AddVariable(string name, object value, VariableType type) {
+    private bool AddVariable(string name, object value, VariableType type, out Guid id) {
         if (!NameExists(name)) {
-            variables.Add(name, (type, value));
+            var newVariable = new WorldVariable(name, type, value);
+            id = newVariable.Guid;
+            variables.Add(newVariable.Guid, newVariable);
             CollectionChanged?.Invoke();
 
             return true;
@@ -118,54 +139,47 @@ public class VariableCollection {
         return false;
     }
 
-    public void RenameVariable(string oldName, string newName) {
-        if (!NameExists(oldName)) {
-            throw new InvalidOperationException("Tried to rename a non-existant variable");
+    public void RenameVariable(Guid id, string newName) {
+        if (NameExists(newName)) {
+            throw new InvalidOperationException("New name for variable already exists!");
         }
 
-        var (varType, value) = variables[oldName];
-        AddVariable(newName, value, varType);
+        variables[id].Name = newName;
 
         CollectionChanged?.Invoke();
     }
 
-    public void RemoveVariable(string name) {
-        if (!NameExists(name)) {
+    public void RemoveVariable(Guid id) {
+        if (!VariableExists(id)) {
             throw new InvalidOperationException("Tried to remove a non-existant variable");
         }
 
-        variables.Remove(name);
+        variables.Remove(id);
         CollectionChanged?.Invoke();
     }
 
-    public void ChangeType(string name, VariableType newType) {
-        if (!NameExists(name)) {
+    public void ChangeType(Guid id, VariableType newType) {
+        if (!VariableExists(id)) {
             throw new InvalidOperationException("Tried to change type of a non-existant variable");
         }
 
-        // Remove the old variable, save the original value and type for carrying
-        var oldValue = GetValue(name);
-        var oldType = GetType(name);
-        RemoveVariable(name);
-
-        // Try to convert the value to the new type
-        var newValue = ConvertValue(oldValue, oldType, newType);
-
-        // Add the same variable with the updated type
-        AddVariable(name, newValue, newType);
+        var newValue = ConvertValue(variables[id].Value, variables[id].Type, newType);
+        variables[id].Type = newType;
+        variables[id].Value = newValue;
 
         // Invoke change event
         CollectionChanged?.Invoke();
     }
 
-    public void SetValue(string name, object newValue) {
+    public void SetValue(Guid id, object newValue) {
         // Check if a variable with the given name exists
-        if (!NameExists(name)) {
-            throw new InvalidOperationException($"Unknown variable name: {name}");
+        if (!VariableExists(id)) {
+            throw new InvalidOperationException($"Unknown variable id: {id}");
         }
 
         // Check if type of the new value matches original type registered in the collection
-        var originalType = variables[name].varType;
+        var originalType = variables[id].Type;
+        var name = variables[id].Name;
         switch (newValue) {
             case string _:
                 if (originalType != VariableType.String) {
@@ -197,22 +211,24 @@ public class VariableCollection {
                 break;
             default:
                 throw new InvalidOperationException(
-                    $"Tried to assign value of type {newValue.GetType()} to variable of type {variables[name].varType}");
+                    $"Tried to assign value of type {newValue.GetType()} to variable of type {variables[id].Type}");
         }
 
-        var data = variables[name];
-        data.value = newValue;
-        variables[name] = data;
+        variables[id].Value = newValue;
 
         CollectionChanged?.Invoke();
     }
 
-    public IEnumerable<string> NameList() {
+    public IEnumerable<Guid> VariableList() {
         return variables.Keys;
     }
 
     private bool NameExists(string name) {
-        return variables.ContainsKey(name);
+        return variables.Keys.Any(key => variables[key].Name == name);
+    }
+
+    public bool VariableExists(Guid id) {
+        return variables.ContainsKey(id);
     }
 
     private static object ConvertValue(object value, VariableType oldType, VariableType newType) {
