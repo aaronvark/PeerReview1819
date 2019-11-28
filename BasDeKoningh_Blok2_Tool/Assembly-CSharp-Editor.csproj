@@ -62,9 +62,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\_Scripts\Editor\ExtendedScriptableObjectDrawer.cs" />
-    <Compile Include="Assets\_Scripts\Editor\NPCEditorWindow.cs" />
-    <Compile Include="Assets\_Scripts\Editor\WayPointDataEditorWindow.cs" />
+    <Compile Include="Assets\EasyAI\_Scripts\Editor\ExtendedScriptableObjectDrawer.cs" />
+    <Compile Include="Assets\EasyAI\_Scripts\Editor\NPCEditorWindow.cs" />
+    <Compile Include="Assets\EasyAI\_Scripts\Editor\WayPointDataEditorWindow.cs" />
     <Compile Include="Assets\Editor\BezierCurveInspector.cs" />
     <Compile Include="Assets\Editor\BezierSplineInspector.cs" />
     <Compile Include="Assets\Editor\LineInspector.cs" />

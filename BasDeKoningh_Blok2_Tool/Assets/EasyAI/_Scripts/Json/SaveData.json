@@ -1,0 +1,9 @@
+{
+    "Items": [
+        "{\"npcId\":\"3\",\"npcName\":\"AwesomeNPC\",\"npcType\":5,\"model\":{\"instanceID\":11556},\"animatorController\":{\"instanceID\":11582},\"spawnPosition\":{\"instanceID\":40640},\"aiSystem\":{\"instanceID\":0},\"settings\":[{\"instanceID\":9818},{\"instanceID\":11106},{\"instanceID\":10432},{\"instanceID\":11424}]}",
+        "{\"Mood\":0,\"Confidence\":0,\"WanderType\":0,\"CombatStyle\":0}",
+        "{\"Damage\":0.0,\"Health\":0.0,\"Range\":0.0,\"Speed\":5.0,\"AiType\":0}",
+        "{\"IdleAnimation\":{\"instanceID\":11868},\"WalkAnimation\":{\"instanceID\":12300},\"RunAnimation\":{\"instanceID\":12348},\"AttackAnimation\":{\"instanceID\":11800},\"DeathAnimation\":{\"instanceID\":12370}}",
+        "{\"WanderType\":0,\"WayPoints\":[{\"x\":3.359999895095825,\"y\":1.9900000095367432,\"z\":4.769594192504883},{\"x\":3.359999895095825,\"y\":1.9900000095367432,\"z\":16.64176368713379},{\"x\":16.34563446044922,\"y\":1.9900000095367432,\"z\":4.769594192504883}],\"WayPointIndex\":0}"
+    ]
+}
