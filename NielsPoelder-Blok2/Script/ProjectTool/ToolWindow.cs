@@ -39,7 +39,6 @@ public class ToolWindow : EditorWindow
         {
             case 0:
                 RequirementTool.ShowSceneRequirementsTab(this);
-              //  ShowSceneRequirementsTab();
                 break;
 
             case 1:
@@ -53,16 +52,15 @@ public class ToolWindow : EditorWindow
 
     }
 
-
+    // simple script that normalized RGB colors to code colors
     public Color RGBColor(float _r, float _g, float _b)
     {
         return new Color((_r / 255f), (_g / 255f), (_b / 255f), 1f);
     }
 
+    // loads all data and finds all the objects
     protected void OnEnable()
     {
-
-
 
         RequirementTool.Load();
         ManagementTool.Load();

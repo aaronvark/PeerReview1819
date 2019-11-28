@@ -37,6 +37,7 @@ public class SceneRequirementsTool
 
         GUILayout.Space(10f);
 
+        // checks if there are already any assigned objects
         if (thisWindow.sceneRequirements.Count > 0)
         {
             GUILayout.Label("All Required Objects", EditorStyles.boldLabel);
@@ -74,6 +75,7 @@ public class SceneRequirementsTool
         so.ApplyModifiedProperties();
     }
 
+    // Imports all the objects in the scene, also checks if the objects aren't already placed in the scene
     public void ImportGameAssets()
     {
         Vector3 _temp = new Vector3(0, 0, 0);
@@ -89,6 +91,7 @@ public class SceneRequirementsTool
                 Debug.Log("Object " + obj.name + " already exists!");
             }
         }
+            Debug.Log("Objects have been placed!");
     }
 
 
@@ -107,6 +110,6 @@ public class SceneRequirementsTool
         // And we save it
         EditorPrefs.SetString("SceneRequirementsTool", data);
 
-        // Et voilà !
+       
     }
 }

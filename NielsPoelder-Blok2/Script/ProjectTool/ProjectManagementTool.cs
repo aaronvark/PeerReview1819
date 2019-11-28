@@ -248,7 +248,6 @@ public class ProjectManagementTool
         // And we save it
         EditorPrefs.SetString("SceneRequirementsTool", data);
 
-        // Et voilà !
     }
 
 
