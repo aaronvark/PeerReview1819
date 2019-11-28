@@ -177,6 +177,9 @@ namespace WorldBuilderTool
 
             GUILayout.Label("Placement", EditorStyles.miniBoldLabel);
             settings.PlaceButton = (KeyCode)EditorGUILayout.EnumPopup("Confirm Placement", settings.PlaceButton);
+            settings.PivotSnap = EditorGUILayout.Toggle("Snap Object to Pivot", settings.PivotSnap);
+            settings.SnapGrid = EditorGUILayout.Toggle("Snap To Grid", settings.SnapGrid);
+            settings.GridSize = EditorGUILayout.Vector3Field("Grid Size", settings.GridSize);
 
 
             GUILayout.Label("Rotation", EditorStyles.miniBoldLabel);
@@ -190,6 +193,7 @@ namespace WorldBuilderTool
             GUILayout.Label("Scaling", EditorStyles.miniBoldLabel);
             settings.ScaleAxis = EditorGUILayout.TextField("Scaling Axis", settings.ScaleAxis);
             settings.ScaleSpeed = EditorGUILayout.FloatField("Scaling Speed", settings.ScaleSpeed);
+
 
             EditorGUILayout.EndVertical();
 

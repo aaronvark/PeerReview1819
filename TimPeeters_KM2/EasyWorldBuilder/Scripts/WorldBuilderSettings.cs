@@ -28,5 +28,11 @@ namespace WorldBuilderTool
         public float ScaleSpeed = 1f;
         public float RotationSpeed = 1f;
         #endregion
+
+        #region Placement Options
+        public bool PivotSnap;
+        public bool SnapGrid;
+        public Vector3 GridSize;
+        #endregion
     }
 }

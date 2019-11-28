@@ -135,6 +135,7 @@ namespace WorldBuilderTool
                 Cursor.lockState = CursorLockMode.None;
             }
 
+
             // Rotation
             if (Input.GetMouseButton(1))
             {

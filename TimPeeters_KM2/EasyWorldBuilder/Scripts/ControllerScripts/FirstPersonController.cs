@@ -4,6 +4,7 @@
 using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.EventSystems;
 
 namespace WorldBuilderTool
 {
@@ -18,17 +19,19 @@ namespace WorldBuilderTool
         [SerializeField] private float m_JumpSpeed = 7f;
         [SerializeField] private float m_StickToGroundForce = 2f;
         [SerializeField] private float m_GravityMultiplier = 1f;
-        [SerializeField] private MouseLook m_MouseLook = new MouseLook();
+        
         private bool m_UseFovKick;
-        //[SerializeField] private FOVKick m_FovKick = new FOVKick();
         private bool m_UseHeadBob;
+        private float m_StepInterval;
+
+        //[SerializeField] private FOVKick m_FovKick = new FOVKick();
         //[SerializeField] private CurveControlledBob m_HeadBob = new CurveControlledBob();
         //[SerializeField] private LerpControlledBob m_JumpBob = new LerpControlledBob();
-        private float m_StepInterval;
         //[SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         //[SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
-       // [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
+        //[SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
+        public MouseLook m_MouseLook = new MouseLook();
         public Camera m_Camera;
         private bool m_Jump;
         private float m_YRotation;
@@ -51,21 +54,19 @@ namespace WorldBuilderTool
             m_Camera.name = "FirstPerson Camera";
 
             m_CharacterController = GetComponent<CharacterController>();
-            //m_OriginalCameraPosition = m_Camera.transform.localPosition;
-
             m_Camera.transform.eulerAngles = Vector3.zero;
             m_Camera.transform.localPosition = new Vector3(0f, m_CharacterController.bounds.extents.y, 0f);
 
             FindObjectOfType<RuntimePlacement>().FpsCam = m_Camera;
 
+            //m_OriginalCameraPosition = m_Camera.transform.localPosition;
             //m_FovKick.Setup(m_Camera);
             //m_HeadBob.Setup(m_Camera, m_StepInterval);
+            //m_AudioSource = GetComponent<AudioSource>();
 
             m_StepCycle = 0f;
             m_NextStep = m_StepCycle / 2f;
             m_Jumping = false;
-
-            //m_AudioSource = GetComponent<AudioSource>();
 
             m_MouseLook.Init(m_CharacterController.transform , m_Camera.transform);
         }
@@ -73,7 +74,11 @@ namespace WorldBuilderTool
         // Update is called once per frame
         private void Update()
         {
-            RotateView();
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                RotateView();
+            }
+            
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
@@ -141,8 +146,6 @@ namespace WorldBuilderTool
 
             ProgressStepCycle(speed);
             //UpdateCameraPosition(speed);
-
-            m_MouseLook.UpdateCursorLock();
         }
 
         /*

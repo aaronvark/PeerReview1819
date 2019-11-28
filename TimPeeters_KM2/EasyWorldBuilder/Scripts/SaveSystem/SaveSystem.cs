@@ -27,7 +27,6 @@ namespace WorldBuilderTool
             serializer.Serialize(writer, data);
             writer.Close();
         }
-
     }
 
     public class SerializedPrefab

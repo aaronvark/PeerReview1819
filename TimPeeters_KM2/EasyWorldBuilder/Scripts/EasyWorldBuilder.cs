@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.EventSystems;
 
 namespace WorldBuilderTool
 {
@@ -27,13 +28,14 @@ namespace WorldBuilderTool
         #endregion
 
         public RuntimePlacement Controller;
-
         public List<GameObject> PlaceableAssets = new List<GameObject>(); //List of assets that can be placed in the scene
         public GameObject SelectedAsset;
-
         public RuntimeUI ControllerUI;
         public RuntimeSaving SaveSys;
         public WorldBuilderSettings Settings;
+
+        private bool onClick;
+
 
         private void OnDestroy()
         {
@@ -57,15 +59,16 @@ namespace WorldBuilderTool
             }
         }
 
+
         private void Update()
         {
             //Assets can change at runtime.
             PlaceableAssets = Settings.AssetList;
 
-            if (SelectedAsset != null)
+            if (SelectedAsset != null && !EventSystem.current.IsPointerOverGameObject())
             {
                 //Input handling
-                if (Input.GetKeyDown(Settings.PlaceButton))
+                if (Input.GetKeyDown(Settings.PlaceButton) && !EventSystem.current.IsPointerOverGameObject())
                 {
                     Controller.PlaceAsset();
                 }
@@ -93,6 +96,22 @@ namespace WorldBuilderTool
                 if (Input.GetAxis("Mouse ScrollWheel") != 0)
                 {
                     Controller.DoScale(Input.GetAxis("Mouse ScrollWheel") * Settings.ScaleSpeed);
+                }
+
+
+                //Undo function
+                if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z))
+                {
+                    SaveSys.Undo();
+                }
+
+
+                //TODO redo function
+                if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) 
+                    && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) 
+                    && Input.GetKeyDown(KeyCode.Z))
+                {
+                    //SaveSys.Redo();
                 }
             }
         }

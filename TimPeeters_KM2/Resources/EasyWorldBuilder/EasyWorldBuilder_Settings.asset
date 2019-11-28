@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: EasyWorldBuilder_Settings
   m_EditorClassIdentifier: 
   AssetList:
-  - {fileID: 5806024239925697157, guid: 9a235c81082805f4fb928fd2bb095fb4, type: 3}
   - {fileID: 5806024239925697157, guid: b3cd358d20c425746b7e2133e95f6d4d, type: 3}
-  PlaceButton: 325
+  PlaceButton: 323
   RotRight: 101
   RotLeft: 113
   ScaleAxis: Mouse ScrollWheel
   FlySpeed: 1
   ScaleSpeed: 1
-  RotationSpeed: 1
+  RotationSpeed: 0.8
+  PivotSnap: 1
+  SnapGrid: 1
+  GridSize: {x: 0, y: 0, z: 0}

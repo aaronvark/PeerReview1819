@@ -3,22 +3,85 @@
   <Prefab>
     <Transform>
       <position>
-        <float>0.8135721</float>
-        <float>-1.94</float>
-        <float>2.82510734</float>
+        <float>1.27131343</float>
+        <float>-1.59000015</float>
+        <float>0.467773438</float>
       </position>
       <rotation>
-        <float>-0.4305107</float>
+        <float>1</float>
         <float>-0</float>
-        <float>0.9025855</float>
+        <float>-0</float>
         <float>-0</float>
       </rotation>
       <scale>
-        <float>0.700000167</float>
         <float>0.7</float>
-        <float>0.700000167</float>
+        <float>0.7</float>
+        <float>0.7</float>
       </scale>
     </Transform>
-    <ID>TestCube</ID>
+    <ID>TestCube2</ID>
+  </Prefab>
+  <Prefab>
+    <Transform>
+      <position>
+        <float>7.766544</float>
+        <float>-0.435044348</float>
+        <float>0.299987167</float>
+      </position>
+      <rotation>
+        <float>1</float>
+        <float>-0</float>
+        <float>-0</float>
+        <float>-0</float>
+      </rotation>
+      <scale>
+        <float>0.199999928</float>
+        <float>0.199999928</float>
+        <float>0.199999928</float>
+      </scale>
+    </Transform>
+    <ID>TestCube2</ID>
+  </Prefab>
+  <Prefab>
+    <Transform>
+      <position>
+        <float>6.523305</float>
+        <float>-0.435044318</float>
+        <float>0.618790269</float>
+      </position>
+      <rotation>
+        <float>1</float>
+        <float>-0</float>
+        <float>-0</float>
+        <float>-0</float>
+      </rotation>
+      <scale>
+        <float>0.199999988</float>
+        <float>0.199999988</float>
+        <float>0.199999988</float>
+      </scale>
+    </Transform>
+    <ID>TestCube2</ID>
+  </Prefab>
+  <Prefab>
+    <Transform>
+      <position>
+        <float>7.46885347</float>
+        <float>-0.435044318</float>
+        <float>1.3536799</float>
+      </position>
+      <rotation>
+        <float>1</float>
+        <float>-0</float>
+        <float>-0</float>
+        <float>-0</float>
+      </rotation>
+      <scale>
+        <float>0.199999988</float>
+        <float>0.199999988</float>
+        <float>0.199999988</float>
+      </scale>
+    </Transform>
+    <ID>TestCube2</ID>
   </Prefab>
 </SaveData>
