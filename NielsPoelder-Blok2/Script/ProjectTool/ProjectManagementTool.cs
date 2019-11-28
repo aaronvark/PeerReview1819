@@ -58,6 +58,7 @@ public class ProjectManagementTool
 
                         if (obj?.itemStatus == ManagementStatus.ToDo)
                         {
+                            // Saves ordening for the user of the tool
                             if (orderTypeInt == 0)
                             {
                                 GetList(obj, true);
@@ -106,7 +107,7 @@ public class ProjectManagementTool
                 {
                     foreach(char i in tempItemName)
                     {
-
+                        // checkt of er een "illegaal" character (/) in de naam zit en verwijdert deze voor de path
                         if (i.ToString() == "/")
                         {
                             tempItemName.Remove(i);
@@ -129,8 +130,7 @@ public class ProjectManagementTool
             case 3:
                 
                 GUILayout.Label("Edit Object", EditorStyles.boldLabel);
-
-
+                
                 editObject.itemName = EditorGUILayout.TextField("Task Name", editObject.itemName);
 
                 editObject.itemType = (ManagementType)EditorGUILayout.EnumPopup("Task Type", editObject.itemType);
@@ -143,6 +143,7 @@ public class ProjectManagementTool
                 GUI.color = thisWindow.RGBColor(127f, 191f, 63f);
                 if (GUILayout.Button("Complete Edit"))
                 {
+                    // Slaat de wijzigingen op en stuurt de gebruiker terug naar het main view tab.
                     managementbarInt = 0;
                     EditorUtility.SetDirty(editObject);
                     AssetDatabase.SaveAssets();
@@ -177,14 +178,14 @@ public class ProjectManagementTool
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("Task Type", EditorStyles.boldLabel);
         GUI.color = thisWindow.RGBColor(63, 127, 191);
-        GUILayout.TextField(_obj.itemType.ToString(), EditorStyles.helpBox, GUILayout.Width(120));
+        GUILayout.TextField(_obj.itemType.ToString(), EditorStyles.helpBox, GUILayout.Width(120)); // haalt de task naam op
         GUI.color = Color.white;
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("Task Description", EditorStyles.boldLabel);        
+        EditorGUILayout.PrefixLabel("Task Description", EditorStyles.boldLabel);     
         //GUILayout.Label(_obj.itemDescription, EditorStyles.textArea, GUILayout.ExpandWidth(false), GUILayout.Width(thisWindow.position.width - 370));
-        GUILayout.TextField(_obj.itemDescription, EditorStyles.textArea, GUILayout.ExpandWidth(false), GUILayout.Width(thisWindow.position.width - 380));
+        GUILayout.TextField(_obj.itemDescription, EditorStyles.textArea, GUILayout.ExpandWidth(false), GUILayout.Width(thisWindow.position.width - 380)); // haalt de task descriptie op
         EditorGUILayout.EndHorizontal();
 
 
@@ -199,6 +200,7 @@ public class ProjectManagementTool
             GUI.color = thisWindow.RGBColor(191f, 63f, 63f); 
             if (GUILayout.Button("Remove", GUILayout.ExpandHeight(true), GUILayout.Width(200)))
             {
+                // Verwijdert het object en uit de file database
                 string _temp = AssetDatabase.GetAssetPath(_obj);
                 thisWindow.managementObjects.Remove(_obj);
                 AssetDatabase.DeleteAsset(_temp);
@@ -208,7 +210,7 @@ public class ProjectManagementTool
             GUI.color = thisWindow.RGBColor(127f, 191f, 63f);
             if (GUILayout.Button("Complete",  GUILayout.ExpandHeight(true),  GUILayout.Width(200)))
             {
-                
+                // zet het object op complete en slaat de wijzigingen op
                 _obj.itemStatus = ManagementStatus.Completed;
                 EditorUtility.SetDirty(_obj);
                 AssetDatabase.SaveAssets();
