@@ -32,6 +32,9 @@ public class WorldVariablesEditor : EditorWindow {
         variableContainer = root.Q<VisualElement>("vars-container");
 
         LoadInitialVariables();
+        
+        // Subscribe to variable addition event
+        VariableCollection.Instance.VariableAdded += AddVarField;
     }
 
     private void LoadInitialVariables() {
@@ -68,17 +71,15 @@ public class WorldVariablesEditor : EditorWindow {
         var worldVars = VariableCollection.Instance;
 
         var varAdded = false;
-        var count = 0;
+        var count = 1;
         Guid id;
         while (!varAdded) {
             // Try to add number to the standard name until a name is found that has not yet been taken
-            var nameCopy = count == 0 ? varName : $"{varName} {count}";
+            var nameCopy = count == 1 ? varName : $"{varName} {count}";
             count++;
 
             varAdded = worldVars.AddEmptyVariable(nameCopy, type, out id);
         }
-
-        AddVarField(id);
     }
 
     private void AddVarField(Guid id) {

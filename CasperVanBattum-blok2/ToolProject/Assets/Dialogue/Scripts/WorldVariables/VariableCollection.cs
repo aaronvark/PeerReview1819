@@ -50,6 +50,10 @@ public class VariableCollection {
     /// </summary>
     [field: NonSerialized] public event Action CollectionChanged;
 
+    [field: NonSerialized] public event Action<Guid> VariableAdded;
+
+    [field: NonSerialized] public event Action<Guid> VariableRemoved;
+
     public override string ToString() {
         var msg = $"Contains {variables.Count} variables\n";
         msg = variables.Aggregate(msg,
@@ -70,6 +74,10 @@ public class VariableCollection {
 
     public string GetName(Guid id) {
         return variables[id].Name;
+    }
+
+    public WorldVariable GetVariable(Guid id) {
+        return variables[id];
     }
 
     public bool AddVariable(string name, string value, out Guid id) {
@@ -132,6 +140,7 @@ public class VariableCollection {
             id = newVariable.Guid;
             variables.Add(newVariable.Guid, newVariable);
             CollectionChanged?.Invoke();
+            VariableAdded?.Invoke(id);
 
             return true;
         }
@@ -156,6 +165,7 @@ public class VariableCollection {
 
         variables.Remove(id);
         CollectionChanged?.Invoke();
+        VariableRemoved?.Invoke(id);
     }
 
     public void ChangeType(Guid id, VariableType newType) {
@@ -163,14 +173,16 @@ public class VariableCollection {
             throw new InvalidOperationException("Tried to change type of a non-existant variable");
         }
 
-        var newValue = ConvertValue(variables[id].Value, variables[id].Type, newType);
         variables[id].Type = newType;
-        variables[id].Value = newValue;
 
         // Invoke change event
         CollectionChanged?.Invoke();
     }
 
+    public void SetValue(string name, object newValue) {
+        SetValue(GetGuidFromName(name), newValue);
+    }
+    
     public void SetValue(Guid id, object newValue) {
         // Check if a variable with the given name exists
         if (!VariableExists(id)) {
@@ -223,66 +235,17 @@ public class VariableCollection {
         return variables.Keys;
     }
 
+    public Guid GetGuidFromName(string name) {
+        // Finds the guid of the variable that matches the requested name
+        return variables.Single(pair => pair.Value.Name == name).Value.Guid;
+    }
+
     private bool NameExists(string name) {
         return variables.Keys.Any(key => variables[key].Name == name);
     }
 
-    public bool VariableExists(Guid id) {
+    private bool VariableExists(Guid id) {
         return variables.ContainsKey(id);
-    }
-
-    private static object ConvertValue(object value, VariableType oldType, VariableType newType) {
-        // Any type to string -> value.tostring()
-        if (newType == VariableType.String) {
-            return value.ToString();
-        }
-
-        try {
-            switch (oldType) {
-                //### String to any type
-                // string to bool -> parse to bool
-                case VariableType.String when newType == VariableType.Bool:
-                {
-                    // Simplified boolean expression for "TryParse(value, out res) ? res : false"
-                    return bool.TryParse((string) value, out var res) && res;
-                }
-                // string to long -> parse to long 
-                case VariableType.String when newType == VariableType.Long:
-                {
-                    return long.TryParse((string) value, out var res) ? res : 0L;
-                }
-                // string to double -> parse to double 
-                case VariableType.String when newType == VariableType.Double:
-                {
-                    return double.TryParse((string) value, out var res) ? res : 0d;
-                }
-                //### Numeric to numeric
-                // long to double -> cast to double
-                case VariableType.Long when newType == VariableType.Double:
-                    return Convert.ToDouble((long) value);
-                // double to long -> round and convert to long
-                case VariableType.Double when newType == VariableType.Long:
-                    return (long) Math.Round((double) value);
-                //### Numeric to bool
-                // long/double to bool -> check if larger than 0
-                case VariableType.Long when newType == VariableType.Bool:
-                    return (long) value > 0;
-                case VariableType.Double when newType == VariableType.Bool:
-                    return (double) value > 0;
-                // bool to long -> interpret the bool as a long so that false becomes 0 and true becomes 1
-                case VariableType.Bool when newType == VariableType.Long:
-                    return (bool) value ? 1L : 0L;
-                // bool to double -> false becomes 0 and true becomes 1
-                case VariableType.Bool when newType == VariableType.Double:
-                    return (bool) value ? 1d : 0d;
-                default:
-                    return null;
-            }
-        }
-        catch (InvalidCastException e) {
-            throw new InvalidCastException(
-                $"Failed to convert from {oldType} to {newType}. Value was {value} ({value.GetType()})", e);
-        }
     }
 
     #region SAVING
