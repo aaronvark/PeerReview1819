@@ -11,6 +11,7 @@ namespace EasyAI
     {
         private WayPointData wayPointData;
 
+        private List<Vector3> connectedPoints = new List<Vector3>();
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -43,23 +44,58 @@ namespace EasyAI
             wayPointData = (WayPointData)target;
             if (wayPointData.WayPoints.Count < 1) return;
 
-            EditorGUI.BeginChangeCheck();
-
             for (int i = 0; i < wayPointData.WayPoints.Count; i++)
             {
                 //ShowPoint(i, handlePositions[i]);
                 //GUI.SetNextControlName((i+1).ToString());
                 selectedIndex = i;
                 wayPointData.WayPoints[i] = Handles.PositionHandle(wayPointData.WayPoints[i], Quaternion.identity);
+                Handles.Label(wayPointData.WayPoints[i], i.ToString());
             }
-            if (EditorGUI.EndChangeCheck())
+
+            List<Vector3> wayPointsToArray = wayPointData.WayPoints;
+            // we store the start and end points of the line segments in this array
+            Vector3[] lineSegments = new Vector3[wayPointsToArray.ToArray().Length * 2];
+
+            int lastObject = wayPointsToArray.Count - 1;
+            Vector3 prevPoint;
+            if (wayPointsToArray[lastObject] != null)
             {
-                Undo.RecordObject(wayPointData, "Setting waypoint positions");
-                //wayPointData.WayPoints[selectedIndex] = handlePositions[selectedIndex];
+                prevPoint = wayPointsToArray[lastObject];
             }
+            else
+            {
+                prevPoint = Vector3.zero;
+            }
+            int pointIndex = 0;
+            for (int currObjectIndex = 0; currObjectIndex < wayPointsToArray.Count; currObjectIndex++)
+            {
+                // find the position of our connected object and store it
+                Vector3 currPoint;
+                if (wayPointsToArray[currObjectIndex] != null)
+                {
+                    currPoint = wayPointsToArray[currObjectIndex];
+                }
+                else
+                {
+                    currPoint = Vector3.zero;
+                }
+
+                // store the starting point of the line segment
+                lineSegments[pointIndex] = prevPoint;
+                pointIndex++;
+
+                // store the ending point of the line segment
+                lineSegments[pointIndex] = currPoint;
+                pointIndex++;
+
+                prevPoint = currPoint;
+            }
+            Handles.DrawLines(lineSegments);
         }
 
         /****/
+        //Future development
         //Trying out handle buttons ( Currently not using this code )
         private const float handleSize = 0.04f;
         private const float pickSize = 0.06f;

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WalkerNPC
   m_EditorClassIdentifier: 
   npcId: 4
-  npcName: Walker
+  npcName: TestSubject
   npcType: 0
   model: {fileID: -927199367670048503, guid: 41827ddb2b608844ea96d065f4e8f6f5, type: 3}
   animatorController: {fileID: 9100000, guid: 6a306060b37205f46b775c735ce3a74d, type: 2}

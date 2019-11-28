@@ -1,9 +1,9 @@
 {
     "Items": [
-        "{\"npcId\":\"4\",\"npcName\":\"Walker\",\"npcType\":0,\"model\":{\"instanceID\":12098},\"animatorController\":{\"instanceID\":11546},\"spawnPosition\":{\"instanceID\":12452},\"aiSystem\":{\"instanceID\":11280},\"settings\":[{\"instanceID\":9818},{\"instanceID\":11106},{\"instanceID\":10432},{\"instanceID\":11424}]}",
-        "{\"Mood\":1,\"Confidence\":0,\"WanderType\":0,\"CombatStyle\":0}",
-        "{\"Damage\":0.0,\"Health\":0.0,\"Range\":0.0,\"Speed\":0.0,\"AiType\":0}",
-        "{\"IdleAnimation\":{\"instanceID\":0},\"WalkAnimation\":{\"instanceID\":0},\"RunAnimation\":{\"instanceID\":0},\"AttackAnimation\":{\"instanceID\":0},\"DeathAnimation\":{\"instanceID\":0}}",
-        "{\"WanderType\":0,\"WayPoints\":[{\"x\":1.0,\"y\":-0.08000004291534424,\"z\":1.0}],\"WayPointIndex\":0}"
+        "{\"npcId\":\"1\",\"npcName\":\"Alien\",\"npcType\":1,\"model\":{\"instanceID\":11794},\"animatorController\":{\"instanceID\":11556},\"spawnPosition\":{\"instanceID\":13168},\"aiSystem\":{\"instanceID\":0},\"settings\":[{\"instanceID\":9818},{\"instanceID\":11106},{\"instanceID\":10432},{\"instanceID\":11424}]}",
+        "{\"Mood\":0,\"Confidence\":0,\"WanderType\":0,\"CombatStyle\":0}",
+        "{\"Damage\":0.0,\"Health\":0.0,\"Range\":0.0,\"Speed\":10.0,\"AiType\":0}",
+        "{\"IdleAnimation\":{\"instanceID\":11688},\"WalkAnimation\":{\"instanceID\":11662},\"RunAnimation\":{\"instanceID\":11662},\"AttackAnimation\":{\"instanceID\":12106},\"DeathAnimation\":{\"instanceID\":12254}}",
+        "{\"WanderType\":0,\"WayPoints\":[{\"x\":3.028578281402588,\"y\":1.0,\"z\":1.0},{\"x\":-3.320037603378296,\"y\":1.0,\"z\":7.159832000732422},{\"x\":-6.117410182952881,\"y\":1.0,\"z\":-0.530827522277832},{\"x\":-1.5986418724060059,\"y\":1.3600000143051148,\"z\":-3.4879894256591799}],\"WayPointIndex\":0}"
     ]
 }

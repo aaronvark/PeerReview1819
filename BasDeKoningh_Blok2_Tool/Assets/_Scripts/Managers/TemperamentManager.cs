@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 namespace EasyAI
 {
@@ -42,10 +43,10 @@ namespace EasyAI
             switch(wanderType)
             {
                 case WanderType.Random:
-                    return Random.Range(0, wayPointData.WayPoints.Count);
+                    return UnityEngine.Random.Range(0, wayPointData.WayPoints.Count);
                 case WanderType.Loop:
-                    var index = wayPointData.WayPoints.FindIndex(wp => wp.ToZeroY().Equals(nextPoint))+1;
-                    if(index > wayPointData.WayPoints.Count)
+                    var index = wayPointData.WayPoints.FindIndex(wp => wp.Equals(nextPoint))+1;
+                    if(index > wayPointData.WayPoints.Count-1)
                     {
                         return 0;
                     }
@@ -54,7 +55,15 @@ namespace EasyAI
                         return index;
                     }
                 case WanderType.Once:
-                    var incomingIndex = wayPointData.WayPoints.FindIndex(wp => wp.ToZeroY().Equals(nextPoint));
+                    int incomingIndex=0;
+                    try
+                    {
+                        incomingIndex = wayPointData.WayPoints.FindIndex(wp => wp.Equals(nextPoint));
+                    }
+                    catch(Exception e)
+                    {
+
+                    }
                     if (incomingIndex+1 > wayPointData.WayPoints.Count)
                     {
                         return incomingIndex;

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a085242fd0783724092136b82645bd45, type: 3}
+  m_Name: AlienNPC
+  m_EditorClassIdentifier: 
+  npcId: 1
+  npcName: Alien
+  npcType: 1
+  model: {fileID: -927199367670048503, guid: 5494d1e24de5f324992acde2402b347b, type: 3}
+  animatorController: {fileID: 9100000, guid: 6a306060b37205f46b775c735ce3a74d, type: 2}
+  spawnPosition: {fileID: 1208466664555354101, guid: af8d309582a88f646941f63bbcff0c6c,
+    type: 3}
+  aiSystem: {fileID: 0}
+  settings:
+  - {fileID: 11500000, guid: 02a798919c3503d4b83221e263e2e61f, type: 3}
+  - {fileID: 11500000, guid: a8c8d9bc2496c3a4886576aabc63661a, type: 3}
+  - {fileID: 11500000, guid: b675bfc66c58499408d69136714fa9be, type: 3}
+  - {fileID: 11500000, guid: 388cc45fac0c8f8408a17d2d296c32cb, type: 3}

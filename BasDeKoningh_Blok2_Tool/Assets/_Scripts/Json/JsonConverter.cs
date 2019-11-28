@@ -24,6 +24,20 @@ public static class JsonConverter<T>
         return list;
     }
 
+    public static T[] FromJsonArray(string jsonString, string path)
+    {
+        if(File.Exists(Application.persistentDataPath + path))
+        {
+            jsonString = File.ReadAllText(Application.persistentDataPath + path);
+        }
+        if(jsonString == null || jsonString == string.Empty)
+        {
+            return null;
+        }
+        T[] outPut = JsonHelper.FromJson<T>(jsonString);
+        return outPut;
+    }
+
     /// <summary>
     /// Serializes the list to a json string at given path
     /// </summary>

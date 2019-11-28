@@ -40,15 +40,7 @@ namespace EasyAI
 
         void OnGUI()
         {
-            EditorGUILayout.LabelField("Json Input: ", EditorStyles.boldLabel);
-            jsonInput = EditorGUILayout.TextField(jsonInput);
-            if(GUILayout.Button("Load Json File"))
-            {
-                if (jsonInput == null) return;
-                string scriptableObjectArea = string.Empty;
-                string[] inputs = jsonInput.Split(',');
 
-            }
             presetType = (PresetType)EditorGUILayout.EnumPopup("Preset Type:", presetType);
             switch (presetType)
             {
@@ -96,6 +88,25 @@ namespace EasyAI
                 {
                     DrawNPCSettings(InputScriptableObject as ScriptableNPC);
                 }
+                //Future development
+                /*
+            EditorGUILayout.LabelField("Json Input: ", EditorStyles.boldLabel);
+            if (GUILayout.Button("Load Json File"))
+            {
+
+                jsonInput = EditorUtility.OpenFilePanel("Load Json File", "/_Scripts/Json/", ".JSON");
+                string scriptableObjectArea = string.Empty;
+
+                scriptableObjectArea = File.ReadAllText(jsonInput);
+
+                UnityEngine.Object[] inputs = JsonConverter<UnityEngine.Object>.FromJsonArray(scriptableObjectArea, "/SaveData.json");
+                for(int cmpIndex = 0; cmpIndex < settingTypes.Count; cmpIndex++)
+                {
+                    var cmp = currentNPC.GetComponent(settingTypes[cmpIndex]);
+                    cmp = inputs[cmpIndex] as Component;
+                }
+                Debug.Log(inputs[0]);
+            }*/
                 foreach (var type in settingTypes)
                 {
                     if (!checker.ContainsKey(type.FullName))
@@ -130,6 +141,10 @@ namespace EasyAI
                         HorizontalLine(Color.grey, horizontalLine);
                     }
                 }
+            }
+            else
+            {
+                settingTypes = new List<Type>();
             }
         }
 
@@ -166,7 +181,6 @@ namespace EasyAI
         {
             try
             {
-                UnityEngine.Assertions.Assert.IsNull(npc.settings);
                 foreach (var setting in npc.settings)
                 {
                     settingTypes.Add(setting.ObjectToClassType());
@@ -195,6 +209,11 @@ namespace EasyAI
             try
             {
                 newNpc.name = npc.NpcName;
+                if(newNpc.GetComponent<Animator>() == null)
+                {
+                    var npcAnim = newNpc.AddComponent<Animator>();
+                    npcAnim.applyRootMotion = false;
+                }
                 newNpc.GetComponent<Animator>().runtimeAnimatorController = npc.AnimatorController;
             }
             catch(Exception e)

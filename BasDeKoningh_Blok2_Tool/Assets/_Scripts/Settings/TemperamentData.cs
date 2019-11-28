@@ -17,7 +17,6 @@ namespace EasyAI
         [SerializeField]
         public CombatStyle CombatStyle;
 
-
         private void OnDrawGizmos()
         {
             // Draw a yellow sphere at the transform's position
