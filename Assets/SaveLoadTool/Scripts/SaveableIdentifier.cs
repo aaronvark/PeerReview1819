@@ -21,5 +21,12 @@ namespace Common.SaveLoadSystem
             get { return _componentSave; } 
             set { _componentSave = value; }
         }
+
+        public bool _hasChanged;
+        public bool hasChanged 
+        { 
+            get { return _hasChanged; } 
+            set { _hasChanged = value; }
+        }
     }
 }

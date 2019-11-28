@@ -13,7 +13,7 @@ namespace Common.SaveLoadSystem
         /// returns Name, AssemblyName, Value
         /// </summary>
         /// <param name="component"></param>
-        /// <returns></returns>
+        /// <returns>Name, AssemblyName, Value</returns>
         public static List<System.Tuple<string, string, string>> GetVariableNames(Component component)
         {
             List<System.Tuple<string, string, string>> variableNamesValues = new List<System.Tuple<string, string, string>>();
@@ -38,8 +38,6 @@ namespace Common.SaveLoadSystem
 
             return variableNamesValues;
         }
-
-
 
         public static void SetComponentVarTo(Component currentComponent, string varName, object value)
         {

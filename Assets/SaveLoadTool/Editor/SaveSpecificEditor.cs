@@ -9,19 +9,27 @@ namespace Common.SaveLoadSystem
     { 
         private static Iidentifier identifier;
         private static Vector2 scrollPosition;
-        private static Component[] components;
-        private static List<ComponentSave> componentSaves = new List<ComponentSave>();
+        private static List<Component> components;
+        private static List<ComponentSave> componentSaves;
         private static bool closeAllButton, saveButton = false;
 
         public static void ShowWindow(GameObject obj)
         {
-            GetWindow<SaveSpecificEditor>(true, "Save specific", true);
             identifier = obj.GetComponent<Iidentifier>();
-            components = obj.GetComponents<Component>();
+            components = new List<Component>();
+            componentSaves = new List<ComponentSave>();
+            foreach (Component c in obj.GetComponents<Component>())
+            {
+                if (c.GetType() != typeof(SaveableIdentifier))
+                {
+                    components.Add(c);
+                }
+            }
+            GetWindow<SaveSpecificEditor>(true, "Save specific", true);
 
             if (identifier.componentSaves == null)
             {
-                for (int i = 0; i < components.Length; i++)
+                for (int i = 0; i < components.Count; i++)
                 {
                     if (components[i].GetType() != typeof(SaveableIdentifier))
                     {
@@ -82,6 +90,7 @@ namespace Common.SaveLoadSystem
             if (saveButton)
             {
                 SaveToIdentifier();
+                Close();
             }
             GUILayout.EndScrollView();
         }
@@ -112,6 +121,7 @@ namespace Common.SaveLoadSystem
             }
 
             identifier.componentSaves = componentSaves;
+            identifier.hasChanged = true;
         }
     }
 

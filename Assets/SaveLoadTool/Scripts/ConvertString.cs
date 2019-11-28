@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class ConvertString
 {
-    private const string Vector3Name = "Vector3";
-    private const string QuaternionName = "Quaternion";
+    #region Typename strings
+    private const string VECTOR3NAME = "Vector3";
+    private const string QUATERNIONNAME = "Quaternion";
+    private const string INTNAME = "int";
+    private const string FLOATNAME = "float";
+    #endregion
 
     public static object ThisType<T>(string value, T toType) where T : System.Type
     {
         switch (toType.Name)
         {
-            case Vector3Name:
+            case VECTOR3NAME:
                 return ToVector3(value);
-            case QuaternionName:
+            case QUATERNIONNAME:
                 return ToQuaternion(value);
+            case INTNAME:
+                return (int)ToFloat(value);
+            case FLOATNAME:
+                return ToFloat(value);
             default:
                 break;
         }
@@ -23,22 +31,15 @@ public class ConvertString
         return null;
     }
 
-    public static Vector3 ToVector3(string text)
+    #region ConvertTO functions
+    private static Vector3 ToVector3(string text)
     {
         string[] splitText = TrimSplit(text);
         Vector3 vector = new Vector3();
 
         for (int i = 0; i < splitText.Length; i++)
         {
-            string[] splitValue = splitText[i].Split('.');
-            float nFloat;
-            if (splitValue.Length < 2)
-            {
-                nFloat = float.Parse(splitText[i]);
-            } else
-            {
-                nFloat = float.Parse(splitText[i]) / Mathf.Pow(10, splitValue[1].Length);
-            }
+            float nFloat = ToFloat(splitText[i]);
 
             switch (i)
             {
@@ -66,15 +67,7 @@ public class ConvertString
 
         for (int i = 0; i < splitText.Length; i++)
         {
-            string[] splitValue = splitText[i].Split('.');
-            float nFloat;
-            if (splitValue.Length < 2)
-            {
-                nFloat = float.Parse(splitText[i]);
-            } else
-            {
-                nFloat = float.Parse(splitText[i]) / Mathf.Pow(10, splitValue[1].Length);
-            }
+            float nFloat = ToFloat(splitText[i]);
 
             switch (i)
             {
@@ -97,6 +90,22 @@ public class ConvertString
 
         return quaternion;
     }
+
+    private static float ToFloat(string text)
+    {
+        string[] splitValue = text.Split('.');
+        float nFloat;
+        if (splitValue.Length < 2)
+        {
+            nFloat = float.Parse(text);
+        } else
+        {
+            nFloat = float.Parse(text) / Mathf.Pow(10, splitValue[1].Length);
+        }
+
+        return nFloat;
+    }
+    #endregion
 
     private static string[] TrimSplit(string text)
     {

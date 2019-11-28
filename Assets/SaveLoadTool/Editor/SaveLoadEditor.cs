@@ -6,19 +6,19 @@ namespace Common.SaveLoadSystem
 {
 
     [InitializeOnLoad]
-    static class MyHierarchyIcons
+    static class HierarchyIcons
     {
         static Texture2D texturePanel;
         static float hierarchyWindowWidth;
 
-        static MyHierarchyIcons()
+        static HierarchyIcons()
         {
             // Init
-            texturePanel = AssetDatabase.LoadAssetAtPath("Assets/SaveLoadTool/save_icon.png", typeof(Texture2D)) as Texture2D;
-            EditorApplication.hierarchyWindowItemOnGUI += HierarchyItemCB;
+            texturePanel = AssetDatabase.LoadAssetAtPath("Assets/SaveLoadTool/save_icon.png", typeof(Texture2D)) as Texture2D; //TODO: find the right path
+            EditorApplication.hierarchyWindowItemOnGUI += HierarchyItem;
         }
 
-        static void HierarchyItemCB(int instanceID, Rect selectionRect)
+        static void HierarchyItem(int instanceID, Rect selectionRect)
         {
             GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
 
@@ -52,17 +52,32 @@ namespace Common.SaveLoadSystem
             {
                 identifier = obj.AddComponent<SaveableIdentifier>();
                 identifier.id = SaveLoadSystem.GetId();
+                SaveSpecificEditor.ShowWindow(obj);
             } else
             {
                 Object.DestroyImmediate((SaveableIdentifier)identifier);
+                SaveLoadSystem.RemoveFromXML();
             }
         }
 
         [MenuItem("GameObject/Save specific", false, 17)]
-        static void SaveSpecific(MenuCommand command)
+        static void SaveWindow(MenuCommand command)
         {
             GameObject obj = (GameObject)command.context;
             SaveSpecificEditor.ShowWindow(obj);
+        }
+
+        [MenuItem("GameObject/Save specific", true)]
+        static bool ValidateSaveWindow(MenuCommand command)
+        {
+            GameObject obj = (GameObject)command.context;
+            return obj.GetComponent<SaveableIdentifier>() != null;
+        }
+
+        [MenuItem("Edit/Save all saveables &s", false, 1)]
+        static void SaveObjectToXML()
+        {
+            SaveLoadSystem.ConvertAllObjectsToXML();
         }
     }
 }

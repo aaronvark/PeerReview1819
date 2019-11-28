@@ -5,6 +5,6 @@ namespace Common.SaveLoadSystem
     {
         int id { get; set; }
         List<ComponentSave> componentSaves { get; set; }
-        
+        bool hasChanged { get; set; }
     }
 }
