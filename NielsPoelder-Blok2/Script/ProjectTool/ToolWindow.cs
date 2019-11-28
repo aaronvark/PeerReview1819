@@ -20,10 +20,10 @@ public class ToolWindow : EditorWindow
     
     ProjectManagementTool ManagementTool = new ProjectManagementTool();
 
-    [MenuItem("Window/Project Tool")]
+    [MenuItem("Window/The “Swiss” Project Utility Tool")]
     public static void ShowWindow()
     {
-        EditorWindow.GetWindow<ToolWindow>("Project Tool");
+        EditorWindow.GetWindow<ToolWindow>("The “Swiss” Project Utility Tool");
         
     }
 

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97fd65d451d07a84399e9c148b4f8256, type: 3}
-  m_Name: Make the character model
+  m_Name: Add character animations
   m_EditorClassIdentifier: 
-  itemName: Make the character model
-  itemStatus: 1
+  itemName: Add character animations
+  itemStatus: 0
   itemType: 0
-  itemDescription: Create the character model in the style of its original concept
+  itemDescription: Add the jump, run, sprint and hit animations for the character

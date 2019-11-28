@@ -9,7 +9,7 @@ public class ProjectManagementTool
     public ToolWindow thisWindow;
 
     private int managementbarInt = 0;
-    private string[] managementbarStrings = { "To Do", "Completed", "Create New" };
+    private string[] managementbarStrings = { "Working on", "Completed", "Create New" };
 
 
     private int orderTypeInt = 0;
@@ -45,6 +45,7 @@ public class ProjectManagementTool
 
         switch (managementbarInt)
         {
+            // displayed alle scriptable objects
             case 0:
                 if (thisWindow.managementObjects.Count > 0)
                 {
@@ -83,7 +84,7 @@ public class ProjectManagementTool
                     EditorGUILayout.EndScrollView();
                 }
                 break;
-
+                // displayed alle voltooide scriptable objects
             case 1:
                 if (thisWindow.managementObjects.Count > 0)
                 {
@@ -96,17 +97,25 @@ public class ProjectManagementTool
                     }
                 }
                 break;
-
+                // displayed het tab waar je de scriptable objects kan aanmaken
             case 2:
-                // hier komt t deel waar je een nieuw object aan kan maken en toevoegen
                 tempItemName = EditorGUILayout.TextField("Task Name", tempItemName);
                 tempItemManagementtype = (ManagementType)EditorGUILayout.EnumPopup("Task Type", tempItemManagementtype);
                 tempItemDescription = EditorGUILayout.TextField("Task Description", tempItemDescription);
                 if (GUILayout.Button("ADD"))
                 {
+                    foreach(char i in tempItemName)
+                    {
+
+                        if (i.ToString() == "/")
+                        {
+                            tempItemName.Remove(i);
+                        }
+                    }
 
 
-                    ManagementObject temp = MakeScriptableObject.CreateMyAsset(tempItemName, ManagementStatus.ToDo, tempItemManagementtype, tempItemDescription);
+
+                    ManagementObject temp = MakeScriptableObject.CreateObject(tempItemName, ManagementStatus.ToDo, tempItemManagementtype, tempItemDescription);
 
                     thisWindow.managementObjects.Add(temp);
                     tempItemName = "";
@@ -116,6 +125,7 @@ public class ProjectManagementTool
                 }
 
                 break;
+                // displayed het tab waar de scriptable objects kunnen worden geëdit
             case 3:
                 
                 GUILayout.Label("Edit Object", EditorStyles.boldLabel);

@@ -6,7 +6,7 @@ using UnityEditor;
 public class MakeScriptableObject : Editor
 {
     [MenuItem("Assets/Create/ScriptableObjects/SpawnManagerScriptableObject")]
-    public static ManagementObject CreateMyAsset(string _name, ManagementStatus _status, ManagementType _type, string _description)
+    public static ManagementObject CreateObject(string _name, ManagementStatus _status, ManagementType _type, string _description)
     {
         ManagementObject asset = ScriptableObject.CreateInstance<ManagementObject>();
 
