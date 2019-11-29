@@ -8,25 +8,26 @@ namespace Common.SaveLoadSystem
     [InitializeOnLoad]
     static class HierarchyIcons
     {
+        //This code is yoinked from the unity form https://answers.unity.com/questions/431952/how-to-show-an-icon-in-hierarchy-view.html
         static Texture2D texturePanel;
         static float hierarchyWindowWidth;
 
         static HierarchyIcons()
         {
-            // Init
             texturePanel = AssetDatabase.LoadAssetAtPath("Assets/SaveLoadTool/save_icon.png", typeof(Texture2D)) as Texture2D; //TODO: find the right path
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyItem;
         }
 
-        static void HierarchyItem(int instanceID, Rect selectionRect)
+        private static void HierarchyItem(int instanceID, Rect selectionRect)
         {
             GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
 
+            //Check if scene
             if (go != null)
             {
+                //Check it needs an icon
                 if (go.GetComponent<SaveableIdentifier>())
                 {
-                    // place the icon to the right of the list:
                     Rect r = new Rect(selectionRect);
                     r.x = hierarchyWindowWidth;
                     r.width = 20;
@@ -35,6 +36,7 @@ namespace Common.SaveLoadSystem
                 }
             } else
             {
+                //If scene then I will set the position of the icons
                 hierarchyWindowWidth = selectionRect.width;
             }
         }
@@ -43,7 +45,7 @@ namespace Common.SaveLoadSystem
     static class SaveCommand
     {
         [MenuItem("GameObject/Saveable", false, 17)]
-        static void MakeSaveable(MenuCommand command)
+        private static void MakeSaveable(MenuCommand command)
         {
             GameObject obj = (GameObject)command.context;
             Iidentifier identifier = obj.GetComponent<SaveableIdentifier>();
@@ -51,33 +53,39 @@ namespace Common.SaveLoadSystem
             if (identifier == null)
             {
                 identifier = obj.AddComponent<SaveableIdentifier>();
-                identifier.id = SaveLoadSystem.GetId();
+                identifier.id = SaveLoadSystem.GetXMLid();
                 SaveSpecificEditor.ShowWindow(obj);
             } else
             {
                 Object.DestroyImmediate((SaveableIdentifier)identifier);
-                SaveLoadSystem.RemoveFromXML();
+                SaveLoadSystem.Save();
             }
         }
 
         [MenuItem("GameObject/Save specific", false, 17)]
-        static void SaveWindow(MenuCommand command)
+        private static void SaveWindow(MenuCommand command)
         {
             GameObject obj = (GameObject)command.context;
             SaveSpecificEditor.ShowWindow(obj);
         }
 
         [MenuItem("GameObject/Save specific", true)]
-        static bool ValidateSaveWindow(MenuCommand command)
+        private static bool ValidateSaveWindow(MenuCommand command)
         {
             GameObject obj = (GameObject)command.context;
             return obj.GetComponent<SaveableIdentifier>() != null;
         }
 
         [MenuItem("Edit/Save all saveables &s", false, 1)]
-        static void SaveObjectToXML()
+        private static void SaveObjectsToXML()
         {
-            SaveLoadSystem.ConvertAllObjectsToXML();
+            SaveLoadSystem.Save();
+        }
+
+        [MenuItem("Edit/Load all", false, 2)]
+        private static void LoadObjects()
+        {
+            SaveLoadSystem.Load();
         }
     }
 }

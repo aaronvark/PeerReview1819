@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ConvertString
 {
@@ -27,11 +25,19 @@ public class ConvertString
                 break;
         }
 
-        Debug.LogError("This type is not yet supported!");
+        Debug.LogError("This type is not yet supported!\n You can add a Convertion in this script, see the example");
         return null;
     }
 
+    //Write example in this region
     #region ConvertTO functions
+    /*EXAMPLE CONVERT FUNCTION
+     * private static <TYPE> To<TYPE> (string text){
+     * Code to turn from string to <TYPE>
+     * }
+     * When done you can add this function to the ThisType<T> function (don't forget to add a const string for your <TYPE> name
+         */
+
     private static Vector3 ToVector3(string text)
     {
         string[] splitText = TrimSplit(text);

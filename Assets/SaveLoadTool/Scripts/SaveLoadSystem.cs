@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEditor;
 using System.Xml;
-using System.Linq;
 
 namespace Common.SaveLoadSystem
 {
@@ -20,21 +18,33 @@ namespace Common.SaveLoadSystem
         private static string idPrefix = "id";
         #endregion
 
-        [RuntimeInitializeOnLoadMethod]
-        public static void TestMethod()
+        static SaveLoadSystem()
         {
-            allIdentifiersInScene = Object.FindObjectsOfType<SaveableIdentifier>();
-
-            for (int i = 1; i < GetId(false) + 1; i++)
+            try
             {
-                LoadObject(i);
+                xmlDocument.Load(saveFileName);
+                rootNode = xmlDocument.FirstChild;
+            } catch (FileNotFoundException)
+            {
+                CreateNewFile();
             }
-            //ConvertAllObjectsToXML();
-
         }
 
         #region Load functions
-        public static void LoadObject(int id)
+        /// <summary>
+        /// Instantiates/overwrites all currently saved objects
+        /// </summary>
+        public static void Load()
+        {
+            allIdentifiersInScene = Object.FindObjectsOfType<SaveableIdentifier>();
+
+            for (int i = 1; i < GetXMLid(false) + 1; i++)
+            {
+                LoadObject(i);
+            }
+        }
+
+        private static void LoadObject(int id)
         {
             if (GetIdNode(id) == null)
             {
@@ -76,20 +86,16 @@ namespace Common.SaveLoadSystem
         #endregion
 
         #region Save functions
-
-        static SaveLoadSystem()
+        /// <summary>
+        /// Saves all saveable objects in the current open scenes
+        /// </summary>
+        public static void Save()
         {
-            try
-            {
-                xmlDocument.Load(saveFileName);
-                rootNode = xmlDocument.FirstChild;
-            } catch (FileNotFoundException)
-            {
-                CreateNewFile();
-            }
+            CreateNewFile();
+            ConvertAllObjectsToXML(true);
         }
 
-        public static void ConvertAllObjectsToXML(bool checkForChange = false)
+        private static void ConvertAllObjectsToXML(bool checkForChange = false)
         {
             allIdentifiersInScene = Object.FindObjectsOfType<SaveableIdentifier>();
 
@@ -103,13 +109,6 @@ namespace Common.SaveLoadSystem
             }
 
             xmlDocument.Save(saveFileName);
-        }
-
-        public static void RemoveFromXML()
-        {
-            Debug.Log("Removed from XML");
-            CreateNewFile();
-            ConvertAllObjectsToXML(true);
         }
 
         private static void AddToSave(GameObject obj, int id)
@@ -176,6 +175,18 @@ namespace Common.SaveLoadSystem
         #endregion
 
         #region General functions
+        public static int GetXMLid(bool forSaveable = true)
+        {
+            string id = rootNode.Attributes["id"].Value;
+            int newValue = int.Parse(id);
+            if (forSaveable)
+            {
+                newValue += 1;
+                rootNode.Attributes["id"].Value = newValue.ToString();
+                xmlDocument.Save(saveFileName);
+            }
+            return newValue;
+        }
 
         private static XmlNode GetCreateIdNode(int id)
         {
@@ -209,24 +220,6 @@ namespace Common.SaveLoadSystem
             }
 
             return null;
-        }
-
-        private static string NameToXMLComponent(string componentName)
-        {
-            return "component[@name=" + componentName + "][1]";
-        }
-
-        public static int GetId(bool forSaveable = true)
-        {
-            string id = rootNode.Attributes["id"].Value;
-            int newValue = int.Parse(id);
-            if (forSaveable)
-            {
-                newValue += 1;
-                rootNode.Attributes["id"].Value = newValue.ToString();
-                xmlDocument.Save(saveFileName);
-            }
-            return newValue;
         }
 
         private static void CreateNewFile()
