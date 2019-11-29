@@ -13,8 +13,8 @@ namespace SpellCreator {
 
     public static class EventSaver {
 
-        public static string SAVED_DATA_DIR = "Assets/Tool/Data/Saved/";
-        public static string TOOL_DATA_DIR = "Assets/Tool/Data/Tool/";
+        public const string SAVED_DATA_DIR = "Assets/Tool/Data/Saved/";
+        public const string TOOL_DATA_DIR = "Assets/Tool/Data/Tool/";
 
         /* Description:
         // Events should be saved as XML, preferably like this 
@@ -63,7 +63,7 @@ namespace SpellCreator {
         }
 
 
-        [System.Obsolete("This method should no longer be used, use SaveEventAsObject()",true)]
+        [System.Obsolete("This method is no longer used and probably not fully functional",true)]
         public static void SaveEventAsXML(Event _event) {
             Debug.Log("Saving: " + _event.eventName);
 
@@ -99,7 +99,7 @@ namespace SpellCreator {
                         }
 
                     } else {//Is a Modifier
-                        //TODO: Add if statement
+                        //DO: Add if statement
 
                         XmlNode modifierNode = xmlDocument.CreateElement("Modifier");
                         actionNode.AppendChild(modifierNode);
@@ -128,7 +128,7 @@ namespace SpellCreator {
             xmlDocument.Save(SAVED_DATA_DIR + _event.eventName + ".xml");
         }
 
-        [System.Obsolete("This method should no longer be used, use LoadEventAsObject()", true)]
+        [System.Obsolete("This method is no longer used and probably not fully functional", true)]
         public static Event LoadEventAsXML(string fileName) {
             Debug.Log("Attempting to Load: " + fileName);
 
@@ -170,7 +170,7 @@ namespace SpellCreator {
                             fieldinfo.SetValue(newAction, o);
                         } else {
                             foreach(XmlNode modifierInfo in actionInfo.ChildNodes) {
-                                //TODO: Modifier Loading Logic
+                                //DO: Modifier Loading Logic
                             }
                         }
                     }

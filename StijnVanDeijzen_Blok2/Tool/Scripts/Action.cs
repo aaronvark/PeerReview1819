@@ -4,7 +4,12 @@ using UnityEngine;
 
 namespace SpellCreator {
 
-    public abstract class Action : ScriptableObject{
-        public abstract void Act();
+    [System.Serializable]
+    public class Action : ScriptableObject{
+        //TODO Modifier List
+
+        public virtual void Act(GameObject g) {
+            Debug.Log("Base Action triggered from " + g);
+        }
     }
 }

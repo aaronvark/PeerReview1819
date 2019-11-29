@@ -10,25 +10,29 @@ public class EventEditor : EditorWindow {
 
     private static SpellCreator.Event editingEvent;
     private static int selectedEvent = 0;
+    private static int selectedNewAction = 0;
     private static bool addActionClicked = false;
     private static string createEventText = "";
     private static Vector2 scrollPos = Vector2.zero;
-    private static List<Action> removeActions = new List<Action>();
+
+    private const string IconPath = "Assets/Tool/Icons/";
+    private static Texture upIcon;
+    private static Texture downIcon;
 
 
     [MenuItem("Window/Event Editor")]
     static void Init() {
+        upIcon = (Texture) AssetDatabase.LoadAssetAtPath(IconPath + "upIcon.png", typeof(Texture));
+        downIcon = (Texture) AssetDatabase.LoadAssetAtPath(IconPath + "downIcon.png", typeof(Texture));
         EventEditor window = (EventEditor)EditorWindow.GetWindow(typeof(EventEditor));
     }
 
-    void Update() {
-        while(removeActions.Count > 0) {
-            editingEvent.RemoveAction(removeActions[0]);
-            removeActions.RemoveAt(0);
-        }
-    }
-
     void OnGUI() {
+        if (upIcon == null)
+            upIcon = (Texture)AssetDatabase.LoadAssetAtPath(IconPath + "upIcon.png", typeof(Texture));
+        if(downIcon == null)
+            downIcon = (Texture)AssetDatabase.LoadAssetAtPath(IconPath + "downIcon.png", typeof(Texture));
+
 
         scrollPos = GUILayout.BeginScrollView(scrollPos);
 
@@ -40,14 +44,9 @@ public class EventEditor : EditorWindow {
         var files = directory.GetFiles();
 
         if(files.Length > 0) {
-            //TODO Move this outside OnGui()
+            //FIX Move this outside OnGui()
 
-            List<string> options = new List<string>();
-
-            //foreach(FileInfo file in files) {
-            //    if(file.Extension == ".xml")
-            //        options.Add(file.Name.Substring(0, file.Name.Length - 4));
-            //}
+            List<string> options = new List<string>();            
 
             string[] guids = AssetDatabase.FindAssets("t:Event", new string[] { EventSaver.SAVED_DATA_DIR.TrimEnd('/') }); ;
             foreach(string guid in guids) {
@@ -64,6 +63,7 @@ public class EventEditor : EditorWindow {
             } else if(editingEvent.eventName != options[selectedEvent]) {
                 editingEvent = EventSaver.LoadEventAsObject(options[selectedEvent]);
             }
+            //FIX Save selected to file for later
         }
 
 
@@ -89,7 +89,8 @@ public class EventEditor : EditorWindow {
             if(editingEvent.actions != null) {
                 foreach(Action action in editingEvent.actions) {
                     if(action != null)
-                        ActionWindow(action);
+                        if(ActionWindow(action))
+                            break;
                 }
             }
         }
@@ -109,17 +110,40 @@ public class EventEditor : EditorWindow {
         GUILayout.EndScrollView();
     }
 
-    static void ActionWindow(Action _action) {
+    //return true if collection is modified
+    static bool ActionWindow(Action _action) {
         GUILayout.BeginHorizontal();
         GUILayout.Label(_action.GetType().Name);
+
+        GUIStyle orderButtonStyle = new GUIStyle(GUI.skin.GetStyle("button"));
+        orderButtonStyle.fixedWidth = 20f;
+        orderButtonStyle.fixedHeight = 20f;
+
+        if (GUILayout.Button(new GUIContent(upIcon), orderButtonStyle))
+        {
+            MoveActionUp(editingEvent.actions.IndexOf(_action));
+            return true;
+        }
+        if (GUILayout.Button(downIcon, orderButtonStyle))
+        {
+            MoveActionUp(editingEvent.actions.IndexOf(_action) + 1);
+            return true;
+        }
+        GUILayout.FlexibleSpace();
 
         GUIStyle removeButtonStyle = new GUIStyle(GUI.skin.GetStyle("button"));
         removeButtonStyle.fixedWidth = 80f;
 
         if(GUILayout.Button("Remove", removeButtonStyle)) {
-            removeActions.Add(_action);
+            editingEvent.RemoveAction(_action);
+
+            string pathToDelete = AssetDatabase.GetAssetPath(_action);
+            AssetDatabase.DeleteAsset(pathToDelete);
+            return true;
         }
         GUILayout.EndHorizontal();
+
+        //EditorGUILayout.HelpBox(_action.ActionToolTip, MessageType.Info);
 
         Separator(0, 1);
 
@@ -131,6 +155,7 @@ public class EventEditor : EditorWindow {
         //TODO: Create Modifier Editor
 
         Separator(5, 2);
+        return false;
     }
 
     static void AddActionWindow() {
@@ -144,14 +169,14 @@ public class EventEditor : EditorWindow {
 
         GUILayout.Label("Add Action", "boldLabel");
 
-        int selected = 0;
+
         List<string> options = new List<string>();
         List<System.Type> types = ActionTracker.FindActions();
 
         foreach(System.Type type in types) {
             options.Add(type.Name);
         }
-        selected = EditorGUILayout.Popup("Action to Add", selected, options.ToArray());
+        selectedNewAction = EditorGUILayout.Popup("Action to Add", selectedNewAction, options.ToArray());
         GUILayout.BeginHorizontal();
         if(GUILayout.Button("Cancel")) {
             addActionClicked = false;
@@ -160,8 +185,9 @@ public class EventEditor : EditorWindow {
             addActionClicked = false;
             Action newAction = null;
 
-            newAction = (Action)AssetDatabase.LoadAssetAtPath(EventSaver.TOOL_DATA_DIR + options[selected] + ".asset", typeof(ScriptableObject));
-            if(newAction == null) { Debug.LogError("Could not load asset at: " + EventSaver.TOOL_DATA_DIR + options[selected]); }
+            //TODO: automatically create the object?
+            newAction = (Action)AssetDatabase.LoadAssetAtPath(EventSaver.TOOL_DATA_DIR + options[selectedNewAction] + ".asset", typeof(ScriptableObject));
+            if(newAction == null) { Debug.LogError("Could not load asset at: " + EventSaver.TOOL_DATA_DIR + options[selectedNewAction]); }
 
             newAction = ScriptableObject.Instantiate(newAction);//DISCUSS: memory leak or auto-collected?
             editingEvent.AddAction(newAction);
@@ -180,9 +206,10 @@ public class EventEditor : EditorWindow {
 
     }
     public static void CreateEvent(string _name) {
+        // make sure to save old, shouldn't be neccessary anymore
         if(editingEvent != null) {
             if(editingEvent.eventName != null) {
-                EventSaver.SaveEventAsObject(editingEvent);// make sure to save old
+                EventSaver.SaveEventAsObject(editingEvent);
             }
         }
 
@@ -192,6 +219,15 @@ public class EventEditor : EditorWindow {
         EventSaver.SaveEventAsObject(editingEvent);
         createEventText = "";
 
-        //TODO Make the new event the selected event
+        //FIX Make the new event the selected event
+    }
+
+    //to move an action down, pass the index + 1
+    public static void MoveActionUp(int index) {
+        if(index > 0 && index < editingEvent.actions.Count) {
+            Action tempAction = editingEvent.actions[index-1];
+            editingEvent.actions[index - 1] = editingEvent.actions[index];
+            editingEvent.actions[index] = tempAction;
+        }
     }
 }
