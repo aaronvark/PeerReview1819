@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -235,16 +236,27 @@ public class VariableCollection {
         return variables.Keys;
     }
 
+    public IEnumerable<Guid> OfType(params VariableType[] types) {
+//        return variables.Where(pair => types.Contains(pair.Value.Type) ? pair.Key : default);
+        var ids = variables.Where(pair => types.Contains(pair.Value.Type));
+        return ids.Select(pair => pair.Key);
+    }
+    
     public Guid GetGuidFromName(string name) {
         // Finds the guid of the variable that matches the requested name
-        return variables.Single(pair => pair.Value.Name == name).Value.Guid;
+        try {
+            return variables.Single(pair => pair.Value.Name == name).Value.Guid;
+        }
+        catch (InvalidOperationException e) {
+            throw new InvalidOperationException($"No element with name \"{name}\" exists");
+        }
     }
 
     private bool NameExists(string name) {
         return variables.Keys.Any(key => variables[key].Name == name);
     }
 
-    private bool VariableExists(Guid id) {
+    public bool VariableExists(Guid id) {
         return variables.ContainsKey(id);
     }
 

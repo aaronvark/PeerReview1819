@@ -1,11 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using WorldVariables;
 
 namespace Dialogue {
 public class ConditionalTextNode : TextNode {
-    [SerializeField] private bool condition;
+    public Guid VarId { get; set; }    
 
     protected override DialogueBaseNode Get() {
-        return condition ? this : GetNextNode();
+        if (VariableCollection.Instance.VariableExists(VarId)) {
+            var condition = (bool) VariableCollection.Instance.GetValue(VarId);
+
+            return condition ? this : GetNextNode();
+        }
+        
+        return GetNextNode();
     }
 }
 }

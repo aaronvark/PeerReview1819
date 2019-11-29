@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using WorldVariables;
 
 namespace Dialogue {
 /// <summary>
@@ -33,6 +35,7 @@ public class Conversation {
     public void NextNode() {
         current = current.GetNextNode();
 
+        // TODO replace this with an event that an interface can react to
         DisplayNode(current);
 
         PeekNext();
@@ -46,9 +49,24 @@ public class Conversation {
     }
 
     private void DisplayNode(DialogueBaseNode node) {
-        if (node is TextNode dialogueNode) {
-            Debug.Log(dialogueNode.Text);
+        if (node is TextNode) {
+            if (node is IParsable parsableNode) {
+                // TODO create an interface (or interface API) that will display the node instead of a debug statement
+                Debug.Log(ParseText(parsableNode.Text));
+            }
         }
+    }
+
+    private static string ParseText(string text) {
+        var reg = new Regex("\\${[\\S\\s]+}");
+        
+        return reg.Replace(text, match => {
+            var name = match.Value;
+            // match is of form ${varname}, so remove the first two and the last character
+            name = name.Substring(2, name.Length - 3);
+            var worldVars = VariableCollection.Instance;
+            return worldVars.GetValue(worldVars.GetGuidFromName(name)).ToString();
+        });
     }
 }
 }
