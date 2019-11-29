@@ -1,22 +1,9 @@
-# Ignore Everything
+# Ignore everything
 *
 
-# But not these files
+# But not these files...
 !.gitignore
 !*/Assets/**/*.cs
-!*/Assets/**/*.txt
-!*/Assets/**/*.xml
-!*/Assets/**/*.fnt
-!*/Assets/**/*.cd
-!*/Assets/**/*.asmref
-!*/Assets/**/*.uxml
-!*/Assets/**/*.uss
 
-# even in subdirectories
+# ...even if they are in subdirectories
 !*/
-
-# but not these subdirectories
-*/[Aa]ssets/Standard Assets/
-*/[Aa]ssets/Textmesh Pro/
-*/[Aa]ssets/Shapes2D/
-*/[Aa]ssets/AssetStoreOriginals/
