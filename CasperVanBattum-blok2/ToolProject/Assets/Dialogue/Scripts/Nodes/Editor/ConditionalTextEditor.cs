@@ -14,7 +14,6 @@ public class ConditionalTextEditor : TextNodeEditor {
     protected override void DrawProperties(TextNode node) {
         base.DrawProperties(node);
 
-//        NodeEditorGUILayout.PropertyField(serializedObject.FindProperty("condition"));
         var options = new List<string>();
 
         var worldVars = VariableCollection.Instance.OfType(VariableType.Bool);
