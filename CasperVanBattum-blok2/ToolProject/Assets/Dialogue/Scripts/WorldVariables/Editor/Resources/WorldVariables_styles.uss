@@ -1,0 +1,50 @@
+#button-container {
+    flex-direction: row;
+}
+
+#button-container * {
+    flex-grow: 1;
+    margin: 0 2px;
+}
+
+.worldvar-field {
+    background-color: #0cb4cc;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 3px;
+}
+
+.worldvar-value-container {
+    flex-grow: 1;
+    min-width: 30px;
+}
+
+.worldvar-field .worldvar-type-dropdown {
+    width: 70px;
+    margin: 0 15px;
+}
+
+.worldvar-field Label {
+    width: 110px;
+}
+
+.worldvar-remove-button {
+    width: 20px;
+    margin: 0 0 0 10px;
+}
+
+.worldvar-type-bool {
+    background-color: #bed7e7;
+}
+
+.worldvar-type-string {
+    background-color: #c3e7bc;
+}
+
+.worldvar-type-long {
+    background-color: #e7e0b4;
+}
+
+.worldvar-type-double {
+    background-color: #e7bebe;
+}

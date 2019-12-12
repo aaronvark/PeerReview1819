@@ -1,0 +1,11 @@
+﻿<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement name="button-container">
+        <Button text="+ String" name="add-str"/>
+        <Button text="+ Bool" name="add-bool"/>
+        <Button text="+ Long" name="add-long"/>
+        <Button text="+ Double" name="add-dbl"/>
+    </VisualElement>
+    <VisualElement name="vars-container">
+        
+    </VisualElement>
+</UXML>
